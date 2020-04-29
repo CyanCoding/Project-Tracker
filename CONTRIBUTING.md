@@ -66,7 +66,7 @@ Head over to the [issues](https://github.com/CyanCoding/Project-Tracker/issues)
 and find something that you would like to work on **and assign yourself**. 
 When you finish coding, submit your pull request and it will be reviewed.
 
-Please only work on **one** bug report/or feature at a time. The smaller the
+Please only work on **one** bug report/feature at a time. The smaller the
 pull request, the better and the more likely it is to be accepted.
 
 ### Frontend contribution
