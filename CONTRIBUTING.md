@@ -63,8 +63,7 @@ starting place. The Project Tracker is a [WPF](https://docs.microsoft.com/en-us/
 `C#` project and all backend code is written in `C#`. All backend files
 can be recognized by the `*.cs` extension.
 Head over to the [issues](https://github.com/CyanCoding/Project-Tracker/issues)
-and find something that you would like to work on and assign yourself.
-Please only work on **one** issue at a time. 
+and find something that you would like to work on **and assign yourself**. 
 When you finish coding, submit your pull request and it will be reviewed.
 
 Please only work on **one** bug report/or feature at a time. The smaller the
@@ -75,7 +74,8 @@ A frontend contribution changes the styling and/or design of the Project Tracker
 Frontend files can be recognized by the `*.xaml` extension. If you want to change
 the design of the Project Tracker, please submit a pull request and state
 how your contribution improves upon the overall layout **and** display
-of the program.
+of the program. You do **not** need to create an issue unless the
+frontend contribution fixes a bug.
 
 To avoid any unwanted results, it's **heavily** advised that you make sure
 any `C#` files related to the display you're changing don't interfere
