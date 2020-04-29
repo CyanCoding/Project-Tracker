@@ -1,0 +1,31 @@
+﻿<Window x:Class="Project_Tracker.UpdateWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Project_Tracker"
+        mc:Ignorable="d"
+        Title="An update to the Project Tracker is available!" Height="480" Width="600" ResizeMode="NoResize">
+	<Grid>
+		<TextBlock x:Name="versionTitle" HorizontalAlignment="Center" Margin="0,30,0,0" TextWrapping="Wrap" Text="Version --- → ---" VerticalAlignment="Top" FontSize="22"/>
+		<TextBlock x:Name="featureTitle" HorizontalAlignment="Left" Margin="10,100,0,0" TextWrapping="Wrap" Text="New features (-):" VerticalAlignment="Top" FontSize="20"/>
+		<FlowDocumentScrollViewer x:Name="featureScrollView" IsToolBarVisible="False" Margin="10,132,10,214" VerticalScrollBarVisibility="Auto">
+			<FlowDocument>
+				<Table x:Name="featureTable">
+					<TableRowGroup>
+					</TableRowGroup>
+				</Table>
+			</FlowDocument>
+		</FlowDocumentScrollViewer>
+		<TextBlock x:Name="fixTitle" HorizontalAlignment="Left" Margin="10,237,0,0" TextWrapping="Wrap" Text="Fixes (-):" VerticalAlignment="Top" FontSize="20" RenderTransformOrigin="0.515,0.001"/>
+		<FlowDocumentScrollViewer x:Name="fixesScrollView" IsToolBarVisible="False" Margin="10,269,10,77" VerticalScrollBarVisibility="Auto">
+			<FlowDocument>
+				<Table x:Name="fixTable">
+					<TableRowGroup>
+					</TableRowGroup>
+				</Table>
+			</FlowDocument>
+		</FlowDocumentScrollViewer>
+		<Button x:Name="updateButton" Content="Update" HorizontalAlignment="Center" Margin="0,0,0,25" VerticalAlignment="Bottom" Width="91" Height="33" Click="Button_Click"/>
+	</Grid>
+</Window>
