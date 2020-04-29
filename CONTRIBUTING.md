@@ -3,11 +3,13 @@ Thanks for showing your interest in the Project Tracker program!
 Before you get involved, take a look at the section that pertains
 to your type of contribution:
 
-[Submitting a bug report](https://github.com/CyanCoding/Project-Tracker/new/master#submitting-a-bug-report)
-[Submitting a feature request](https://github.com/CyanCoding/Project-Tracker/new/master#submitting-a-bug-report)
-[Backend contribution](https://github.com/CyanCoding/Project-Tracker/new/master#submitting-a-bug-report)
-[Frontend contribution](https://github.com/CyanCoding/Project-Tracker/new/master#submitting-a-bug-report)
-[Fixing documentation](https://github.com/CyanCoding/Project-Tracker/blob/master/CONTRIBUTING.md#fixing-documentation)
+**Table of contents**:
+* [Submitting a bug report](https://github.com/CyanCoding/Project-Tracker/new/master#submitting-a-bug-report)
+* [Submitting a feature request](https://github.com/CyanCoding/Project-Tracker/new/master#submitting-a-bug-report)
+* [Backend contribution](https://github.com/CyanCoding/Project-Tracker/new/master#submitting-a-bug-report)
+* [Frontend contribution](https://github.com/CyanCoding/Project-Tracker/new/master#submitting-a-bug-report)
+* [Fixing documentation](https://github.com/CyanCoding/Project-Tracker/blob/master/CONTRIBUTING.md#fixing-documentation)
+
 
 **Before contributing**, make sure you're familiar with the [Code of Conduct](https://github.com/CyanCoding/Project-Tracker/blob/master/CODE_OF_CONDUCT.md).
 Everyone participating in this project is expected to uphold the code of conduct.
