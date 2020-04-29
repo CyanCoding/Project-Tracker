@@ -6,9 +6,10 @@ comments, time spent on the project, and percent complete!
 
 ### Version: 0.6 (beta)
 Currently this project is still in beta. If you want to try
-the project out, there is an installable version located
+the project out, there is a `.zip` package located
 at the [releases](https://github.com/CyanCoding/Project-Tracker/releases) 
-for Windows 8/10 systems.
+for Windows 10 systems. Unpack this and you will have access to 
+the program.
 As this program is still in beta, it does **not** have full 
 functionality and it's probably littered with bugs. If you 
 encounter anything, please submit an [issue](https://github.com/CyanCoding/Project-Tracker/issues) 
