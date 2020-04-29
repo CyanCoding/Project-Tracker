@@ -3,17 +3,22 @@ Thanks for showing your interest in the Project Tracker program!
 Before you get involved, take a look at the section that pertains
 to your type of contribution:
 
-Submitting a bug report
-Submitting a feature request
-Backend contribution
-Frontend contribution
+[Submitting a bug report](https://github.com/CyanCoding/Project-Tracker/new/master#submitting-a-bug-report)
+[Submitting a feature request](https://github.com/CyanCoding/Project-Tracker/new/master#submitting-a-bug-report)
+[Backend contribution](https://github.com/CyanCoding/Project-Tracker/new/master#submitting-a-bug-report)
+[Frontend contribution](https://github.com/CyanCoding/Project-Tracker/new/master#submitting-a-bug-report)
+Fixing documentation
+
+If you have any questions about contributing or the project itself,
+please don't hesistate to contact me at CyanCoding@users.noreply.github.com.
 
 **Before contributing**, make sure you're familiar with the [Code of Conduct](https://github.com/CyanCoding/Project-Tracker/blob/master/CODE_OF_CONDUCT.md).
 Everyone participating in this project is expected to uphold the code of conduct.
 If you spot:mag: someone breaking the code of conduct, please report it to CyanCoding@users.noreply.github.com.
 
 ## How can I contribute?
-You can contribute by coding backend/frontend, submitting a bug report, or submitting a feature request.
+You can contribute by submitting a bug report, submitting a feature request, coding backend/frontend, or
+by fixing documentation.
 
 ### Submitting a bug report
 Noticed something off about the Project Tracker? Submit a bug report at
@@ -52,6 +57,9 @@ and find something that you would like to work on and assign yourself.
 Please only work on **one** issue at a time. 
 When you finish coding, submit your pull request and it will be reviewed.
 
+Please only work on **one** bug report/or feature at a time. The smaller the
+pull request, the better and the more likely it is to be accepted.
+
 ### Frontend contribution
 A frontend contribution changes the styling and/or design of the Project Tracker.
 Frontend files can be recognized by the `*.xaml` extension. If you want to change
@@ -63,3 +71,8 @@ To avoid any unwanted results, it's **heavily** advised that you make sure
 any `C#` files related to the display you're changing don't interfere
 with your design. Many components of the display are changed in the
 `*.xaml.cs` files and you may need to change the respective `C#` file as well.
+
+### Fixing documentation
+If you notice a grammatical error or some other documentation-related
+error, please edit the file and make a pull request. Do **not** create
+an issue about it.
