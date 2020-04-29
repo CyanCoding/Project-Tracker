@@ -7,14 +7,19 @@ to your type of contribution:
 [Submitting a feature request](https://github.com/CyanCoding/Project-Tracker/new/master#submitting-a-bug-report)
 [Backend contribution](https://github.com/CyanCoding/Project-Tracker/new/master#submitting-a-bug-report)
 [Frontend contribution](https://github.com/CyanCoding/Project-Tracker/new/master#submitting-a-bug-report)
-Fixing documentation
+[Fixing documentation](https://github.com/CyanCoding/Project-Tracker/blob/master/CONTRIBUTING.md#fixing-documentation)
 
 If you have any questions about contributing or the project itself,
 please don't hesistate to contact me at CyanCoding@users.noreply.github.com.
 
 **Before contributing**, make sure you're familiar with the [Code of Conduct](https://github.com/CyanCoding/Project-Tracker/blob/master/CODE_OF_CONDUCT.md).
 Everyone participating in this project is expected to uphold the code of conduct.
-If you spot:mag: someone breaking the code of conduct, please report it to CyanCoding@users.noreply.github.com.
+Any user found to be violating the code of conduct will be punished
+based on the severity and frequency of the violation(s).
+
+If you spot:mag: someone breaking the code of conduct, have any questions
+about contributing, or questions about the project itself, 
+please contact me at CyanCoding@users.noreply.github.com.
 
 ## How can I contribute?
 You can contribute by submitting a bug report, submitting a feature request, coding backend/frontend, or
