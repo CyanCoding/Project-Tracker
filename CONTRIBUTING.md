@@ -4,10 +4,10 @@ Before you get involved, take a look at the section that pertains
 to your type of contribution:
 
 **Table of contents**:
-* [Submitting a bug report](https://github.com/CyanCoding/Project-Tracker/new/master#submitting-a-bug-report)
-* [Submitting a feature request](https://github.com/CyanCoding/Project-Tracker/new/master#submitting-a-bug-report)
-* [Backend contribution](https://github.com/CyanCoding/Project-Tracker/new/master#submitting-a-bug-report)
-* [Frontend contribution](https://github.com/CyanCoding/Project-Tracker/new/master#submitting-a-bug-report)
+* [Submitting a bug report](https://github.com/CyanCoding/Project-Tracker/blob/master/CONTRIBUTING.md#submitting-a-bug-report)
+* [Submitting a feature request](https://github.com/CyanCoding/Project-Tracker/blob/master/CONTRIBUTING.md#submitting-a-feature-request)
+* [Backend contribution](https://github.com/CyanCoding/Project-Tracker/blob/master/CONTRIBUTING.md#backend-contribution)
+* [Frontend contribution](https://github.com/CyanCoding/Project-Tracker/blob/master/CONTRIBUTING.md#frontend-contribution)
 * [Fixing documentation](https://github.com/CyanCoding/Project-Tracker/blob/master/CONTRIBUTING.md#fixing-documentation)
 
 
@@ -25,28 +25,34 @@ You can contribute by submitting a bug report, submitting a feature request, cod
 by fixing documentation.
 
 ### Submitting a bug report
-Noticed something off about the Project Tracker? Submit a bug report at
-[issues](https://github.com/CyanCoding/Project-Tracker/issues). Before
+Noticed something off about the Project Tracker? Submit an
+[issue](https://github.com/CyanCoding/Project-Tracker/issues)! Before
 reporting a bug, make sure that you can recreate it. Instead of creating
 a broad and hard-to-fix issue like "Project Tracker crashes", try and find
 what's going wrong and what leads up to it, such as "Project Tracker crashes
 directly after installation". All bug reports should be tagged with the 
 `bug` tag.
 
-If you are intending to fix the bug, go ahead and read Backend contribution 
-**and** Frontend contribution. Even if you're only intending to code backend
+If you are intending to fix the bug, go ahead and read 
+[Backend contribution](https://github.com/CyanCoding/Project-Tracker/blob/master/CONTRIBUTING.md#backend-contribution)
+**and** 
+[Frontend contribution](https://github.com/CyanCoding/Project-Tracker/blob/master/CONTRIBUTING.md#frontend-contribution). 
+Even if you're only intending to code backend
 or frontend, it's important that you know what is required of any kind of
 code contribution. When you create the issue, **make sure to assign yourself**. 
 Any issue left unassigned will typically be assigned to the owner, [@CyanCoding](https://github.com/CyanCoding).
 
 ### Submitting a feature request
 Have an idea about an improvement to the Project Tracker? Create an 
-[issues](https://github.com/CyanCoding/Project-Tracker/issues)!
+[issue](https://github.com/CyanCoding/Project-Tracker/issues)!
 All feature requests should be tagged with the `enhancement` tag.
 
 
-If you are intending to implement the feature, go ahead and read Backend contribution 
-**and** Frontend contribution. Even if you're only intending to code backend
+If you are intending to implement the feature, go ahead and read 
+[Backend contribution](https://github.com/CyanCoding/Project-Tracker/new/master#submitting-a-bug-report)
+**and** 
+[Frontend contribution](https://github.com/CyanCoding/Project-Tracker/blob/master/CONTRIBUTING.md#frontend-contribution). 
+Even if you're only intending to code backend
 or frontend, it's important that you know what is required of any kind of
 code contribution. When you create the issue, **make sure to assign yourself**. 
 Any issue left unassigned will typically be assigned to the owner, [@CyanCoding](https://github.com/CyanCoding).
