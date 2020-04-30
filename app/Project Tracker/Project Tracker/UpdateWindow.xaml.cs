@@ -78,7 +78,6 @@ namespace Project_Tracker {
 			if (File.Exists(VERSION_FILE)) {
 				File.Delete(VERSION_FILE);
 			}
-			AddRow("hiiiiii iiiiiiiii iiiiiiii iiiiiiiiii iiiiiiiii iiiiiiiiii iiiiiiii iiiiii iiiiiii iiiiiiiiii iiiiiiii iiiiiiiiii iiiiiiii iiiiiiiiii iiiiiiiiii iiiiiiiiii iiiiii iiiiiiii iii i iiiiiiiii iiiiii iiiiiiiii iiiiiiiiiii iiiiiiiii iiiiii iiiiiii iiiiiii ii iiiiiiiiiii iiiii iiiiiii iiiiiiiii iiiiiiii iiiiiiii ii", featureTable, 0);
 			try {
 				using (StreamReader reader = new StreamReader(VERSION_INFO)) {
 					string json = reader.ReadToEnd();
