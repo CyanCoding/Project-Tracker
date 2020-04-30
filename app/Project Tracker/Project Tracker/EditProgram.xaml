@@ -1,0 +1,48 @@
+﻿<Window x:Class="Project_Tracker.EditProgram"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Project_Tracker"
+        mc:Ignorable="d"
+        Title="Edit Program - 0%" Height="400" Width="800" ResizeMode="NoResize" Closing="Window_Closing">
+	<Grid>
+		<TextBlock x:Name="durationLabel" HorizontalAlignment="Left" Margin="20,20,0,0" TextWrapping="Wrap" Text="00:00:00" VerticalAlignment="Top" FontSize="36"/>
+		
+		<!-- These elements are moved programatically at runtime -->
+		<FlowDocumentScrollViewer x:Name="errorScrollView" IsToolBarVisible="False" Margin="10,140,490,60" VerticalScrollBarVisibility="Auto" BorderBrush="Black" BorderThickness="2">
+			<FlowDocument>
+				<Table x:Name="errorTable">
+					<TableRowGroup>
+					</TableRowGroup>
+				</Table>
+			</FlowDocument>
+		</FlowDocumentScrollViewer>
+		<FlowDocumentScrollViewer x:Name="featureScrollView" IsToolBarVisible="False" Margin="242,140,292,60" VerticalScrollBarVisibility="Auto" BorderBrush="Black" BorderThickness="2">
+			<FlowDocument>
+				<Table x:Name="featureTable">
+					<TableRowGroup>
+					</TableRowGroup>
+				</Table>
+			</FlowDocument>
+		</FlowDocumentScrollViewer>
+		<FlowDocumentScrollViewer x:Name="commentScrollView" IsToolBarVisible="False" Margin="507,140,10,60" HorizontalAlignment="Right" VerticalScrollBarVisibility="Auto" BorderBrush="Black" BorderThickness="2">
+			<FlowDocument>
+				<Table x:Name="commentTable">
+					<TableRowGroup>
+					</TableRowGroup>
+				</Table>
+			</FlowDocument>
+		</FlowDocumentScrollViewer>
+		<TextBlock x:Name="errorLabel" HorizontalAlignment="Left" Margin="10,100,0,0" TextWrapping="Wrap" Text="Errors" VerticalAlignment="Top" FontSize="24"/>
+		<TextBlock x:Name="featureLabel" HorizontalAlignment="Left" Margin="50,100,0,0" TextWrapping="Wrap" Text="Features" VerticalAlignment="Top" FontSize="24"/>
+		<TextBlock x:Name="commentLabel" HorizontalAlignment="Left" Margin="100,100,0,0" TextWrapping="Wrap" Text="Comments" VerticalAlignment="Top" FontSize="24"/>
+
+		<Border BorderBrush="LightGray" BorderThickness="0">
+			<TextBlock x:Name="editButton" HorizontalAlignment="Left" Margin="10,0,0,10" TextWrapping="Wrap" Text="&#xE70F;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="Edit"/>
+		</Border>
+		<Border BorderBrush="LightGray" BorderThickness="0">
+			<TextBlock x:Name="stopwatchButton" HorizontalAlignment="Left"  Margin="50,0,0,10" TextWrapping="Wrap" Text="&#xE916;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="Stopwatch" Foreground="#FF9C0909"/>
+		</Border>
+	</Grid>
+</Window>
