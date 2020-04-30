@@ -21,5 +21,5 @@ When updating, this is the procedure you need to follow:
 5. Update `version.json`.
 6. Change the `version.txt` version.
 
-After that the files are ready to be installed on user's system and you can create a 
+After that the files are ready to be installed on the user's system and you can create a 
 new release!
