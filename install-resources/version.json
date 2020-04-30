@@ -1,11 +1,11 @@
 {
-  "Version": "0.6",
+  "Version": "0.7",
   "Updates": [
       "Finished installer.",
       "Changed view program logo.",
       "Added some view program functionality.",
       "Created stopwatch in view program.",
-      "Added an auto-update feature to the main table."
+      "Added an auto-update feature to the main table and we also fixed something weird with the tables spacing."
       ],
   "Fixes": [
       "Fixed quite a few bugs with the installer."
