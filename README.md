@@ -8,7 +8,7 @@ comments, time spent on the project, and percent complete!
 ## Latest version:
 ### v0.6:
 Currently this project is still in beta. If you want to try it out, 
-you can find the latest pre-release at the [roadmap](https://github.com/CyanCoding/Project-Tracker/blob/master/ROADMAP.md#latest-pre-release-v06).
+you can find it at the [releases](https://github.com/CyanCoding/Project-Tracker/releases/tag/v0.6).
 As this program is still in beta, it does **not** have full functionality.
 If you encounter any issues, please submit an [issue](https://github.com/CyanCoding/Project-Tracker/issues) 
 or consider helping to solve the problem. Before you do that, however,
