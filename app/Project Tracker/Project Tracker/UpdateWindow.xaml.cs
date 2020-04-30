@@ -26,7 +26,7 @@ namespace Project_Tracker {
 		readonly string VERSION_INFO = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/version.json";
 		readonly string INSTALLER_PATH = @"C:\Program Files\Project Tracker\Project Tracker Installer.exe";
 		readonly string VERSION_FILE = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/update.txt";
-		readonly string CURRENT_VERSION = "0.1";
+		readonly string CURRENT_VERSION = "0.6";
 		readonly Color sortColor = Color.FromRgb(228, 233, 235);
 		readonly FontFamily textFont = new FontFamily("Microsoft Sans Serif");
 
@@ -115,7 +115,7 @@ namespace Project_Tracker {
 				// Enter the executable to run, including the complete path
 				FileName = INSTALLER_PATH,
 				// Do you want to show a console window?
-				WindowStyle = ProcessWindowStyle.Hidden,
+				WindowStyle = ProcessWindowStyle.Normal,
 				CreateNoWindow = true
 			};
 			Process.Start(start);
