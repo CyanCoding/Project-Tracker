@@ -10,8 +10,9 @@ change anything.
 * `version.txt` - Pull the latest version without needing the JSON module libraries.
 * `Project Tracker.zip` - The zip file with all of the components for the program.
 
-The unzipped folder is what's inside the `Project Tracker.zip` file. When updating, this
-is the procedure you need to follow:
+The unzipped folder is what's inside the `Project Tracker.zip` file.
+## Updating procedure:
+When updating, this is the procedure you need to follow:
 
 1. Double check you've changed the version in `MainWindow.xaml.cs`.
 2. Build the release `.exe` program.
