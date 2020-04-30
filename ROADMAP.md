@@ -20,8 +20,6 @@ official release is created, it will be linked here.
 - [x] Enable auto-updates.
 - [x] Add updating information on main table functionality.
 - [x] Move installation files to GitHub.
-- [x] Fix window hiding bug.
-- [ ] Fix weird spacing in view-program tables.
 - [ ] Finish view-program window.
 
 ### v2.0:
