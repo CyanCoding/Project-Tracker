@@ -1,0 +1,13 @@
+{
+  "Version": "0.6",
+  "Updates": [
+      "Finished installer.",
+      "Changed view program logo.",
+      "Added some view program functionality.",
+      "Created stopwatch in view program.",
+      "Added an auto-update feature to the main table."
+      ],
+  "Fixes": [
+      "Fixed quite a few bugs with the installer."
+      ]
+}

@@ -1,0 +1,13 @@
+Icon
+----
+This software uses an icon from dDara on www.flaticon.com.
+
+<https://www.flaticon.com/authors/ddara>
+
+
+Newtonsoft.Json
+---------------
+This software uses Newtonsoft.Json libries licensed
+under the MIT license.
+
+<https://github.com/JamesNK/Newtonsoft.Json/blob/master/LICENSE.md>
