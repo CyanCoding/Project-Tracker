@@ -27,6 +27,7 @@ official release is created, it will be linked here.
 ### v2.0:
 **Estimated release:** `June 1st, 2020`
 
+- [ ] Allow resizing of windows.
 - [ ] Create a better design for main window.
 - [ ] Add a settings menu.
 - [ ] Create a dark theme.
