@@ -19,6 +19,7 @@ namespace Project_Tracker {
 		int rowsAdded = 0; // We use a global variable so the AddRow function knows what id of a row to edit
 		int rowSelectionID = 0; // We use this to identify which row is currently selected
 		int filesUpdate = 0;
+		bool addedProgram = false; // We do this so that we can only open a program if there is one to prevent an error
 		public List<string> filesRead = new List<string>();
 		List<string> tableValues = new List<string>();
 		Thread tableUpdateThread;
@@ -40,6 +41,7 @@ namespace Project_Tracker {
 		}
 
 		private void AddRow(string title, int warnings, int features, int comments, string time, string percent) {
+			addedProgram = true;
 
 			// rowsAdded++;
 			rowsAdded = listTable.RowGroups[0].Rows.Count - 1;
@@ -267,10 +269,12 @@ namespace Project_Tracker {
 		}
 
 		private void EditProgram(object sender, MouseButtonEventArgs e) {
-			Passthrough.EditingFile = filesRead[rowSelectionID - 1];
+			if (addedProgram == true) {
+				Passthrough.EditingFile = filesRead[rowSelectionID - 1];
 
-			EditProgram editProgram = new EditProgram();
-			editProgram.Show();
+				EditProgram editProgram = new EditProgram();
+				editProgram.Show();
+			}
 		}
 
 		private void Window_Closing(object sender, CancelEventArgs e) {
