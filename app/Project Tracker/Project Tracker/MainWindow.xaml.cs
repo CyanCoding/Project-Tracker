@@ -30,7 +30,7 @@ namespace Project_Tracker {
 		readonly FontFamily textFont = new FontFamily("Microsoft Sans Serif");
 		readonly string pathExtension = "*.json";
 		readonly string DATA_DIRECTORY = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/data";
-		readonly string VERSION_MANIFEST_URL = "https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/version.json";
+		readonly string VERSION_MANIFEST_URL = "https://raw.githubusercontent.com/CyanCoding/Project-Tracker/cyancoding-commit/install-resources/version.json";
 		readonly string VERSION_INFO = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/version.json";
 		readonly string CURRENT_VERSION = "0.6"; // IF YOU CHANGE THIS, ALSO CHANGE IT IN UpdateWindow.xaml.cs
 
@@ -60,6 +60,7 @@ namespace Project_Tracker {
 
 				newRow.FontSize = 16;
 				newRow.FontFamily = textFont;
+				newRow.Cells.Add(new TableCell(new Paragraph(new Run())));
 				newRow.Cells.Add(new TableCell(new Paragraph(new Run(" " + title))));
 				newRow.Cells.Add(new TableCell(new Paragraph(new Run(" " + warnings.ToString()))));
 				newRow.Cells.Add(new TableCell(new Paragraph(new Run(" " + features.ToString()))));
