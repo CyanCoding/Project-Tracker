@@ -30,7 +30,7 @@ namespace Project_Tracker {
 		readonly FontFamily textFont = new FontFamily("Microsoft Sans Serif");
 		readonly string pathExtension = "*.json";
 		readonly string DATA_DIRECTORY = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/data";
-		readonly string VERSION_MANIFEST_URL = "http://cyancoding-server.000webhostapp.com/Project%20Tracker/version.json";
+		readonly string VERSION_MANIFEST_URL = "https://raw.githubusercontent.com/CyanCoding/Project-Tracker/cyancoding-commit-1/install-resources/version.json";
 		readonly string VERSION_INFO = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/version.json";
 		readonly string CURRENT_VERSION = "0.6";
 

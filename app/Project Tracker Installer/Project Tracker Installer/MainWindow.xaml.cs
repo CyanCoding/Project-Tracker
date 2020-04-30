@@ -26,13 +26,13 @@ namespace Project_Tracker_Installer {
         string PROGRAM_VERSION = "calculating version...";
         readonly string PROGRAM_PATH = @"C:\Program Files\Project Tracker\Project Tracker.exe";
         readonly string VERSION_PATH = @"C:\Program Files\Project Tracker\version.txt";
-        readonly string VERSION_DOWNLOAD_LINK = "http://cyancoding-server.000webhostapp.com/Project%20Tracker/version.txt";
+        readonly string VERSION_DOWNLOAD_LINK = "https://raw.githubusercontent.com/CyanCoding/Project-Tracker/cyancoding-commit-1/install-resources/version.txt";
         readonly string DATA_DIRECTORY_PATH = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Project Tracker\data";
         readonly string INSTALLER_PATH = @"C:\Program Files\Project Tracker\Project Tracker Installer.exe";
         readonly string INSTALL_DIRECTORY = @"C:\Program Files\Project Tracker";
         readonly string VERSION_FILE = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Project Tracker\update.txt";
         readonly string REGISTRY = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Project Tracker";
-        readonly string ONLINE_PROGRAM_LINK = "http://cyancoding-server.000webhostapp.com/Project%20Tracker/Project%20Tracker.zip";
+        readonly string ONLINE_PROGRAM_LINK = "https://github.com/CyanCoding/Project-Tracker/raw/cyancoding-commit-1/install-resources/Project%20Tracker.zip";
         readonly string ZIP_PATH = @"C:\Program Files\Project Tracker\Project Tracker.zip";
         readonly string ICON_PATH = @"C:\Program Files\Project Tracker\logo.ico";
         readonly string SHORTCUT_LOCATION = @"C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Project Tracker.lnk";
