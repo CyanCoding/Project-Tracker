@@ -154,7 +154,7 @@ namespace Project_Tracker_Installer {
                 // Enter the executable to run, including the complete path
                 FileName = PROGRAM_PATH,
                 // Do you want to show a console window?
-                WindowStyle = ProcessWindowStyle.Hidden,
+                WindowStyle = ProcessWindowStyle.Normal,
                 CreateNoWindow = true
             };
             Process.Start(start);
