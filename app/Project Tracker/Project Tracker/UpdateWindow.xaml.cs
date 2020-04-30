@@ -78,7 +78,6 @@ namespace Project_Tracker {
 			if (File.Exists(VERSION_FILE)) {
 				File.Delete(VERSION_FILE);
 			}
-
 			try {
 				using (StreamReader reader = new StreamReader(VERSION_INFO)) {
 					string json = reader.ReadToEnd();

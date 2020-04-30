@@ -56,6 +56,10 @@ namespace Project_Tracker_Installer {
                 subTitle.Content = "Version: " + PROGRAM_VERSION;
             }));
             installButton.IsEnabled = true;
+
+            if (subTitle.Content.ToString()== "Version: ") {
+                FinalResult("An error occured while installing");
+            }
         }
 
         void startup() {
