@@ -364,7 +364,10 @@ namespace Project_Tracker {
 			main.filesRead.Remove(editingFile);
 
 			isStopwatchRunning = false;
-			timerThread.Abort();
+
+			if (timerThread.IsAlive) {
+				timerThread.Abort();
+			}
 		}
 	}
 }
