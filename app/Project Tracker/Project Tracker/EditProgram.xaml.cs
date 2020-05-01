@@ -357,10 +357,7 @@ namespace Project_Tracker {
 			}
 
 			MainWindow main = new MainWindow();
-			foreach (string file in main.filesRead) {
-				Console.WriteLine(file);
-			}
-			Console.WriteLine(editingFile);
+
 			main.filesRead.Remove(editingFile);
 
 			isStopwatchRunning = false;

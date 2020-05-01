@@ -45,6 +45,29 @@ namespace Project_Tracker {
 
 			TableRow newRow = null;
 
+			// For some reason the tables put in like really weird spacing if rows are
+			// longer than one line. I coded my own kind of "text-wrap" property. Basically
+			// it waits for 58 characters and then finds the next space. At that point it
+			// inserts a new line. It seems to solve the issue, though I'm sure there could
+			// be some kind of string that might break this (like a really long word or
+			// something I'm not sure. A temporary fix. I suggest making a better method
+			// soon, but it's not a priority.
+			int index = -1;
+			bool isLookingForSpace = false;
+
+			foreach (char c in value) {
+				index++;
+
+				if (c == ' ' && isLookingForSpace) {
+					value = value.Remove(index, 1);
+					value = value.Insert(index, "\n");
+					isLookingForSpace = false;
+				}
+				if (index % 58 == 0 && index > 57) {
+					isLookingForSpace = true;
+				}
+			}
+
 			if (tableCount == 0) { // Update table
 				newRow = table.RowGroups[0].Rows[updateRowsAdded];
 
@@ -78,6 +101,7 @@ namespace Project_Tracker {
 			if (File.Exists(VERSION_FILE)) {
 				File.Delete(VERSION_FILE);
 			}
+			AddRow("I added some row functionality and functionality functionality functionality functionality functionality functionality also changed something that was weird with the spacing of the whole thing.", featureTable, 0);
 			try {
 				using (StreamReader reader = new StreamReader(VERSION_INFO)) {
 					string json = reader.ReadToEnd();
