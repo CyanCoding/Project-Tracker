@@ -20,8 +20,9 @@ namespace Project_Tracker {
 		int rowSelectionID = 0; // We use this to identify which row is currently selected
 		int filesUpdate = 0;
 		bool addedProgram = false; // We do this so that we can only open a program if there is one to prevent an error
-		public List<string> filesRead = new List<string>();
+		static bool firstRun = true; // We use this to not call startup stuff more than once when MainWindow is called.
 		List<string> tableValues = new List<string>();
+		public List<string> filesRead = new List<string>();
 		Thread tableUpdateThread;
 
 
@@ -129,8 +130,6 @@ namespace Project_Tracker {
 						foreach (string path in files) {
 
 							if (!filesRead.Contains(path)) {
-								
-
 								// Convert each json file to a table row
 								using (StreamReader reader = new StreamReader(path)) {
 									string json = reader.ReadToEnd();
@@ -194,40 +193,44 @@ namespace Project_Tracker {
 				Directory.CreateDirectory(DATA_DIRECTORY);
 			}
 
-			try {
-				string[] files = Directory.GetFiles(DATA_DIRECTORY, pathExtension, SearchOption.AllDirectories);
-				foreach (string path in files) {
+			if (firstRun) {
+				try {
+					string[] files = Directory.GetFiles(DATA_DIRECTORY, pathExtension, SearchOption.AllDirectories);
+					foreach (string path in files) {
+						if (!filesRead.Contains(path)) {
+							// Convert each json file to a table row
+							using (StreamReader reader = new StreamReader(path)) {
+								string json = reader.ReadToEnd();
 
-					filesRead.Add(path);
+								dynamic array = JsonConvert.DeserializeObject(json);
 
-					// Convert each json file to a table row
-					using (StreamReader reader = new StreamReader(path)) {
-						string json = reader.ReadToEnd();
+								MainTableManifest.Rootobject mainTable = JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
 
-						dynamic array = JsonConvert.DeserializeObject(json);
-
-						MainTableManifest.Rootobject mainTable = JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
-
-						AddRow(mainTable.title, mainTable.errors.Length, mainTable.features.Length, mainTable.comments.Length, mainTable.duration, mainTable.percent);
-
+								AddRow(mainTable.title, mainTable.errors.Length, mainTable.features.Length, mainTable.comments.Length, mainTable.duration, mainTable.percent);
+								filesRead.Add(path);
+								// rowsAdded++;
+							}
+						}
 					}
 				}
-			}
-			catch (IOException) {
+				catch (IOException) {
 
-			}
+				}
 
-			if (File.Exists(VERSION_INFO)) {
-				File.Delete(VERSION_INFO);
-			}
+				if (File.Exists(VERSION_INFO)) {
+					File.Delete(VERSION_INFO);
+				}
 
-			try {
-				WebClient client = new WebClient();
-				client.DownloadFileCompleted += new AsyncCompletedEventHandler(ShowUpdate);
-				client.DownloadFileAsync(new Uri(VERSION_MANIFEST_URL), VERSION_INFO);
-			}
-			catch (WebException) {
-				// Couldn't download update file. Possible their wifi isn't working
+				try {
+					WebClient client = new WebClient();
+					client.DownloadFileCompleted += new AsyncCompletedEventHandler(ShowUpdate);
+					client.DownloadFileAsync(new Uri(VERSION_MANIFEST_URL), VERSION_INFO);
+				}
+				catch (WebException) {
+					// Couldn't download update file. Possible their wifi isn't working
+				}
+
+				firstRun = false;
 			}
 
 			tableUpdateThread = new Thread(UpdateTable); // Start the background resize thread			
@@ -281,7 +284,5 @@ namespace Project_Tracker {
 			tableUpdateThread.Abort();
 			System.Windows.Application.Current.Shutdown(); // If we don't do this, the AddNewProgram window doesn't close and the program keeps running in the bg
 		}
-
-		// TODO: Add language tab
 	}
 }
