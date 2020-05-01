@@ -15,3 +15,6 @@ or consider helping to solve the problem. Before you do that, however,
 make sure there isn't already an issue similar to yours. For the most
 part, all of the bugs and lack of features in the pre-release are already
 submitted and will be fixed before the official release.
+
+Head over to the [roadmap](https://github.com/CyanCoding/Project-Tracker/blob/master/ROADMAP.md)
+for more information on future releases.
