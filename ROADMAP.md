@@ -33,3 +33,9 @@ official release is created, it will be linked here.
 - [ ] Allow users to check for updates after the app is opened.
 - [ ] A more subtle way of displaying an update.
 - [ ] Allow deleting of items in the add-program tables.
+- [ ] Create a language section to see the programming language of each project.
+
+### v3.0:
+**Estimated release:** `unknown`
+- [ ] Allow linking of a folder to each project to easily see files from Project Tracker.
+- [ ] GitHub integration!
