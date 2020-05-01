@@ -9,6 +9,10 @@ official release is created, it will be linked here.
 
 ---
 ## Future releases:
+Note: estimated release dates are **estimated**. Based on how quickly the project is progressing,
+these may change. It's not uncommon for a project to be finished ahead of schedule. When the
+project gets close to the estimated release date, either an updated estimate or an official
+date will be posted allowing you to stay up to date with when new updates will be available.
 
 ### v1.0:
 **Release date:** `May 5th, 2020`
@@ -36,6 +40,6 @@ official release is created, it will be linked here.
 - [ ] Create a language section to see the programming language of each project.
 
 ### v3.0:
-**Estimated release date:** `unknown`
+**Estimated release date:** `summer 2020`
 - [ ] Allow linking of a folder to each project to easily see files from Project Tracker.
 - [ ] GitHub integration!
