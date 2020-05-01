@@ -11,7 +11,7 @@ official release is created, it will be linked here.
 ## Future releases:
 
 ### v1.0:
-**Estimated release date:** `May 5th, 2020`
+**Release date:** `May 5th, 2020`
 
 - [x] Create installer.
 - [x] Create Project Tracker.
@@ -23,7 +23,7 @@ official release is created, it will be linked here.
 - [ ] Finish view-program window.
 
 ### v2.0:
-**Estimated release:** `June 1st, 2020`
+**Estimated release date:** `June 1st, 2020`
 
 - [ ] Allow resizing of windows.
 - [ ] Create a better design for main window.
@@ -36,6 +36,6 @@ official release is created, it will be linked here.
 - [ ] Create a language section to see the programming language of each project.
 
 ### v3.0:
-**Estimated release:** `unknown`
+**Estimated release date:** `unknown`
 - [ ] Allow linking of a folder to each project to easily see files from Project Tracker.
 - [ ] GitHub integration!
