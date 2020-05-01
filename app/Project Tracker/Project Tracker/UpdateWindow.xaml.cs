@@ -101,7 +101,7 @@ namespace Project_Tracker {
 			if (File.Exists(VERSION_FILE)) {
 				File.Delete(VERSION_FILE);
 			}
-			AddRow("I added some row functionality and functionality functionality functionality functionality functionality functionality also changed something that was weird with the spacing of the whole thing.", featureTable, 0);
+			
 			try {
 				using (StreamReader reader = new StreamReader(VERSION_INFO)) {
 					string json = reader.ReadToEnd();
