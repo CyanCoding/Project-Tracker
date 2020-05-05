@@ -29,6 +29,7 @@ date will be posted allowing you to stay up to date with when new updates will b
 ### v2.0:
 **Estimated release date:** `June 1st, 2020`
 
+- [ ] Program language changed to Java for more cross-platform options.
 - [ ] Allow resizing of windows.
 - [ ] Create a better design for main window.
 - [ ] Add a settings menu.
