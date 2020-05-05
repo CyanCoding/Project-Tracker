@@ -15,7 +15,7 @@ project gets close to the estimated release date, either an updated estimate or 
 date will be posted allowing you to stay up to date with when new updates will be available.
 
 ### v1.0:
-**Release date:** `May 5th, 2020`
+**Release date:** `May 20th, 2020`
 
 - [x] Create installer.
 - [x] Create Project Tracker.
@@ -24,12 +24,12 @@ date will be posted allowing you to stay up to date with when new updates will b
 - [x] Enable auto-updates.
 - [x] Add updating information on main table functionality.
 - [x] Move installation files to GitHub.
+- [ ] Convert program to Kotlin for better cross-platform support.
 - [ ] Finish view-program window.
 
 ### v2.0:
-**Estimated release date:** `June 1st, 2020`
+**Estimated release date:** `June 15th, 2020`
 
-- [ ] Program language changed to Java for more cross-platform options.
 - [ ] Allow resizing of windows.
 - [ ] Create a better design for main window.
 - [ ] Add a settings menu.
