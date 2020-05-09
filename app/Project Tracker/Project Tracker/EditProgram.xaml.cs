@@ -56,7 +56,7 @@ namespace Project_Tracker {
 		public EditProgram() {
 			InitializeComponent();
 
-			startup();
+			Startup();
 		}
 		// TODO: You can change values from the function. No need to repeat the code. Optimize NOW
 		private void AddRow(Table table, int rowsAddedValue, string value, int index, string[] dataValues) {
@@ -165,6 +165,8 @@ namespace Project_Tracker {
 		}
 
 		private void ResetSelection(Table table, string[] values, string[] dataValues, int rowsAddedValue) {
+			rowSelectionID = 0;
+
 			for (int i = 0; i < values.Length; i++) {
 				table.RowGroups[0].Rows[i].Cells.RemoveRange(0, 1);
 			}
@@ -186,10 +188,9 @@ namespace Project_Tracker {
 
 			TableRow selectedRow = table.RowGroups[0].Rows[0];
 			selectedRow.Background = new SolidColorBrush(selectionColor);
-			rowSelectionID = 0;
 		}
 
-		private void stopwatchTimer() {
+		private void StopwatchTimer() {
 			while (true) {
 				// I believe this is a more accurate way of counting. It creates a stopwatch
 				// And updates it for each second rather than sleeping for a thousand milliseconds
@@ -249,71 +250,8 @@ namespace Project_Tracker {
 								durationLabel.Text = reparsedDuration;
 							}));
 
-							if (lastSecond % 10 == 0) {
-								StringBuilder sb = new StringBuilder();
-								StringWriter sw = new StringWriter(sb);
-
-								using (JsonWriter js = new JsonTextWriter(sw)) {
-									js.Formatting = Formatting.Indented;
-
-									js.WriteStartObject();
-
-									js.WritePropertyName("Title");
-									js.WriteValue(projectTitle);
-
-									js.WritePropertyName("Errors");
-									js.WriteStartArray();
-									foreach (string error in errors) {
-										js.WriteValue(error);
-									}
-									js.WriteEnd();
-
-									js.WritePropertyName("ErrorsData");
-									js.WriteStartArray();
-									foreach (string data in errorsData) {
-										js.WriteValue(data);
-									}
-									js.WriteEnd();
-
-									js.WritePropertyName("Features");
-									js.WriteStartArray();
-									foreach (string feature in features) {
-										js.WriteValue(feature);
-									}
-									js.WriteEnd();
-
-									js.WritePropertyName("FeaturesData");
-									js.WriteStartArray();
-									foreach (string data in featuresData) {
-										js.WriteValue(data);
-									}
-									js.WriteEnd();
-
-									js.WritePropertyName("Comments");
-									js.WriteStartArray();
-									foreach (string comment in comments) {
-										js.WriteValue(comment);
-									}
-									js.WriteEnd();
-
-									js.WritePropertyName("CommentsData");
-									js.WriteStartArray();
-									foreach (string data in commentsData) {
-										js.WriteValue(data);
-									}
-									js.WriteEnd();
-
-									js.WritePropertyName("Duration");
-									js.WriteValue(duration);
-
-									js.WritePropertyName("Percent");
-									js.WriteValue(percentComplete);
-
-									js.WriteEndObject();
-								}
-								using (StreamWriter writer = File.CreateText(editingFile)) {
-									writer.WriteLine(sb.ToString());
-								}
+							if (lastSecond % 10 == 0) { // Save every 10 seconds of the timer running
+								Save();
 							}
 						}
 						catch (TaskCanceledException) { // Happens when the user tries to close the program
@@ -325,7 +263,84 @@ namespace Project_Tracker {
 			}
 		}
 
-		private void startup() {
+		private void Save() {
+			StringBuilder sb = new StringBuilder();
+			StringWriter sw = new StringWriter(sb);
+
+
+			// Make 10 attempts to save the file.
+			for (int i = 0; i < 10; i++) {
+				try {
+					using (JsonWriter js = new JsonTextWriter(sw)) {
+						js.Formatting = Formatting.Indented;
+
+						js.WriteStartObject();
+
+						js.WritePropertyName("Title");
+						js.WriteValue(projectTitle);
+
+						js.WritePropertyName("Errors");
+						js.WriteStartArray();
+						foreach (string error in errors) {
+							js.WriteValue(error);
+						}
+						js.WriteEnd();
+
+						js.WritePropertyName("ErrorsData");
+						js.WriteStartArray();
+						foreach (string data in errorsData) {
+							js.WriteValue(data);
+						}
+						js.WriteEnd();
+
+						js.WritePropertyName("Features");
+						js.WriteStartArray();
+						foreach (string feature in features) {
+							js.WriteValue(feature);
+						}
+						js.WriteEnd();
+
+						js.WritePropertyName("FeaturesData");
+						js.WriteStartArray();
+						foreach (string data in featuresData) {
+							js.WriteValue(data);
+						}
+						js.WriteEnd();
+
+						js.WritePropertyName("Comments");
+						js.WriteStartArray();
+						foreach (string comment in comments) {
+							js.WriteValue(comment);
+						}
+						js.WriteEnd();
+
+						js.WritePropertyName("CommentsData");
+						js.WriteStartArray();
+						foreach (string data in commentsData) {
+							js.WriteValue(data);
+						}
+						js.WriteEnd();
+
+						js.WritePropertyName("Duration");
+						js.WriteValue(duration);
+
+						js.WritePropertyName("Percent");
+						js.WriteValue(percentComplete);
+
+						js.WriteEndObject();
+					}
+					using (StreamWriter writer = File.CreateText(editingFile)) {
+						writer.WriteLine(sb.ToString());
+					}
+					break;
+				}
+				catch (IOException) {
+					Thread.Sleep(1000);
+				}
+			}
+		}
+
+		private void Startup() {
 			stopwatch = new Stopwatch();
 
 			editingFile = Passthrough.EditingFile;
@@ -377,7 +392,7 @@ namespace Project_Tracker {
 				this.Title = values.Title + " - " + values.Percent + "%";
 				durationLabel.Text = values.Duration;
 
-				timerThread = new Thread(stopwatchTimer);
+				timerThread = new Thread(StopwatchTimer);
 				timerThread.Start();
 			}
 		}
@@ -462,86 +477,9 @@ namespace Project_Tracker {
 		}
 
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
-			// Save
-			StringBuilder sb = new StringBuilder();
-			StringWriter sw = new StringWriter(sb);
-
-
-			// Make 10 attempts to save the file.
-			for (int i = 0; i < 10; i++) {
-				try {
-					using (JsonWriter js = new JsonTextWriter(sw)) {
-						js.Formatting = Formatting.Indented;
-
-						js.WriteStartObject();
-
-						js.WritePropertyName("Title");
-						js.WriteValue(projectTitle);
-
-						js.WritePropertyName("Errors");
-						js.WriteStartArray();
-						foreach (string error in errors) {
-							js.WriteValue(error);
-						}
-						js.WriteEnd();
-
-						js.WritePropertyName("ErrorsData");
-						js.WriteStartArray();
-						foreach (string data in errorsData) {
-							js.WriteValue(data);
-						}
-						js.WriteEnd();
-
-						js.WritePropertyName("Features");
-						js.WriteStartArray();
-						foreach (string feature in features) {
-							js.WriteValue(feature);
-						}
-						js.WriteEnd();
-
-						js.WritePropertyName("FeaturesData");
-						js.WriteStartArray();
-						foreach (string data in featuresData) {
-							js.WriteValue(data);
-						}
-						js.WriteEnd();
-
-						js.WritePropertyName("Comments");
-						js.WriteStartArray();
-						foreach (string comment in comments) {
-							js.WriteValue(comment);
-						}
-						js.WriteEnd();
-
-						js.WritePropertyName("CommentsData");
-						js.WriteStartArray();
-						foreach (string data in commentsData) {
-							js.WriteValue(data);
-						}
-						js.WriteEnd();
-
-						js.WritePropertyName("Duration");
-						js.WriteValue(duration);
-
-						js.WritePropertyName("Percent");
-						js.WriteValue(percentComplete);
-
-						js.WriteEndObject();
-					}
-					using (StreamWriter writer = File.CreateText(editingFile)) {
-						writer.WriteLine(sb.ToString());
-					}
-					break;
-				}
-				catch (IOException) {
-					Thread.Sleep(1000);
-				}
-			}
-
-
+			Save();
 
 			MainWindow main = new MainWindow();
-
 			main.filesRead.Remove(editingFile);
 
 			isStopwatchRunning = false;
@@ -622,9 +560,41 @@ namespace Project_Tracker {
 				}
 			}
 		}
-
+		// TODO: We need to change the SelectionChange function to change the selection before resetting. Do this by creating params like int newIndex, int oldIndex.
 		private void RemoveValue(object sender, MouseButtonEventArgs e) {
+			/*
+			 * Remember: 0 = normal, 1 = complete, 2 = deleted
+			 */
 
+			if (switchLabels.SelectedIndex == 0) { // Errors
+				if (errorsData[rowSelectionID] != "2") {
+					errorsData[rowSelectionID] = "2";
+				}
+				else {
+					errorsData[rowSelectionID] = "0";
+				}
+				ResetSelection(errorTable, errors, errorsData, 0);
+			}
+			else if (switchLabels.SelectedIndex == 1) { // Features
+				if (featuresData[rowSelectionID] != "2") {
+					featuresData[rowSelectionID] = "2";
+				}
+				else {
+					featuresData[rowSelectionID] = "0";
+				}
+				ResetSelection(featureTable, features, featuresData, 1);
+			}
+			else if (switchLabels.SelectedIndex == 2) { // Comments
+				if (commentsData[rowSelectionID] != "2") {
+					commentsData[rowSelectionID] = "2";
+				}
+				else {
+					commentsData[rowSelectionID] = "0";
+				}
+				ResetSelection(commentTable, comments, commentsData, 2);
+			}
+			
+			Save();
 		}
 		private void AddValue(object sender, MouseButtonEventArgs e) {
 
