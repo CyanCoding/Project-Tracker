@@ -25,8 +25,11 @@ namespace Project_Tracker {
 
 		string projectTitle;
 		string[] errors;
+		string[] errorsData;
 		string[] features;
+		string[] featuresData;
 		string[] comments;
+		string[] commentsData;
 		string duration;
 		string percentComplete;
 
@@ -55,33 +58,30 @@ namespace Project_Tracker {
 
 			startup();
 		}
-
-		private void AddRow(Table table, int tableCount, string value) {
+		// TODO: You can change values from the function. No need to repeat the code. Optimize NOW
+		private void AddRow(Table table, int rowsAddedValue, string value, int index, string[] dataValues) {
 			table.RowGroups[0].Rows.Add(new TableRow());
 
 			TableRow newRow = null;
 
-			if (tableCount == 0) { // Error table
+			if (rowsAddedValue == 0) {
 				newRow = table.RowGroups[0].Rows[errorRowsAdded];
-
 				errorRowsAdded++;
 
 				if (errorRowsAdded % 2 == 0) { // Every other, change the color for readability purposes
 					newRow.Background = new SolidColorBrush(sortColor);
 				}
 			}
-			else if (tableCount == 1) { // Error table
+			else if (rowsAddedValue == 1) {
 				newRow = table.RowGroups[0].Rows[featureRowsAdded];
-
 				featureRowsAdded++;
 
 				if (featureRowsAdded % 2 == 0) { // Every other, change the color for readability purposes
 					newRow.Background = new SolidColorBrush(sortColor);
 				}
 			}
-			else { // Comments table
+			else if (rowsAddedValue == 2) {
 				newRow = table.RowGroups[0].Rows[commentsRowsAdded];
-
 				commentsRowsAdded++;
 
 				if (commentsRowsAdded % 2 == 0) { // Every other, change the color for readability purposes
@@ -89,12 +89,19 @@ namespace Project_Tracker {
 				}
 			}
 
+			if (dataValues[index] == "1") {
+				newRow.Background = new SolidColorBrush(greenStopwatch);
+			}
+			else if (dataValues[index] == "2") {
+				newRow.Background = new SolidColorBrush(redStopwatch);
+			}
+
 			newRow.FontSize = 16;
 			newRow.FontFamily = textFont;
 			newRow.Cells.Add(new TableCell(new Paragraph(new Run(value))));
 		}
 
-		private void SelectionChange(bool isUp, Table table, int rowsAdded) {
+		private void SelectionChange(bool isUp, Table table, int rowsAdded, string[] dataValues) {
 			this.Dispatcher.Invoke(() => {
 				if (rowSelectionID < 0) {
 					rowSelectionID = 0;
@@ -103,13 +110,23 @@ namespace Project_Tracker {
 					TableRow selectedRow = table.RowGroups[0].Rows[rowSelectionID];
 					selectedRow.Background = new SolidColorBrush(selectionColor);
 
-					if (rowSelectionID % 2 == 0) {
-						TableRow previouslySelectedRow = table.RowGroups[0].Rows[rowSelectionID + 1];
-						previouslySelectedRow.Background = new SolidColorBrush(sortColor);
+					if (dataValues[rowSelectionID + 1] == "0") {
+						if (rowSelectionID % 2 == 0) {
+							TableRow previouslySelectedRow = table.RowGroups[0].Rows[rowSelectionID + 1];
+							previouslySelectedRow.Background = new SolidColorBrush(sortColor);
+						}
+						else {
+							TableRow previouslySelectedRow = table.RowGroups[0].Rows[rowSelectionID + 1];
+							previouslySelectedRow.Background = Brushes.White;
+						}
 					}
-					else {
+					else if (dataValues[rowSelectionID + 1] == "1") {
 						TableRow previouslySelectedRow = table.RowGroups[0].Rows[rowSelectionID + 1];
-						previouslySelectedRow.Background = Brushes.White;
+						previouslySelectedRow.Background = new SolidColorBrush(greenStopwatch);
+					}
+					else if (dataValues[rowSelectionID + 1] == "2") {
+						TableRow previouslySelectedRow = table.RowGroups[0].Rows[rowSelectionID + 1];
+						previouslySelectedRow.Background = new SolidColorBrush(redStopwatch);
 					}
 
 				}
@@ -119,13 +136,24 @@ namespace Project_Tracker {
 						selectedRow.Background = new SolidColorBrush(selectionColor);
 
 						if (rowSelectionID != 0) {
-							if (rowSelectionID % 2 == 0) {
-								TableRow previouslySelectedRow = table.RowGroups[0].Rows[rowSelectionID - 1];
-								previouslySelectedRow.Background = new SolidColorBrush(sortColor);
+
+							if (dataValues[rowSelectionID - 1] == "0") {
+								if (rowSelectionID % 2 == 0) {
+									TableRow previouslySelectedRow = table.RowGroups[0].Rows[rowSelectionID - 1];
+									previouslySelectedRow.Background = new SolidColorBrush(sortColor);
+								}
+								else {
+									TableRow previouslySelectedRow = table.RowGroups[0].Rows[rowSelectionID - 1];
+									previouslySelectedRow.Background = Brushes.White;
+								}
 							}
-							else {
+							else if (dataValues[rowSelectionID - 1] == "1") {
 								TableRow previouslySelectedRow = table.RowGroups[0].Rows[rowSelectionID - 1];
-								previouslySelectedRow.Background = Brushes.White;
+								previouslySelectedRow.Background = new SolidColorBrush(greenStopwatch);
+							}
+							else if (dataValues[rowSelectionID - 1] == "2") {
+								TableRow previouslySelectedRow = table.RowGroups[0].Rows[rowSelectionID - 1];
+								previouslySelectedRow.Background = new SolidColorBrush(redStopwatch);
 							}
 						}
 					}
@@ -136,7 +164,26 @@ namespace Project_Tracker {
 			});
 		}
 
-		private void ResetSelection(Table table) {
+		private void ResetSelection(Table table, string[] values, string[] dataValues, int rowsAddedValue) {
+			for (int i = 0; i < values.Length; i++) {
+				table.RowGroups[0].Rows[i].Cells.RemoveRange(0, 1);
+			}
+			if (rowsAddedValue == 0) {
+				errorRowsAdded = 0;
+			}
+			else if (rowsAddedValue == 1) {
+				featureRowsAdded = 0;
+			}
+			else if (rowsAddedValue == 2) {
+				commentsRowsAdded = 0;
+			}
+
+			int index = 0;
+			foreach (string value in values) {
+				AddRow(table, rowsAddedValue, value, index, dataValues);
+				index++;
+			}
+
 			TableRow selectedRow = table.RowGroups[0].Rows[0];
 			selectedRow.Background = new SolidColorBrush(selectionColor);
 			rowSelectionID = 0;
@@ -213,33 +260,57 @@ namespace Project_Tracker {
 
 									js.WritePropertyName("Title");
 									js.WriteValue(projectTitle);
+
 									js.WritePropertyName("Errors");
 									js.WriteStartArray();
 									foreach (string error in errors) {
 										js.WriteValue(error);
 									}
 									js.WriteEnd();
+
+									js.WritePropertyName("ErrorsData");
+									js.WriteStartArray();
+									foreach (string data in errorsData) {
+										js.WriteValue(data);
+									}
+									js.WriteEnd();
+
 									js.WritePropertyName("Features");
 									js.WriteStartArray();
 									foreach (string feature in features) {
 										js.WriteValue(feature);
 									}
 									js.WriteEnd();
+
+									js.WritePropertyName("FeaturesData");
+									js.WriteStartArray();
+									foreach (string data in featuresData) {
+										js.WriteValue(data);
+									}
+									js.WriteEnd();
+
 									js.WritePropertyName("Comments");
 									js.WriteStartArray();
 									foreach (string comment in comments) {
 										js.WriteValue(comment);
 									}
 									js.WriteEnd();
+
+									js.WritePropertyName("CommentsData");
+									js.WriteStartArray();
+									foreach (string data in commentsData) {
+										js.WriteValue(data);
+									}
+									js.WriteEnd();
+
 									js.WritePropertyName("Duration");
 									js.WriteValue(duration);
+
 									js.WritePropertyName("Percent");
 									js.WriteValue(percentComplete);
 
 									js.WriteEndObject();
 								}
-
-
 								using (StreamWriter writer = File.CreateText(editingFile)) {
 									writer.WriteLine(sb.ToString());
 								}
@@ -267,33 +338,44 @@ namespace Project_Tracker {
 				MainTableManifest.Rootobject values = JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
 
 				// Set values for saving feature to rewrite
-				projectTitle = values.title;
-				errors = values.errors;
-				features = values.features;
-				comments = values.comments;
-				duration = values.duration;
-				percentComplete = values.percent;
+				projectTitle = values.Title;
+				errors = values.Errors;
+				errorsData = values.ErrorsData;
+				features = values.Features;
+				featuresData = values.FeaturesData;
+				comments = values.Comments;
+				commentsData = values.CommentsData;
+				duration = values.Duration;
+				percentComplete = values.Percent;
 
+				int index = 0;
 				// Add values to tables
-				foreach (string error in values.errors) {
-					AddRow(errorTable, 0, error);
+				foreach (string error in values.Errors) {
+					AddRow(errorTable, 0, error, index, errorsData);
+					index++;
 				}
-				foreach (string feature in values.features) {
-					AddRow(featureTable, 1, feature);
+
+				index = 0;
+				foreach (string feature in values.Features) {
+					AddRow(featureTable, 1, feature, index, featuresData);
+					index++;
 				}
-				foreach (string comment in values.comments) {
-					AddRow(commentTable, 2, comment);
+
+				index = 0;
+				foreach (string comment in values.Comments) {
+					AddRow(commentTable, 2, comment, index, commentsData);
+					index++;
 				}
-				ResetSelection(errorTable);
-				ResetSelection(featureTable);
-				ResetSelection(commentTable);
+				ResetSelection(errorTable, errors, errorsData, 0);
+				ResetSelection(featureTable, features, featuresData, 1);
+				ResetSelection(commentTable, comments, commentsData, 2);
 
 				errorScrollView.Focus();
 
 				isTablesGenerated = true;
 
-				this.Title = values.title + " - " + values.percent + "%";
-				durationLabel.Text = values.duration;
+				this.Title = values.Title + " - " + values.Percent + "%";
+				durationLabel.Text = values.Duration;
 
 				timerThread = new Thread(stopwatchTimer);
 				timerThread.Start();
@@ -395,26 +477,52 @@ namespace Project_Tracker {
 
 						js.WritePropertyName("Title");
 						js.WriteValue(projectTitle);
+
 						js.WritePropertyName("Errors");
 						js.WriteStartArray();
 						foreach (string error in errors) {
 							js.WriteValue(error);
 						}
 						js.WriteEnd();
+
+						js.WritePropertyName("ErrorsData");
+						js.WriteStartArray();
+						foreach (string data in errorsData) {
+							js.WriteValue(data);
+						}
+						js.WriteEnd();
+
 						js.WritePropertyName("Features");
 						js.WriteStartArray();
 						foreach (string feature in features) {
 							js.WriteValue(feature);
 						}
 						js.WriteEnd();
+
+						js.WritePropertyName("FeaturesData");
+						js.WriteStartArray();
+						foreach (string data in featuresData) {
+							js.WriteValue(data);
+						}
+						js.WriteEnd();
+
 						js.WritePropertyName("Comments");
 						js.WriteStartArray();
 						foreach (string comment in comments) {
 							js.WriteValue(comment);
 						}
 						js.WriteEnd();
+
+						js.WritePropertyName("CommentsData");
+						js.WriteStartArray();
+						foreach (string data in commentsData) {
+							js.WriteValue(data);
+						}
+						js.WriteEnd();
+
 						js.WritePropertyName("Duration");
 						js.WriteValue(duration);
+
 						js.WritePropertyName("Percent");
 						js.WriteValue(percentComplete);
 
@@ -451,13 +559,13 @@ namespace Project_Tracker {
 					rowSelectionID++;
 
 					if (switchLabels.SelectedIndex == 0) { // Error table is selected
-						SelectionChange(false, errorTable, errorRowsAdded);
+						SelectionChange(false, errorTable, errorRowsAdded, errorsData);
 					}
 					else if (switchLabels.SelectedIndex == 1) { // Feature table is selected
-						SelectionChange(false, featureTable, featureRowsAdded);
+						SelectionChange(false, featureTable, featureRowsAdded, featuresData);
 					}
 					else { // Comment table is selected
-						SelectionChange(false, commentTable, commentsRowsAdded);
+						SelectionChange(false, commentTable, commentsRowsAdded, commentsData);
 					}
 
 				}
@@ -467,13 +575,13 @@ namespace Project_Tracker {
 					}
 
 					if (switchLabels.SelectedIndex == 0) { // Error table is selected
-						SelectionChange(true, errorTable, errorRowsAdded);
+						SelectionChange(true, errorTable, errorRowsAdded, errorsData);
 					}
 					else if (switchLabels.SelectedIndex == 1) { // Feature table is selected
-						SelectionChange(true, featureTable, featureRowsAdded);
+						SelectionChange(true, featureTable, featureRowsAdded, featuresData);
 					}
 					else { // Comment table is selected
-						SelectionChange(true, commentTable, commentsRowsAdded);
+						SelectionChange(true, commentTable, commentsRowsAdded, commentsData);
 					}
 				}
 			}
@@ -486,9 +594,9 @@ namespace Project_Tracker {
 			// then it'll obviously return an error. So we wait until AFTER
 			// the tables have been initialized, aka after startup.
 			if (isTablesGenerated) {
-				ResetSelection(errorTable);
-				ResetSelection(featureTable);
-				ResetSelection(commentTable);
+				ResetSelection(errorTable, errors, errorsData, 0);
+				ResetSelection(featureTable, features, featuresData, 1);
+				ResetSelection(commentTable, comments, commentsData, 2);
 
 
 				if (switchLabels.SelectedIndex == 0) { // Errors

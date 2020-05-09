@@ -233,18 +233,42 @@ namespace Project_Tracker {
 					js.WriteValue(error);
 				}
 				js.WriteEnd();
+
+				js.WritePropertyName("ErrorsData");
+				js.WriteStartArray();
+				foreach (string error in errors) {
+					js.WriteValue("0");
+				}
+				js.WriteEnd();
+
 				js.WritePropertyName("Features");
 				js.WriteStartArray();
 				foreach (string feature in features) {
 					js.WriteValue(feature);
 				}
 				js.WriteEnd();
+
+				js.WritePropertyName("FeaturesData");
+				js.WriteStartArray();
+				foreach (string feature in features) {
+					js.WriteValue("0");
+				}
+				js.WriteEnd();
+
 				js.WritePropertyName("Comments");
 				js.WriteStartArray();
 				foreach (string comment in comments) {
 					js.WriteValue(comment);
 				}
 				js.WriteEnd();
+
+				js.WritePropertyName("CommentsData");
+				js.WriteStartArray();
+				foreach (string comment in comments) {
+					js.WriteValue("0");
+				}
+				js.WriteEnd();
+
 				js.WritePropertyName("Duration");
 				js.WriteValue(duration);
 				js.WritePropertyName("Percent");

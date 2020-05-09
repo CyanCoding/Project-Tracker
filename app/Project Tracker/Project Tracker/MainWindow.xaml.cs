@@ -138,7 +138,7 @@ namespace Project_Tracker {
 
 									MainTableManifest.Rootobject mainTable = JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
 
-									AddRow(mainTable.title, mainTable.errors.Length, mainTable.features.Length, mainTable.comments.Length, mainTable.duration, mainTable.percent);
+									AddRow(mainTable.Title, mainTable.Errors.Length, mainTable.Features.Length, mainTable.Comments.Length, mainTable.Duration, mainTable.Percent);
 									filesRead.Add(path);
 									// rowsAdded++;
 								}
@@ -165,7 +165,7 @@ namespace Project_Tracker {
 
 								Dispatcher.Invoke(new Action(() => {
 									listTable.RowGroups[0].Rows[rowsAdded - 1].Cells.RemoveRange(4, 1);
-									listTable.RowGroups[0].Rows[rowsAdded - 1].Cells.Insert(4, new TableCell(new Paragraph(new Run(" " + mainTable.duration))));
+									listTable.RowGroups[0].Rows[rowsAdded - 1].Cells.Insert(4, new TableCell(new Paragraph(new Run(" " + mainTable.Duration))));
 								}));
 							}
 
@@ -206,7 +206,7 @@ namespace Project_Tracker {
 
 								MainTableManifest.Rootobject mainTable = JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
 
-								AddRow(mainTable.title, mainTable.errors.Length, mainTable.features.Length, mainTable.comments.Length, mainTable.duration, mainTable.percent);
+								AddRow(mainTable.Title, mainTable.Errors.Length, mainTable.Features.Length, mainTable.Comments.Length, mainTable.Duration, mainTable.Percent);
 								filesRead.Add(path);
 								// rowsAdded++;
 							}
