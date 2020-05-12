@@ -43,6 +43,7 @@ namespace Project_Tracker {
 		long currentSecond = 0;
 		bool isTablesGenerated = false;
 		int rowSelectionID = 0; // We use this to identify which row is currently selected
+		int oldRowSelectionID = 0; // We use this to identify which row was last selected
 
 		Stopwatch stopwatch;
 
@@ -101,71 +102,53 @@ namespace Project_Tracker {
 			newRow.Cells.Add(new TableCell(new Paragraph(new Run(value))));
 		}
 
-		private void SelectionChange(bool isUp, Table table, int rowsAdded, string[] dataValues) {
+		private void SelectionChange(int oldPos, int newPos, int rowsAdded, Table table, string[] dataValues) {
 			this.Dispatcher.Invoke(() => {
-				if (rowSelectionID < 0) {
-					rowSelectionID = 0;
+				if (newPos < 0) {
+					newPos = 0;
 				}
-				if (isUp == true && rowsAdded > 1) { // REMEMBER: Going "up" actually brings the selection ID lower.
-					TableRow selectedRow = table.RowGroups[0].Rows[rowSelectionID];
+
+				if (newPos > oldPos && newPos > rowsAdded - 1) {
+					rowSelectionID--;
+					return;
+				}
+
+				if (rowsAdded > 1) {
+					// Set the color of the newly selected item
+					TableRow selectedRow = table.RowGroups[0].Rows[newPos];
 					selectedRow.Background = new SolidColorBrush(selectionColor);
 
-					if (dataValues[rowSelectionID + 1] == "0") {
-						if (rowSelectionID % 2 == 0) {
-							TableRow previouslySelectedRow = table.RowGroups[0].Rows[rowSelectionID + 1];
-							previouslySelectedRow.Background = new SolidColorBrush(sortColor);
-						}
-						else {
-							TableRow previouslySelectedRow = table.RowGroups[0].Rows[rowSelectionID + 1];
+
+					if (oldPos != newPos) { // We don't want to draw over the already selected one
+						TableRow previouslySelectedRow = table.RowGroups[0].Rows[oldPos];
+						// Set the color of the old selected item
+						if (dataValues[oldPos] == "0") { // Normal
 							previouslySelectedRow.Background = Brushes.White;
 						}
-					}
-					else if (dataValues[rowSelectionID + 1] == "1") {
-						TableRow previouslySelectedRow = table.RowGroups[0].Rows[rowSelectionID + 1];
-						previouslySelectedRow.Background = new SolidColorBrush(greenStopwatch);
-					}
-					else if (dataValues[rowSelectionID + 1] == "2") {
-						TableRow previouslySelectedRow = table.RowGroups[0].Rows[rowSelectionID + 1];
-						previouslySelectedRow.Background = new SolidColorBrush(redStopwatch);
-					}
-
-				}
-				else if (isUp == false) {
-					if (rowSelectionID < rowsAdded) {
-						TableRow selectedRow = table.RowGroups[0].Rows[rowSelectionID];
-						selectedRow.Background = new SolidColorBrush(selectionColor);
-
-						if (rowSelectionID != 0) {
-
-							if (dataValues[rowSelectionID - 1] == "0") {
-								if (rowSelectionID % 2 == 0) {
-									TableRow previouslySelectedRow = table.RowGroups[0].Rows[rowSelectionID - 1];
-									previouslySelectedRow.Background = new SolidColorBrush(sortColor);
-								}
-								else {
-									TableRow previouslySelectedRow = table.RowGroups[0].Rows[rowSelectionID - 1];
-									previouslySelectedRow.Background = Brushes.White;
-								}
-							}
-							else if (dataValues[rowSelectionID - 1] == "1") {
-								TableRow previouslySelectedRow = table.RowGroups[0].Rows[rowSelectionID - 1];
-								previouslySelectedRow.Background = new SolidColorBrush(greenStopwatch);
-							}
-							else if (dataValues[rowSelectionID - 1] == "2") {
-								TableRow previouslySelectedRow = table.RowGroups[0].Rows[rowSelectionID - 1];
-								previouslySelectedRow.Background = new SolidColorBrush(redStopwatch);
-							}
+						else if (dataValues[oldPos] == "1") { // Complete
+							previouslySelectedRow.Background = new SolidColorBrush(greenStopwatch);
 						}
-					}
-					else {
-						rowSelectionID--;
+						else if (dataValues[oldPos] == "2") { // Deleted
+							previouslySelectedRow.Background = new SolidColorBrush(redStopwatch);
+						}
 					}
 				}
 			});
 		}
 
-		private void ResetSelection(Table table, string[] values, string[] dataValues, int rowsAddedValue) {
+		/// <summary>
+		/// Resets the selection for the table. This might occur if
+		/// you changed tables or changed the value of a table element.
+		/// We need to reset the table to refresh the view.
+		/// </summary>
+		/// <param name="table">The table to edit.</param>
+		/// <param name="values">The value of each item for when we re-add elements.</param>
+		/// <param name="dataValues">The data value of each item (e.g. 0 for normal, 1 for completed, 2 for deleted).</param>
+		/// <param name="rowsAddedValue">Whether we're changing the error (0), feature (1), or comments (2).</param>
+		/// <param name="totalRows">The total amount of rows for that table.</param>
+		private void ResetSelection(Table table, string[] values, string[] dataValues, int rowsAddedValue, int totalRows) {
 			rowSelectionID = 0;
+			oldRowSelectionID = 0;
 
 			for (int i = 0; i < values.Length; i++) {
 				table.RowGroups[0].Rows[i].Cells.RemoveRange(0, 1);
@@ -188,6 +171,23 @@ namespace Project_Tracker {
 
 			TableRow selectedRow = table.RowGroups[0].Rows[0];
 			selectedRow.Background = new SolidColorBrush(selectionColor);
+
+			// For some reason the values get a bit messed up so this attempts to redraw over every
+			// element and try and fix it.
+			for (int i = 0; i < totalRows; i++) {
+				TableRow row = table.RowGroups[0].Rows[i];
+
+				if (dataValues[i] == "0") { // Normal
+					row.Background = Brushes.White;
+				}
+				else if (dataValues[i] == "1") { // Complete
+					row.Background = new SolidColorBrush(greenStopwatch);
+				}
+				else if (dataValues[i] == "2") { // Deleted
+					row.Background = new SolidColorBrush(redStopwatch);
+				}
+			}
+			SelectionChange(0, 0, totalRows, table, dataValues);
 		}
 
 		private void StopwatchTimer() {
@@ -381,9 +381,9 @@ namespace Project_Tracker {
 					AddRow(commentTable, 2, comment, index, commentsData);
 					index++;
 				}
-				ResetSelection(errorTable, errors, errorsData, 0);
-				ResetSelection(featureTable, features, featuresData, 1);
-				ResetSelection(commentTable, comments, commentsData, 2);
+				ResetSelection(errorTable, errors, errorsData, 0, errorRowsAdded);
+				ResetSelection(featureTable, features, featuresData, 1, featureRowsAdded);
+				ResetSelection(commentTable, comments, commentsData, 2, commentsRowsAdded);
 
 				errorScrollView.Focus();
 
@@ -493,34 +493,23 @@ namespace Project_Tracker {
 			// Remember that combo box values can be changed by the arrow keys.
 			// We don't want to change the table selection when we're doing this.
 			if (!errorSelection.IsFocused && !featureSelection.IsFocused && !commentSelection.IsFocused) {
-				if (e.Key == Key.Down) {
-					rowSelectionID++;
-
-					if (switchLabels.SelectedIndex == 0) { // Error table is selected
-						SelectionChange(false, errorTable, errorRowsAdded, errorsData);
+				if (e.Key == Key.Down || e.Key == Key.Up) {
+					if (e.Key == Key.Down) {
+						rowSelectionID++;
 					}
-					else if (switchLabels.SelectedIndex == 1) { // Feature table is selected
-						SelectionChange(false, featureTable, featureRowsAdded, featuresData);
-					}
-					else { // Comment table is selected
-						SelectionChange(false, commentTable, commentsRowsAdded, commentsData);
-					}
-
-				}
-				else if (e.Key == Key.Up) {
-					if (rowSelectionID > 0) {
+					else if (e.Key == Key.Up && rowSelectionID > 0) {
 						rowSelectionID--;
 					}
-
 					if (switchLabels.SelectedIndex == 0) { // Error table is selected
-						SelectionChange(true, errorTable, errorRowsAdded, errorsData);
+						SelectionChange(oldRowSelectionID, rowSelectionID, errorRowsAdded, errorTable, errorsData);
 					}
 					else if (switchLabels.SelectedIndex == 1) { // Feature table is selected
-						SelectionChange(true, featureTable, featureRowsAdded, featuresData);
+						SelectionChange(oldRowSelectionID, rowSelectionID, featureRowsAdded, featureTable, featuresData);
 					}
 					else { // Comment table is selected
-						SelectionChange(true, commentTable, commentsRowsAdded, commentsData);
+						SelectionChange(oldRowSelectionID, rowSelectionID, commentsRowsAdded, commentTable, commentsData);
 					}
+					oldRowSelectionID = rowSelectionID;
 				}
 			}
 		}
@@ -532,9 +521,9 @@ namespace Project_Tracker {
 			// then it'll obviously return an error. So we wait until AFTER
 			// the tables have been initialized, aka after startup.
 			if (isTablesGenerated) {
-				ResetSelection(errorTable, errors, errorsData, 0);
-				ResetSelection(featureTable, features, featuresData, 1);
-				ResetSelection(commentTable, comments, commentsData, 2);
+				ResetSelection(errorTable, errors, errorsData, 0, errorRowsAdded);
+				ResetSelection(featureTable, features, featuresData, 1, featureRowsAdded);
+				ResetSelection(commentTable, comments, commentsData, 2, commentsRowsAdded);
 
 
 				if (switchLabels.SelectedIndex == 0) { // Errors
@@ -567,31 +556,36 @@ namespace Project_Tracker {
 			 */
 
 			if (switchLabels.SelectedIndex == 0) { // Errors
+				SelectionChange(oldRowSelectionID, 0, errorRowsAdded, errorTable, errorsData);
+
 				if (errorsData[rowSelectionID] != "2") {
 					errorsData[rowSelectionID] = "2";
 				}
 				else {
 					errorsData[rowSelectionID] = "0";
 				}
-				ResetSelection(errorTable, errors, errorsData, 0);
+
+				ResetSelection(errorTable, errors, errorsData, 0, errorRowsAdded);
 			}
 			else if (switchLabels.SelectedIndex == 1) { // Features
+				SelectionChange(oldRowSelectionID, 0, featureRowsAdded, featureTable, featuresData);
 				if (featuresData[rowSelectionID] != "2") {
 					featuresData[rowSelectionID] = "2";
 				}
 				else {
 					featuresData[rowSelectionID] = "0";
 				}
-				ResetSelection(featureTable, features, featuresData, 1);
+				ResetSelection(featureTable, features, featuresData, 1, featureRowsAdded);
 			}
 			else if (switchLabels.SelectedIndex == 2) { // Comments
+				SelectionChange(oldRowSelectionID, 0, commentsRowsAdded, commentTable, commentsData);
 				if (commentsData[rowSelectionID] != "2") {
 					commentsData[rowSelectionID] = "2";
 				}
 				else {
 					commentsData[rowSelectionID] = "0";
 				}
-				ResetSelection(commentTable, comments, commentsData, 2);
+				ResetSelection(commentTable, comments, commentsData, 2, commentsRowsAdded);
 			}
 			
 			Save();
