@@ -118,6 +118,13 @@ namespace Project_Tracker {
 					TableRow selectedRow = table.RowGroups[0].Rows[newPos];
 					selectedRow.Background = new SolidColorBrush(selectionColor);
 
+					if (dataValues[newPos] == "1") { // Checked checkmark
+						checkmarkButton.Text = "\xE73A";
+					}
+					else { // Unchecked checkmark
+						checkmarkButton.Text = "\xE739";
+					}
+
 
 					if (oldPos != newPos) { // We don't want to draw over the already selected one
 						TableRow previouslySelectedRow = table.RowGroups[0].Rows[oldPos];
