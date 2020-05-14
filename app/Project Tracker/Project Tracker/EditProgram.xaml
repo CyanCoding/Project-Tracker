@@ -5,12 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Project_Tracker"
         mc:Ignorable="d"
-        Title="Edit Program - 0%" Height="400" Width="800" ResizeMode="NoResize" Closing="Window_Closing">
+        Title="Edit Program - 0%" Height="700" Width="700" ResizeMode="NoResize" Closing="Window_Closing" PreviewKeyDown="KeyPress" Icon="logo.png">
 	<Grid>
-		<TextBlock x:Name="durationLabel" HorizontalAlignment="Left" Margin="20,20,0,0" TextWrapping="Wrap" Text="00:00:00" VerticalAlignment="Top" FontSize="36"/>
-		
-		<!-- These elements are moved programatically at runtime -->
-		<FlowDocumentScrollViewer x:Name="errorScrollView" IsToolBarVisible="False" Margin="10,140,490,60" VerticalScrollBarVisibility="Auto" BorderBrush="Black" BorderThickness="2">
+		<TextBlock x:Name="durationLabel" HorizontalAlignment="Left" Margin="20,20,0,0" TextWrapping="Wrap" Text="00:00:00" VerticalAlignment="Top" FontSize="36" />
+
+		<FlowDocumentScrollViewer x:Name="errorScrollView" IsToolBarVisible="False" Margin="10,140,10,60" VerticalScrollBarVisibility="Auto" BorderBrush="Black" BorderThickness="2" Cursor="Arrow">
 			<FlowDocument>
 				<Table x:Name="errorTable">
 					<TableRowGroup>
@@ -18,7 +17,7 @@
 				</Table>
 			</FlowDocument>
 		</FlowDocumentScrollViewer>
-		<FlowDocumentScrollViewer x:Name="featureScrollView" IsToolBarVisible="False" Margin="242,140,292,60" VerticalScrollBarVisibility="Auto" BorderBrush="Black" BorderThickness="2">
+		<FlowDocumentScrollViewer x:Name="featureScrollView" IsToolBarVisible="False" Margin="10,140,10,60" VerticalScrollBarVisibility="Auto" BorderBrush="Black" BorderThickness="2" Visibility="Hidden" Cursor="Arrow">
 			<FlowDocument>
 				<Table x:Name="featureTable">
 					<TableRowGroup>
@@ -26,7 +25,7 @@
 				</Table>
 			</FlowDocument>
 		</FlowDocumentScrollViewer>
-		<FlowDocumentScrollViewer x:Name="commentScrollView" IsToolBarVisible="False" Margin="507,140,10,60" HorizontalAlignment="Right" VerticalScrollBarVisibility="Auto" BorderBrush="Black" BorderThickness="2">
+		<FlowDocumentScrollViewer x:Name="commentScrollView" IsToolBarVisible="False" Margin="10,140,10,60" HorizontalAlignment="Right" VerticalScrollBarVisibility="Auto" BorderBrush="Black" BorderThickness="2" Visibility="Hidden" Cursor="Arrow">
 			<FlowDocument>
 				<Table x:Name="commentTable">
 					<TableRowGroup>
@@ -34,15 +33,28 @@
 				</Table>
 			</FlowDocument>
 		</FlowDocumentScrollViewer>
-		<TextBlock x:Name="errorLabel" HorizontalAlignment="Left" Margin="10,100,0,0" TextWrapping="Wrap" Text="Errors" VerticalAlignment="Top" FontSize="24"/>
-		<TextBlock x:Name="featureLabel" HorizontalAlignment="Left" Margin="50,100,0,0" TextWrapping="Wrap" Text="Features" VerticalAlignment="Top" FontSize="24"/>
-		<TextBlock x:Name="commentLabel" HorizontalAlignment="Left" Margin="100,100,0,0" TextWrapping="Wrap" Text="Comments" VerticalAlignment="Top" FontSize="24"/>
+
+		<ComboBox x:Name="switchLabels" Width="200" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,100,0,0" FontSize="16" SelectionChanged="ComboBox_SelectionChanged">
+			<ComboBoxItem x:Name="errorSelection" Content="Errors" IsSelected="True" FontSize="16" />
+			<ComboBoxItem x:Name="featureSelection" Content="Features" FontSize="16" />
+			<ComboBoxItem x:Name="commentSelection" Content="Comments" FontSize="16" />
+		</ComboBox>
 
 		<Border BorderBrush="LightGray" BorderThickness="0">
-			<TextBlock x:Name="editButton" HorizontalAlignment="Left" Margin="10,0,0,10" TextWrapping="Wrap" Text="&#xE70F;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="Edit"/>
+			<TextBlock x:Name="settingsButton" HorizontalAlignment="Left" Margin="10,0,0,10" TextWrapping="Wrap" Text="&#xE713;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="Edit" />
 		</Border>
 		<Border BorderBrush="LightGray" BorderThickness="0">
-			<TextBlock x:Name="stopwatchButton" HorizontalAlignment="Left"  Margin="50,0,0,10" TextWrapping="Wrap" Text="&#xE916;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="Stopwatch" Foreground="#FF9C0909"/>
+			<TextBlock x:Name="stopwatchButton" HorizontalAlignment="Left" Margin="50,0,0,10" TextWrapping="Wrap" Text="&#xE916;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="Stopwatch" Foreground="#FF9C0909" />
+		</Border>
+
+		<Border BorderBrush="LightGray" BorderThickness="0">
+			<TextBlock x:Name="removeButton" HorizontalAlignment="Right" Margin="0,0,10,10" TextWrapping="Wrap" Text="&#xECC9;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="RemoveValue" ToolTip="Delete this item" />
+		</Border>
+		<Border BorderBrush="LightGray" BorderThickness="0">
+			<TextBlock x:Name="addNewButton" HorizontalAlignment="Right" Margin="0,0,50,10" TextWrapping="Wrap" Text="&#xECC8;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="AddValue" ToolTip="Add a new item" />
+		</Border>
+		<Border BorderBrush="LightGray" BorderThickness="0">
+			<TextBlock x:Name="checkmarkButton" HorizontalAlignment="Right" Margin="0,0,90,10" TextWrapping="Wrap" Text="&#xE739;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="CheckOff" ToolTip="Mark as completed" />
 		</Border>
 	</Grid>
 </Window>

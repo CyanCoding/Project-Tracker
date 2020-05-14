@@ -9,46 +9,43 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Project_Tracker {
+
 	/// <summary>
 	/// Interaction logic for AddNewProgram.xaml
 	/// </summary>
 	public partial class AddNewProgram : Window {
-
-		string projectTitle;
-		List<string> errors = new List<string>();
-		List<string> features = new List<string>();
-		List<string> comments = new List<string>();
-		string duration;
-		string percentComplete;
+		private string projectTitle;
+		private List<string> errors = new List<string>();
+		private List<string> features = new List<string>();
+		private List<string> comments = new List<string>();
+		private string duration;
 
 		// WARNING: READONLY VALUES. IF YOU CHANGE THESE, CHANGE IN OTHER FILES AS WELL
-		readonly string DATA_DIRECTORY = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/data";
-		// readonly Color selectionColor = Color.FromRgb(84, 207, 255);
-		readonly Color sortColor = Color.FromRgb(228, 233, 235);
-		readonly FontFamily textFont = new FontFamily("Microsoft Sans Serif");
+		private readonly string DATA_DIRECTORY = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/data";
 
-		int errorRowsAdded = 0; // We use a global variable so the AddRow function knows what id of a row to edit
-		int featureRowsAdded = 0;
-		int commentsRowsAdded = 0; 
+		// readonly Color selectionColor = Color.FromRgb(84, 207, 255);
+		private readonly Color sortColor = Color.FromRgb(228, 233, 235);
+
+		private readonly FontFamily textFont = new FontFamily("Microsoft Sans Serif");
+
+		private int errorRowsAdded = 0; // We use a global variable so the AddRow function knows what id of a row to edit
+		private int featureRowsAdded = 0;
+		private int commentsRowsAdded = 0;
 		// int rowSelectionID = 0; // We use this to identify which row is currently selected
 
-
-
-		bool[] durationSuccess = { false, false, false };
+		private bool[] durationSuccess = { false, false, false };
 
 		/*
 		 * Current progression through the form
-		 * 
+		 *
 		 * 0: Project title
 		 * 1: Duration
 		 * 2: Errors
 		 * 3: Features
 		 * 4: Comments
-		 * 5: Percent complete
-		 * 6: Review
+		 * 5: Review
 		 */
-		int level = 0;
-		
+		private int level = 0;
 
 		public AddNewProgram() {
 			InitializeComponent();
@@ -57,7 +54,6 @@ namespace Project_Tracker {
 
 		private void FirstForward() { // Moving from project title to project duration
 			if (projectTitleInputBox.Text != "") {
-				
 				level = 1;
 
 				projectTitle = projectTitleInputBox.Text;
@@ -73,7 +69,7 @@ namespace Project_Tracker {
 				spacer1.Visibility = Visibility.Visible;
 				spacer2.Visibility = Visibility.Visible;
 				projectHourInputBox.Focus();
-			} 
+			}
 			else { // They haven't inputted a title
 				projectTitleWarning.Visibility = Visibility.Visible;
 			}
@@ -85,7 +81,6 @@ namespace Project_Tracker {
 			durationSuccess[2] = CheckValid(projectSecondInputBox.Text, "second");
 
 			if (durationSuccess[0] && durationSuccess[1] && durationSuccess[2]) { // All are valid numbers!
-				
 				level = 2;
 
 				if (projectHourInputBox.Text.Length == 1) {
@@ -151,48 +146,19 @@ namespace Project_Tracker {
 			errorAddButton.Visibility = Visibility.Hidden;
 
 			// Set up the next components
-			projectPercentInputBox.Visibility = Visibility.Visible;
-			projectPercentInputBox.Focus();
-			spacer1.Text = "%";
-			spacer1.Visibility = Visibility.Visible;
-			this.Height = 190;
-		}
+			nextButton.Content = "Finish";
+			projectTitleText.Text = projectTitle;
+			this.Height = 250;
 
+			durationResult.Text = "Duration: " + duration;
+			errorResult.Text = "Errors: " + errors.Count;
+			featureResult.Text = "Features: " + features.Count;
+			commentResult.Text = "Comments: " + comments.Count;
 
-		private void SixthForward() { // Moving from percent complete to review
-			bool validPercent = CheckValid(projectPercentInputBox.Text, "percent");
-			if (validPercent) { // Percent is a valid number
-				if (projectPercentInputBox.Text == "" || projectPercentInputBox.Text == "0") {
-					projectPercentInputBox.Text = "00";
-				}
-
-				if (projectPercentInputBox.Text[0] == '0') { // Replace 04% with 4%
-					projectPercentInputBox.Text = projectPercentInputBox.Text[1].ToString();
-				}
-
-				level = 6;
-
-				percentComplete = projectPercentInputBox.Text;
-				projectPercentInputBox.Visibility = Visibility.Hidden;
-				spacer1.Visibility = Visibility.Hidden;
-				
-				// Set up the next components
-				nextButton.Content = "Finish";
-				projectTitleText.Text = projectTitle;
-				this.Height = 250;
-
-				durationResult.Text = "Duration: " + duration;
-				errorResult.Text = "Errors: " + errors.Count;
-				featureResult.Text = "Features: " + features.Count;
-				commentResult.Text = "Comments: " + comments.Count;
-				percentResult.Text = "Percent complete: " + percentComplete + "%";
-
-				durationResult.Visibility = Visibility.Visible;
-				errorResult.Visibility = Visibility.Visible;
-				featureResult.Visibility = Visibility.Visible;
-				commentResult.Visibility = Visibility.Visible;
-				percentResult.Visibility = Visibility.Visible;
-			}
+			durationResult.Visibility = Visibility.Visible;
+			errorResult.Visibility = Visibility.Visible;
+			featureResult.Visibility = Visibility.Visible;
+			commentResult.Visibility = Visibility.Visible;
 		}
 
 		private void Finish() { // Creating file for new project
@@ -233,30 +199,53 @@ namespace Project_Tracker {
 					js.WriteValue(error);
 				}
 				js.WriteEnd();
+
+				js.WritePropertyName("ErrorsData");
+				js.WriteStartArray();
+				foreach (string error in errors) {
+					js.WriteValue("0");
+				}
+				js.WriteEnd();
+
 				js.WritePropertyName("Features");
 				js.WriteStartArray();
 				foreach (string feature in features) {
 					js.WriteValue(feature);
 				}
 				js.WriteEnd();
+
+				js.WritePropertyName("FeaturesData");
+				js.WriteStartArray();
+				foreach (string feature in features) {
+					js.WriteValue("0");
+				}
+				js.WriteEnd();
+
 				js.WritePropertyName("Comments");
 				js.WriteStartArray();
 				foreach (string comment in comments) {
 					js.WriteValue(comment);
 				}
 				js.WriteEnd();
+
+				js.WritePropertyName("CommentsData");
+				js.WriteStartArray();
+				foreach (string comment in comments) {
+					js.WriteValue("0");
+				}
+				js.WriteEnd();
+
 				js.WritePropertyName("Duration");
 				js.WriteValue(duration);
 				js.WritePropertyName("Percent");
-				js.WriteValue(percentComplete);
+				js.WriteValue("00");
 
 				js.WriteEndObject();
 			}
 
-
-			using (StreamWriter writer = File.CreateText(path)) {
-				writer.WriteLine(sb.ToString());
-			}
+			File.WriteAllText(path, sw.ToString());
+			sb.Clear();
+			sw.Close();
 
 			this.Hide();
 		}
@@ -264,40 +253,42 @@ namespace Project_Tracker {
 		/*
 		 * Checks the validitiy of the duration values to make sure they are real numbers.
 		 */
+
 		private bool CheckValid(string value, string identifier) {
 			try {
 				Int32.Parse(value);
 				return true;
-			} catch(FormatException) {
+			}
+			catch (FormatException) {
 				projectTitleWarning.Text = "The " + identifier + " value is invalid.";
 				projectTitleWarning.Visibility = Visibility.Visible;
 				return false;
 			}
 		}
 
-		
-
 		private void nextButton_Click(object sender, RoutedEventArgs e) {
 			switch (level) {
 				case 0:
 					FirstForward();
 					break;
+
 				case 1:
 					SecondForward();
 					break;
+
 				case 2:
 					ThirdForward();
 					break;
+
 				case 3:
 					FourthForward();
 					break;
+
 				case 4:
 					FifthForward();
 					break;
+
 				case 5:
-					SixthForward();
-					break;
-				case 6:
 					Finish();
 					break;
 			}
@@ -313,11 +304,6 @@ namespace Project_Tracker {
 
 				errorRowsAdded++;
 
-				/*if (errorRowsAdded == 1) { // It's the first row so we add the selection to it
-					newRow.Background = new SolidColorBrush(selectionColor);
-					rowSelectionID++;
-				}*/
-
 				if (errorRowsAdded % 2 == 0) { // Every other, change the color for readability purposes
 					newRow.Background = new SolidColorBrush(sortColor);
 				}
@@ -326,11 +312,6 @@ namespace Project_Tracker {
 				newRow = table.RowGroups[0].Rows[featureRowsAdded];
 
 				featureRowsAdded++;
-
-				/*if (featureRowsAdded == 1) { // It's the first row so we add the selection to it
-					newRow.Background = new SolidColorBrush(selectionColor);
-					rowSelectionID++;
-				}*/
 
 				if (featureRowsAdded % 2 == 0) { // Every other, change the color for readability purposes
 					newRow.Background = new SolidColorBrush(sortColor);
@@ -341,65 +322,15 @@ namespace Project_Tracker {
 
 				commentsRowsAdded++;
 
-				/*if (commentsRowsAdded == 1) { // It's the first row so we add the selection to it
-					newRow.Background = new SolidColorBrush(selectionColor);
-					rowSelectionID++;
-				}*/
-
 				if (commentsRowsAdded % 2 == 0) { // Every other, change the color for readability purposes
 					newRow.Background = new SolidColorBrush(sortColor);
 				}
 			}
 
-
-
-
 			newRow.FontSize = 16;
 			newRow.FontFamily = textFont;
 			newRow.Cells.Add(new TableCell(new Paragraph(new Run(value))));
 		}
-
-		/*private void SelectionChange(bool isUp) {
-			if (rowSelectionID < 0) {
-				rowSelectionID = 0;
-			}
-			if (isUp == true && rowSelectionID != 0) { // REMEMBER: Going "up" actually brings the selection ID lower.
-				TableRow selectedRow = errorTable.RowGroups[0].Rows[rowSelectionID - 1];
-				selectedRow.Background = new SolidColorBrush(selectionColor);
-
-				if (rowSelectionID != rowsAdded) {
-					if ((rowSelectionID - 1) % 2 == 0) {
-						TableRow previouslySelectedRow = errorTable.RowGroups[0].Rows[rowSelectionID];
-						previouslySelectedRow.Background = new SolidColorBrush(sortColor);
-					}
-					else {
-						TableRow previouslySelectedRow = errorTable.RowGroups[0].Rows[rowSelectionID];
-						previouslySelectedRow.Background = Brushes.White;
-					}
-				}
-
-			}
-			else if (isUp == false) {
-				if (rowSelectionID < rowsAdded) {
-					TableRow selectedRow = errorTable.RowGroups[0].Rows[rowSelectionID];
-					selectedRow.Background = new SolidColorBrush(selectionColor);
-
-					if (rowSelectionID != 0) {
-						if ((rowSelectionID - 1) % 2 == 0) {
-							TableRow previouslySelectedRow = errorTable.RowGroups[0].Rows[rowSelectionID - 1];
-							previouslySelectedRow.Background = new SolidColorBrush(sortColor);
-						}
-						else {
-							TableRow previouslySelectedRow = errorTable.RowGroups[0].Rows[rowSelectionID - 1];
-							previouslySelectedRow.Background = Brushes.White;
-						}
-					}
-				}
-				else {
-					rowSelectionID--;
-				}
-			}
-		}*/
 
 		private void AddValue(object sender, MouseButtonEventArgs e) {
 			if (level == 2) { // Error table
@@ -426,86 +357,41 @@ namespace Project_Tracker {
 		}
 
 		private void KeyPress(object sender, KeyEventArgs e) {
-			if (level == 0) {
-				if (e.Key == Key.Return) {
+			if (e.Key == Key.Return) {
+				if (level == 0) { // Title page
 					FirstForward();
 				}
-			}
-			else if (level == 1) {
-				if (e.Key == Key.Return) {
+				else if (level == 1) { // Duration page
 					SecondForward();
 				}
-			}
-			else if (level == 2) { // Errors/Features page
-				/*if (e.Key == Key.Down) {
-					SelectionChange(false);
-					rowSelectionID++;
-				}
-				else if (e.Key == Key.Up) {
-					SelectionChange(true);
-
-					if (rowSelectionID > 1) {
-						rowSelectionID--;
-					}
-				}*/
-				if (e.Key == Key.Return) {
+				else if (level == 2) { // Errors page
 					if (projectErrorInputBox.Text != "") {
 						errors.Add(projectErrorInputBox.Text);
 						AddRow(projectErrorInputBox.Text, errorTable, 0);
 						projectErrorInputBox.Text = "";
 					}
 				}
-			}
-			else if (level == 3) { // Errors/Features page
-				/*if (e.Key == Key.Down) {
-					SelectionChange(false);
-					rowSelectionID++;
-				}
-				else if (e.Key == Key.Up) {
-					SelectionChange(true);
-
-					if (rowSelectionID > 1) {
-						rowSelectionID--;
-					}
-				}*/
-				if (e.Key == Key.Return) {
-					if (projectFeatureInputBox.Text != "") {
-						features.Add(projectFeatureInputBox.Text);
-						AddRow(projectFeatureInputBox.Text, featureTable, 1);
-						projectFeatureInputBox.Text = "";
+				else if (level == 3) { // Features page
+					if (e.Key == Key.Return) {
+						if (projectFeatureInputBox.Text != "") {
+							features.Add(projectFeatureInputBox.Text);
+							AddRow(projectFeatureInputBox.Text, featureTable, 1);
+							projectFeatureInputBox.Text = "";
+						}
 					}
 				}
-			}
-			else if (level == 4) { // Errors/Features page
-				/*if (e.Key == Key.Down) {
-					SelectionChange(false);
-					rowSelectionID++;
-				}
-				else if (e.Key == Key.Up) {
-					SelectionChange(true);
-
-					if (rowSelectionID > 1) {
-						rowSelectionID--;
-					}
-				}*/
-				if (e.Key == Key.Return) {
+				else if (level == 4) { // Comments page
 					if (projectCommentInputBox.Text != "") {
 						comments.Add(projectCommentInputBox.Text);
 						AddRow(projectCommentInputBox.Text, commentTable, 2);
 						projectCommentInputBox.Text = "";
 					}
 				}
-			}
-			else if (level == 5) {
-				if (e.Key == Key.Return) {
-					SixthForward();
-				}
-			}
-			else if (level == 6) {
-				if (e.Key == Key.Return) {
+				else if (level == 5) { // Review page
 					Finish();
 				}
 			}
+
 		}
 
 		private void FirstBack() { // From duration to project title
@@ -577,29 +463,13 @@ namespace Project_Tracker {
 			projectCommentInputBox.Visibility = Visibility.Visible;
 			errorAddButton.Visibility = Visibility.Visible;
 			projectCommentInputBox.Focus();
-
-			// Hide old elements
-			projectPercentInputBox.Visibility = Visibility.Hidden;
-			spacer1.Text = ":";
-			spacer1.Visibility = Visibility.Hidden;
-		}
-
-		private void SixthBack() { // From results to percent complete
-			level = 5;
-
-			this.Height = 190;
-			projectTitleText.Text = "Percent complete";
 			nextButton.Content = "Next";
-			projectPercentInputBox.Visibility = Visibility.Visible;
-			projectPercentInputBox.Focus();
-			spacer1.Visibility = Visibility.Visible;
 
 			// Hide old elements
 			durationResult.Visibility = Visibility.Hidden;
 			errorResult.Visibility = Visibility.Hidden;
 			featureResult.Visibility = Visibility.Hidden;
 			commentResult.Visibility = Visibility.Hidden;
-			percentResult.Visibility = Visibility.Hidden;
 		}
 
 		private void cancelButton_Click(object sender, RoutedEventArgs e) {
@@ -607,23 +477,25 @@ namespace Project_Tracker {
 				case 0:
 					this.Hide();
 					break;
+
 				case 1:
 					FirstBack();
 					break;
+
 				case 2:
 					SecondBack();
 					break;
+
 				case 3:
 					ThirdBack();
 					break;
+
 				case 4:
 					FourthBack();
 					break;
+
 				case 5:
 					FifthBack();
-					break;
-				case 6:
-					SixthBack();
 					break;
 			}
 		}

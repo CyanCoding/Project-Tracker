@@ -1,38 +1,29 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Project_Tracker {
+
 	/// <summary>
 	/// Interaction logic for UpdateWindow.xaml
 	/// </summary>
 	public partial class UpdateWindow : Window {
 
 		// WARNING: READONLY VALUES. IF YOU CHANGE THESE, CHANGE IN OTHER FILES AS WELL
-		readonly string VERSION_INFO = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/version.json";
-		readonly string INSTALLER_PATH = @"C:\Program Files\Project Tracker\Project Tracker Installer.exe";
-		readonly string VERSION_FILE = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/update.txt";
-		readonly string CURRENT_VERSION = "0.6";
-		readonly Color sortColor = Color.FromRgb(228, 233, 235);
-		readonly FontFamily textFont = new FontFamily("Microsoft Sans Serif");
+		private readonly string VERSION_INFO = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/version.json";
 
-		int updateRowsAdded = 0;
-		int fixRowsAdded = 0;
+		private readonly string INSTALLER_PATH = @"C:\Program Files\Project Tracker\Project Tracker Installer.exe";
+		private readonly string VERSION_FILE = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/update.txt";
+		private readonly string CURRENT_VERSION = "0.6";
+		private readonly Color sortColor = Color.FromRgb(228, 233, 235);
+		private readonly FontFamily textFont = new FontFamily("Microsoft Sans Serif");
 
+		private int updateRowsAdded = 0;
+		private int fixRowsAdded = 0;
 
 		public UpdateWindow() {
 			InitializeComponent();
@@ -101,7 +92,7 @@ namespace Project_Tracker {
 			if (File.Exists(VERSION_FILE)) {
 				File.Delete(VERSION_FILE);
 			}
-			
+
 			try {
 				using (StreamReader reader = new StreamReader(VERSION_INFO)) {
 					string json = reader.ReadToEnd();
@@ -131,10 +122,11 @@ namespace Project_Tracker {
 				Height = 125;
 			}
 		}
+
 		private void Button_Click(object sender, RoutedEventArgs e) {
 			ProcessStartInfo start = new ProcessStartInfo {
 				// Enter in the command line arguments, everything you would enter after the executable name itself
-				Arguments = "update", 
+				Arguments = "update",
 				// Enter the executable to run, including the complete path
 				FileName = INSTALLER_PATH,
 				// Do you want to show a console window?
