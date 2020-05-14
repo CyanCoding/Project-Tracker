@@ -9,13 +9,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Project_Tracker {
 	/// <summary>
@@ -24,12 +20,13 @@ namespace Project_Tracker {
 	public partial class EditProgram : Window {
 
 		string projectTitle;
-		string[] errors;
-		string[] errorsData;
-		string[] features;
-		string[] featuresData;
-		string[] comments;
-		string[] commentsData;
+		// We use a list for the items instead of an array because we have to remove values if the user deletes an item
+		List<string> errors = new List<string>();
+		List<string> errorsData = new List<string>();
+		List<string> features = new List<string>();
+		List<string> featuresData = new List<string>();
+		List<string> comments = new List<string>();
+		List<string> commentsData = new List<string>();
 		string duration;
 		string percentComplete;
 
@@ -60,41 +57,25 @@ namespace Project_Tracker {
 			Startup();
 		}
 		// TODO: You can change values from the function. No need to repeat the code. Optimize NOW
-		private void AddRow(Table table, int rowsAddedValue, string value, int index, string[] dataValues) {
+		private void AddRow(Table table, int rowsAddedValue, string value, int index, List<string> dataValues) {
 			table.RowGroups[0].Rows.Add(new TableRow());
-
 			TableRow newRow = null;
 
 			if (rowsAddedValue == 0) {
 				newRow = table.RowGroups[0].Rows[errorRowsAdded];
 				errorRowsAdded++;
-
-				if (errorRowsAdded % 2 == 0) { // Every other, change the color for readability purposes
-					newRow.Background = new SolidColorBrush(sortColor);
-				}
 			}
 			else if (rowsAddedValue == 1) {
 				newRow = table.RowGroups[0].Rows[featureRowsAdded];
 				featureRowsAdded++;
-
-				if (featureRowsAdded % 2 == 0) { // Every other, change the color for readability purposes
-					newRow.Background = new SolidColorBrush(sortColor);
-				}
 			}
 			else if (rowsAddedValue == 2) {
 				newRow = table.RowGroups[0].Rows[commentsRowsAdded];
 				commentsRowsAdded++;
-
-				if (commentsRowsAdded % 2 == 0) { // Every other, change the color for readability purposes
-					newRow.Background = new SolidColorBrush(sortColor);
-				}
 			}
 
 			if (dataValues[index] == "1") {
 				newRow.Background = new SolidColorBrush(greenStopwatch);
-			}
-			else if (dataValues[index] == "2") {
-				newRow.Background = new SolidColorBrush(redStopwatch);
 			}
 
 			newRow.FontSize = 16;
@@ -102,13 +83,13 @@ namespace Project_Tracker {
 			newRow.Cells.Add(new TableCell(new Paragraph(new Run(value))));
 		}
 
-		private void SelectionChange(int oldPos, int newPos, int rowsAdded, Table table, string[] dataValues) {
+		private void SelectionChange(int oldPos, int newPos, int rowsAdded, Table table, List<string> dataValues) {
 			this.Dispatcher.Invoke(() => {
 				if (newPos < 0) {
 					newPos = 0;
 				}
 
-				if (newPos > oldPos && newPos > rowsAdded - 1) {
+				if (newPos > oldPos && newPos > rowsAdded - 1) { // Moved down and newPos is too big
 					rowSelectionID--;
 					return;
 				}
@@ -135,9 +116,6 @@ namespace Project_Tracker {
 						else if (dataValues[oldPos] == "1") { // Complete
 							previouslySelectedRow.Background = new SolidColorBrush(greenStopwatch);
 						}
-						else if (dataValues[oldPos] == "2") { // Deleted
-							previouslySelectedRow.Background = new SolidColorBrush(redStopwatch);
-						}
 					}
 				}
 			});
@@ -153,13 +131,18 @@ namespace Project_Tracker {
 		/// <param name="dataValues">The data value of each item (e.g. 0 for normal, 1 for completed, 2 for deleted).</param>
 		/// <param name="rowsAddedValue">Whether we're changing the error (0), feature (1), or comments (2).</param>
 		/// <param name="totalRows">The total amount of rows for that table.</param>
-		private void ResetSelection(Table table, string[] values, string[] dataValues, int rowsAddedValue, int totalRows) {
+		private void ResetSelection(Table table, List<string> values, List<string> dataValues, int rowsAddedValue, int totalRows) {
+			if (totalRows == 0) { // Shouldn't do anything if there's nothing to do it to
+				return;
+			}
+			
 			rowSelectionID = 0;
 			oldRowSelectionID = 0;
 
-			for (int i = 0; i < values.Length; i++) {
+			for (int i = 0; i < values.Count; i++) {
 				table.RowGroups[0].Rows[i].Cells.RemoveRange(0, 1);
 			}
+
 			if (rowsAddedValue == 0) {
 				errorRowsAdded = 0;
 			}
@@ -175,6 +158,7 @@ namespace Project_Tracker {
 				AddRow(table, rowsAddedValue, value, index, dataValues);
 				index++;
 			}
+			
 
 			TableRow selectedRow = table.RowGroups[0].Rows[0];
 			selectedRow.Background = new SolidColorBrush(selectionColor);
@@ -183,15 +167,18 @@ namespace Project_Tracker {
 			// element and try and fix it.
 			for (int i = 0; i < totalRows; i++) {
 				TableRow row = table.RowGroups[0].Rows[i];
-
-				if (dataValues[i] == "0") { // Normal
-					row.Background = Brushes.White;
+				
+				try {
+					if (dataValues[i] == "0") { // Normal
+						row.Background = Brushes.White;
+					}
+					else if (dataValues[i] == "1") { // Complete
+						row.Background = new SolidColorBrush(greenStopwatch);
+					}
 				}
-				else if (dataValues[i] == "1") { // Complete
-					row.Background = new SolidColorBrush(greenStopwatch);
-				}
-				else if (dataValues[i] == "2") { // Deleted
-					row.Background = new SolidColorBrush(redStopwatch);
+				catch (ArgumentOutOfRangeException) { // This would occur if we just deleted something and the array is one smaller
+					table.RowGroups[0].Rows[index].Cells.RemoveRange(0, 1);
+					break;
 				}
 			}
 			SelectionChange(0, 0, totalRows, table, dataValues);
@@ -281,7 +268,12 @@ namespace Project_Tracker {
 					using (JsonWriter js = new JsonTextWriter(sw)) {
 						js.Formatting = Formatting.Indented;
 
-						js.WriteStartObject();
+						try {
+							js.WriteStartObject();
+						}
+						catch (ObjectDisposedException) { // Couldn't write for some reason
+							continue;
+						}
 
 						js.WritePropertyName("Title");
 						js.WriteValue(projectTitle);
@@ -361,12 +353,12 @@ namespace Project_Tracker {
 
 				// Set values for saving feature to rewrite
 				projectTitle = values.Title;
-				errors = values.Errors;
-				errorsData = values.ErrorsData;
-				features = values.Features;
-				featuresData = values.FeaturesData;
-				comments = values.Comments;
-				commentsData = values.CommentsData;
+				errors = values.Errors.ToList();
+				errorsData = values.ErrorsData.ToList();
+				features = values.Features.ToList();
+				featuresData = values.FeaturesData.ToList();
+				comments = values.Comments.ToList();
+				commentsData = values.CommentsData.ToList();
 				duration = values.Duration;
 				percentComplete = values.Percent;
 
@@ -469,13 +461,13 @@ namespace Project_Tracker {
 			featureScrollView.Visibility = Visibility.Hidden;
 
 			// Create new checkboxes
-			System.Windows.Controls.CheckBox box;
+			CheckBox box;
 			StackPanel panel = new StackPanel { Orientation = System.Windows.Controls.Orientation.Vertical };
-			for (int i = 0; i < errors.Length; i++) {
-				box = new System.Windows.Controls.CheckBox();
+			for (int i = 0; i < errors.Count; i++) {
+				box = new CheckBox();
 				box.Content = errors[i];
 				box.VerticalAlignment = VerticalAlignment.Top;
-				box.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
+				box.HorizontalAlignment = HorizontalAlignment.Left;
 				box.Margin = new Thickness(10, i * 50, 50, 50);
 
 				panel.Children.Add(box);
@@ -500,7 +492,7 @@ namespace Project_Tracker {
 			// Remember that combo box values can be changed by the arrow keys.
 			// We don't want to change the table selection when we're doing this.
 			if (!errorSelection.IsFocused && !featureSelection.IsFocused && !commentSelection.IsFocused) {
-				if (e.Key == Key.Down || e.Key == Key.Up) {
+				if (e.Key == Key.Down || e.Key == Key.Up) { // Either arrow is pressed
 					if (e.Key == Key.Down) {
 						rowSelectionID++;
 					}
@@ -558,41 +550,28 @@ namespace Project_Tracker {
 		}
 		// TODO: We need to change the SelectionChange function to change the selection before resetting. Do this by creating params like int newIndex, int oldIndex.
 		private void RemoveValue(object sender, MouseButtonEventArgs e) {
-			/*
-			 * Remember: 0 = normal, 1 = complete, 2 = deleted
-			 */
-
-			if (switchLabels.SelectedIndex == 0) { // Errors
-				SelectionChange(oldRowSelectionID, 0, errorRowsAdded, errorTable, errorsData);
-
-				if (errorsData[rowSelectionID] != "2") {
-					errorsData[rowSelectionID] = "2";
+			try {
+				if (switchLabels.SelectedIndex == 0) { // Errors
+					SelectionChange(oldRowSelectionID, 0, errorRowsAdded, errorTable, errorsData);
+					errors.RemoveAt(rowSelectionID);
+					errorsData.RemoveAt(rowSelectionID);
+					ResetSelection(errorTable, errors, errorsData, 0, errorRowsAdded);
 				}
-				else {
-					errorsData[rowSelectionID] = "0";
+				else if (switchLabels.SelectedIndex == 1) { // Features
+					SelectionChange(oldRowSelectionID, 0, featureRowsAdded, featureTable, featuresData);
+					features.RemoveAt(rowSelectionID);
+					featuresData.RemoveAt(rowSelectionID);
+					ResetSelection(featureTable, features, featuresData, 1, featureRowsAdded);
 				}
-
-				ResetSelection(errorTable, errors, errorsData, 0, errorRowsAdded);
+				else if (switchLabels.SelectedIndex == 2) { // Comments
+					SelectionChange(oldRowSelectionID, 0, commentsRowsAdded, commentTable, commentsData);
+					comments.RemoveAt(rowSelectionID);
+					commentsData.RemoveAt(rowSelectionID);
+					ResetSelection(commentTable, comments, commentsData, 2, commentsRowsAdded);
+				}
 			}
-			else if (switchLabels.SelectedIndex == 1) { // Features
-				SelectionChange(oldRowSelectionID, 0, featureRowsAdded, featureTable, featuresData);
-				if (featuresData[rowSelectionID] != "2") {
-					featuresData[rowSelectionID] = "2";
-				}
-				else {
-					featuresData[rowSelectionID] = "0";
-				}
-				ResetSelection(featureTable, features, featuresData, 1, featureRowsAdded);
-			}
-			else if (switchLabels.SelectedIndex == 2) { // Comments
-				SelectionChange(oldRowSelectionID, 0, commentsRowsAdded, commentTable, commentsData);
-				if (commentsData[rowSelectionID] != "2") {
-					commentsData[rowSelectionID] = "2";
-				}
-				else {
-					commentsData[rowSelectionID] = "0";
-				}
-				ResetSelection(commentTable, comments, commentsData, 2, commentsRowsAdded);
+			catch (ArgumentOutOfRangeException) { // They tried to press the delete button when there was no items in it
+				return;
 			}
 			
 			Save();
