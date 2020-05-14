@@ -548,7 +548,6 @@ namespace Project_Tracker {
 			}
 		}
 
-		// TODO: We need to change the SelectionChange function to change the selection before resetting. Do this by creating params like int newIndex, int oldIndex.
 		private void RemoveValue(object sender, MouseButtonEventArgs e) {
 			try {
 				if (switchLabels.SelectedIndex == 0) { // Errors
@@ -581,6 +580,38 @@ namespace Project_Tracker {
 		}
 
 		private void CheckOff(object sender, MouseButtonEventArgs e) {
+			if (switchLabels.SelectedIndex == 0) { // Errors
+				if (errorsData[rowSelectionID] == "0") { // Not checked, check it!
+					errorsData[rowSelectionID] = "1";
+					ResetSelection(errorTable, errors, errorsData, 0, errorRowsAdded);
+				}
+				else { // Uncheck it
+					errorsData[rowSelectionID] = "0";
+					ResetSelection(errorTable, errors, errorsData, 0, errorRowsAdded);
+				}
+			}
+			else if (switchLabels.SelectedIndex == 1) { // Features
+				if (featuresData[rowSelectionID] == "0") {
+					featuresData[rowSelectionID] = "1";
+					ResetSelection(featureTable, features, featuresData, 1, featureRowsAdded);
+				}
+				else {
+					featuresData[rowSelectionID] = "0";
+					ResetSelection(featureTable, features, featuresData, 1, featureRowsAdded);
+				}
+			}
+			else if (switchLabels.SelectedIndex == 2) { // Comments
+				if (commentsData[rowSelectionID] == "0") {
+					commentsData[rowSelectionID] = "1";
+					ResetSelection(commentTable, comments, commentsData, 2, commentsRowsAdded);
+				}
+				else {
+					commentsData[rowSelectionID] = "0";
+					ResetSelection(commentTable, comments, commentsData, 2, commentsRowsAdded);
+				}
+			}
+
+			Save();
 		}
 	}
 }
