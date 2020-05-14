@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Project_Tracker"
         mc:Ignorable="d"
-        Title="Add New Project" Height="190" Width="500" ResizeMode="NoResize" PreviewKeyDown="KeyPress" WindowStartupLocation="CenterScreen">
+        Title="Add New Project" Height="190" Width="500" ResizeMode="NoResize" PreviewKeyDown="KeyPress" WindowStartupLocation="CenterScreen" Icon="logo.png">
 	<Window.Resources>
 		<Style TargetType="{x:Type TextBox}">
 			<Setter Property="SnapsToDevicePixels" Value="True"/>

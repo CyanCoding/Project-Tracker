@@ -128,17 +128,14 @@ namespace Project_Tracker {
 						foreach (string path in files) {
 							if (!filesRead.Contains(path)) {
 								// Convert each json file to a table row
-								using (StreamReader reader = new StreamReader(path)) {
-									string json = reader.ReadToEnd();
+								string json = File.ReadAllText(path);
 
-									dynamic array = JsonConvert.DeserializeObject(json);
+								dynamic array = JsonConvert.DeserializeObject(json);
 
-									MainTableManifest.Rootobject mainTable = JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
+								MainTableManifest.Rootobject mainTable = JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
 
-									AddRow(mainTable.Title, mainTable.Errors.Length, mainTable.Features.Length, mainTable.Comments.Length, mainTable.Duration, mainTable.Percent);
-									filesRead.Add(path);
-									// rowsAdded++;
-								}
+								AddRow(mainTable.Title, mainTable.Errors.Length, mainTable.Features.Length, mainTable.Comments.Length, mainTable.Duration, mainTable.Percent);
+								filesRead.Add(path);
 							}
 						}
 					}
@@ -152,36 +149,33 @@ namespace Project_Tracker {
 					if (filesUpdate == 50) {
 						filesUpdate = 0;
 						for (int i = 0; i < rowsAdded - 1; i++) {
-							using (StreamReader reader = new StreamReader(filesRead[i])) {
-								string json = reader.ReadToEnd();
+							string json = File.ReadAllText(filesRead[i]);
+							dynamic array = JsonConvert.DeserializeObject(json);
 
-								dynamic array = JsonConvert.DeserializeObject(json);
+							MainTableManifest.Rootobject mainTable = JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
 
-								MainTableManifest.Rootobject mainTable = JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
-
-								Dispatcher.Invoke(new Action(() =>
-								{
-									// TODO: See if we can optimize this repetitive code
-									// Title
-									listTable.RowGroups[0].Rows[i + 1].Cells.RemoveRange(0, 1);
-									listTable.RowGroups[0].Rows[i + 1].Cells.Insert(0, new TableCell(new Paragraph(new Run(" " + mainTable.Title))));
-									// Errors
-									listTable.RowGroups[0].Rows[i + 1].Cells.RemoveRange(1, 1);
-									listTable.RowGroups[0].Rows[i + 1].Cells.Insert(1, new TableCell(new Paragraph(new Run(" " + mainTable.Errors.Length))));
-									// Features
-									listTable.RowGroups[0].Rows[i + 1].Cells.RemoveRange(2, 1);
-									listTable.RowGroups[0].Rows[i + 1].Cells.Insert(2, new TableCell(new Paragraph(new Run(" " + mainTable.Features.Length))));
-									// Comments
-									listTable.RowGroups[0].Rows[i + 1].Cells.RemoveRange(3, 1);
-									listTable.RowGroups[0].Rows[i + 1].Cells.Insert(3, new TableCell(new Paragraph(new Run(" " + mainTable.Comments.Length))));
-									// Duration
-									listTable.RowGroups[0].Rows[i + 1].Cells.RemoveRange(4, 1);
-									listTable.RowGroups[0].Rows[i + 1].Cells.Insert(4, new TableCell(new Paragraph(new Run(" " + mainTable.Duration))));
-									// Percent
-									listTable.RowGroups[0].Rows[i + 1].Cells.RemoveRange(5, 1);
-									listTable.RowGroups[0].Rows[i + 1].Cells.Insert(5, new TableCell(new Paragraph(new Run(" " + mainTable.Percent + "%"))));
-								}));
-							}
+							Dispatcher.Invoke(new Action(() =>
+							{
+								// TODO: See if we can optimize this repetitive code
+								// Title
+								listTable.RowGroups[0].Rows[i + 1].Cells.RemoveRange(0, 1);
+								listTable.RowGroups[0].Rows[i + 1].Cells.Insert(0, new TableCell(new Paragraph(new Run(" " + mainTable.Title))));
+								// Errors
+								listTable.RowGroups[0].Rows[i + 1].Cells.RemoveRange(1, 1);
+								listTable.RowGroups[0].Rows[i + 1].Cells.Insert(1, new TableCell(new Paragraph(new Run(" " + mainTable.Errors.Length))));
+								// Features
+								listTable.RowGroups[0].Rows[i + 1].Cells.RemoveRange(2, 1);
+								listTable.RowGroups[0].Rows[i + 1].Cells.Insert(2, new TableCell(new Paragraph(new Run(" " + mainTable.Features.Length))));
+								// Comments
+								listTable.RowGroups[0].Rows[i + 1].Cells.RemoveRange(3, 1);
+								listTable.RowGroups[0].Rows[i + 1].Cells.Insert(3, new TableCell(new Paragraph(new Run(" " + mainTable.Comments.Length))));
+								// Duration
+								listTable.RowGroups[0].Rows[i + 1].Cells.RemoveRange(4, 1);
+								listTable.RowGroups[0].Rows[i + 1].Cells.Insert(4, new TableCell(new Paragraph(new Run(" " + mainTable.Duration))));
+								// Percent
+								listTable.RowGroups[0].Rows[i + 1].Cells.RemoveRange(5, 1);
+								listTable.RowGroups[0].Rows[i + 1].Cells.Insert(5, new TableCell(new Paragraph(new Run(" " + mainTable.Percent + "%"))));
+							}));
 						}
 					}
 				}
@@ -211,17 +205,12 @@ namespace Project_Tracker {
 					foreach (string path in files) {
 						if (!filesRead.Contains(path)) {
 							// Convert each json file to a table row
-							using (StreamReader reader = new StreamReader(path)) {
-								string json = reader.ReadToEnd();
+							string json = File.ReadAllText(path);
+							dynamic array = JsonConvert.DeserializeObject(json);
+							MainTableManifest.Rootobject mainTable = JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
 
-								dynamic array = JsonConvert.DeserializeObject(json);
-
-								MainTableManifest.Rootobject mainTable = JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
-
-								AddRow(mainTable.Title, mainTable.Errors.Length, mainTable.Features.Length, mainTable.Comments.Length, mainTable.Duration, mainTable.Percent);
-								filesRead.Add(path);
-								// rowsAdded++;
-							}
+							AddRow(mainTable.Title, mainTable.Errors.Length, mainTable.Features.Length, mainTable.Comments.Length, mainTable.Duration, mainTable.Percent);
+							filesRead.Add(path);
 						}
 					}
 				}
@@ -249,17 +238,14 @@ namespace Project_Tracker {
 		}
 
 		private void ShowUpdate(object sender, AsyncCompletedEventArgs e) {
-			using (StreamReader reader = new StreamReader(VERSION_INFO)) {
-				string json = reader.ReadToEnd();
+			string json = File.ReadAllText(VERSION_INFO);
+			dynamic array = JsonConvert.DeserializeObject(json);
 
-				dynamic array = JsonConvert.DeserializeObject(json);
+			UpdateManifest.Rootobject update = JsonConvert.DeserializeObject<UpdateManifest.Rootobject>(json);
 
-				UpdateManifest.Rootobject update = JsonConvert.DeserializeObject<UpdateManifest.Rootobject>(json);
-
-				if (float.Parse(CURRENT_VERSION) < float.Parse(update.Version)) { // Update is available
-					UpdateWindow updateWindow = new UpdateWindow();
-					updateWindow.Show();
-				}
+			if (float.Parse(CURRENT_VERSION) < float.Parse(update.Version)) { // Update is available
+				UpdateWindow updateWindow = new UpdateWindow();
+				updateWindow.Show();
 			}
 		}
 
@@ -293,7 +279,7 @@ namespace Project_Tracker {
 
 		private void Window_Closing(object sender, CancelEventArgs e) {
 			tableUpdateThread.Abort();
-			System.Windows.Application.Current.Shutdown(); // If we don't do this, the AddNewProgram window doesn't close and the program keeps running in the bg
+			Application.Current.Shutdown(); // If we don't do this, the AddNewProgram window doesn't close and the program keeps running in the bg
 		}
 	}
 }

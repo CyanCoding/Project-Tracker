@@ -243,9 +243,9 @@ namespace Project_Tracker {
 				js.WriteEndObject();
 			}
 
-			using (StreamWriter writer = File.CreateText(path)) {
-				writer.WriteLine(sb.ToString());
-			}
+			File.WriteAllText(path, sw.ToString());
+			sb.Clear();
+			sw.Close();
 
 			this.Hide();
 		}

@@ -38,6 +38,7 @@ namespace Project_Tracker {
 		private int commentsRowsAdded = 0;
 		private bool isStopwatchRunning = false;
 		private Thread timerThread;
+		private Thread readThread;
 		private long lastSecond = 0;
 		private long currentSecond = 0;
 		private bool isTablesGenerated = false;
@@ -61,7 +62,19 @@ namespace Project_Tracker {
 		}
 
 		// TODO: You can change values from the function. No need to repeat the code. Optimize NOW
+		/// <summary>
+		/// Adds a row to a certain table
+		/// </summary>
+		/// <param name="table">The table to add to.</param>
+		/// <param name="rowsAddedValue">The table number we're adding to (errors = 0, features = 1, comments = 2)</param>
+		/// <param name="value">The text of the row.</param>
+		/// <param name="index">The index where the value is in the array.</param>
+		/// <param name="dataValues">The array of data.</param>
 		private void AddRow(Table table, int rowsAddedValue, string value, int index, List<string> dataValues) {
+			//if (value == "") {
+			//	return;
+			//}
+
 			table.RowGroups[0].Rows.Add(new TableRow());
 			TableRow newRow = null;
 
@@ -88,43 +101,40 @@ namespace Project_Tracker {
 		}
 
 		private void SelectionChange(int oldPos, int newPos, int rowsAdded, Table table, List<string> dataValues) {
-			this.Dispatcher.Invoke(() =>
-			{
-				if (newPos < 0) {
-					newPos = 0;
+			if (newPos < 0) {
+				newPos = 0;
+			}
+
+			if (newPos > oldPos && newPos > rowsAdded - 1) { // Moved down and newPos is too big
+				rowSelectionID--;
+				return;
+			}
+
+			if (rowsAdded > 1) {
+				// Set the color of the newly selected item
+				TableRow selectedRow = table.RowGroups[0].Rows[newPos];
+				selectedRow.Background = new SolidColorBrush(selectionColor);
+
+				if (dataValues[newPos] == "1") { // Checked checkmark
+					checkmarkButton.ToolTip = "Mark as incomplete";
+					checkmarkButton.Text = "\xE73A";
+				}
+				else { // Unchecked checkmark
+					checkmarkButton.ToolTip = "Mark as completed";
+					checkmarkButton.Text = "\xE739";
 				}
 
-				if (newPos > oldPos && newPos > rowsAdded - 1) { // Moved down and newPos is too big
-					rowSelectionID--;
-					return;
-				}
-
-				if (rowsAdded > 1) {
-					// Set the color of the newly selected item
-					TableRow selectedRow = table.RowGroups[0].Rows[newPos];
-					selectedRow.Background = new SolidColorBrush(selectionColor);
-
-					if (dataValues[newPos] == "1") { // Checked checkmark
-						checkmarkButton.ToolTip = "Mark as incomplete";
-						checkmarkButton.Text = "\xE73A";
+				if (oldPos != newPos) { // We don't want to draw over the already selected one
+					TableRow previouslySelectedRow = table.RowGroups[0].Rows[oldPos];
+					// Set the color of the old selected item
+					if (dataValues[oldPos] == "0") { // Normal
+						previouslySelectedRow.Background = Brushes.White;
 					}
-					else { // Unchecked checkmark
-						checkmarkButton.ToolTip = "Mark as completed";
-						checkmarkButton.Text = "\xE739";
-					}
-
-					if (oldPos != newPos) { // We don't want to draw over the already selected one
-						TableRow previouslySelectedRow = table.RowGroups[0].Rows[oldPos];
-						// Set the color of the old selected item
-						if (dataValues[oldPos] == "0") { // Normal
-							previouslySelectedRow.Background = Brushes.White;
-						}
-						else if (dataValues[oldPos] == "1") { // Complete
-							previouslySelectedRow.Background = new SolidColorBrush(greenStopwatch);
-						}
+					else if (dataValues[oldPos] == "1") { // Complete
+						previouslySelectedRow.Background = new SolidColorBrush(greenStopwatch);
 					}
 				}
-			});
+			}
 		}
 
 		/// <summary>
@@ -293,7 +303,87 @@ namespace Project_Tracker {
 			Save();
 		}
 
-		// TODO: We need this to stop freezing
+		private void Read() {
+			while (Passthrough.IsAdding) {
+				Thread.Sleep(1000);
+				string json = File.ReadAllText(editingFile);
+				dynamic array = JsonConvert.DeserializeObject(json);
+				MainTableManifest.Rootobject values = JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
+
+				// Set values for saving feature to rewrite
+				projectTitle = values.Title;
+				errors = values.Errors.ToList();
+				errorsData = values.ErrorsData.ToList();
+				features = values.Features.ToList();
+				featuresData = values.FeaturesData.ToList();
+				comments = values.Comments.ToList();
+				commentsData = values.CommentsData.ToList();
+				duration = values.Duration;
+				percentComplete = values.Percent;
+
+
+				this.Dispatcher.Invoke(() =>
+				{
+					// TODO: Add features and comments tables
+					if (switchLabels.SelectedIndex == 0) { // Errors
+						errorRowsAdded = 0;
+						try {
+							for (int i = 0; i < errors.Count; i++) {
+								errorTable.RowGroups[0].Rows[i].Cells.RemoveRange(0, 1);
+							}
+						}
+						catch (ArgumentOutOfRangeException) {
+							// They just added a new value
+							CalculatePercentage();
+						}
+						int index = 0;
+						foreach (string value in errors) {
+							AddRow(errorTable, 0, value, index, errorsData);
+							index++;
+						}
+						SelectionChange(rowSelectionID, rowSelectionID, errorRowsAdded, errorTable, errorsData);
+					}
+					else if (switchLabels.SelectedIndex == 1) { // Features
+						featureRowsAdded = 0;
+						try {
+							for (int i = 0; i < features.Count; i++) {
+								featureTable.RowGroups[0].Rows[i].Cells.RemoveRange(0, 1);
+							}
+						}
+						catch (ArgumentOutOfRangeException) {
+							// They just added a new value
+							CalculatePercentage();
+						}
+						int index = 0;
+						foreach (string value in features) {
+							AddRow(featureTable, 1, value, index, featuresData);
+							index++;
+						}
+						SelectionChange(rowSelectionID, rowSelectionID, featureRowsAdded, featureTable, featuresData);
+					}
+					else if (switchLabels.SelectedIndex == 2) { // Comments
+						commentsRowsAdded = 0;
+						try {
+							for (int i = 0; i < comments.Count; i++) {
+								commentTable.RowGroups[0].Rows[i].Cells.RemoveRange(0, 1);
+							}
+						}
+						catch (ArgumentOutOfRangeException) {
+							// They just added a new value
+							CalculatePercentage();
+						}
+						int index = 0;
+						foreach (string value in comments) {
+							AddRow(commentTable, 2, value, index, commentsData);
+							index++;
+						}
+						SelectionChange(rowSelectionID, rowSelectionID, commentsRowsAdded, commentTable, commentsData);
+					}
+				});
+				
+			}
+		}
+
 		private void Save() {
 			StringBuilder sb = new StringBuilder();
 			StringWriter sw = new StringWriter(sb);
@@ -359,21 +449,17 @@ namespace Project_Tracker {
 
 						js.WriteEndObject();
 					}
-					using (StreamWriter writer = File.CreateText(editingFile)) {
-						writer.WriteLine(sb.ToString());
-					}
+
+					File.WriteAllText(editingFile, sw.ToString());
+					sb.Clear();
+					sw.Close();
+
 					break;
 				}
 				catch (ObjectDisposedException) {
-				}
-				catch (IOException) {
-					Save();
-					Thread.Sleep(1000);
+
 				}
 			}
-
-			sb.Clear();
-			sw.Close();
 		}
 
 		private void Startup() {
@@ -381,50 +467,47 @@ namespace Project_Tracker {
 
 			editingFile = Passthrough.EditingFile;
 
-			// Convert each json file to a table row
-			using (StreamReader reader = new StreamReader(editingFile)) {
-				// Read JSON
-				string json = reader.ReadToEnd();
-				dynamic array = JsonConvert.DeserializeObject(json);
-				MainTableManifest.Rootobject values = JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
+			string json = File.ReadAllText(editingFile);
+			dynamic array = JsonConvert.DeserializeObject(json);
+			MainTableManifest.Rootobject values = JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
 
-				// Set values for saving feature to rewrite
-				projectTitle = values.Title;
-				errors = values.Errors.ToList();
-				errorsData = values.ErrorsData.ToList();
-				features = values.Features.ToList();
-				featuresData = values.FeaturesData.ToList();
-				comments = values.Comments.ToList();
-				commentsData = values.CommentsData.ToList();
-				duration = values.Duration;
-				percentComplete = values.Percent;
+			// Set values for saving feature to rewrite
+			projectTitle = values.Title;
+			errors = values.Errors.ToList();
+			errorsData = values.ErrorsData.ToList();
+			features = values.Features.ToList();
+			featuresData = values.FeaturesData.ToList();
+			comments = values.Comments.ToList();
+			commentsData = values.CommentsData.ToList();
+			duration = values.Duration;
+			percentComplete = values.Percent;
 
-				int index = 0;
-				// Add values to tables
-				foreach (string error in values.Errors) {
-					AddRow(errorTable, 0, error, index, errorsData);
-					index++;
-				}
-
-				index = 0;
-				foreach (string feature in values.Features) {
-					AddRow(featureTable, 1, feature, index, featuresData);
-					index++;
-				}
-
-				index = 0;
-				foreach (string comment in values.Comments) {
-					AddRow(commentTable, 2, comment, index, commentsData);
-					index++;
-				}
-				ResetSelection(errorTable, errors, errorsData, 0, errorRowsAdded);
-				ResetSelection(featureTable, features, featuresData, 1, featureRowsAdded);
-				ResetSelection(commentTable, comments, commentsData, 2, commentsRowsAdded);
-
-				errorScrollView.Focus();
-				isTablesGenerated = true;
-				durationLabel.Text = values.Duration;
+			int index = 0;
+			// Add values to tables
+			foreach (string error in values.Errors) {
+				AddRow(errorTable, 0, error, index, errorsData);
+				index++;
 			}
+
+			index = 0;
+			foreach (string feature in values.Features) {
+				AddRow(featureTable, 1, feature, index, featuresData);
+				index++;
+			}
+
+			index = 0;
+			foreach (string comment in values.Comments) {
+				AddRow(commentTable, 2, comment, index, commentsData);
+				index++;
+			}
+			ResetSelection(errorTable, errors, errorsData, 0, errorRowsAdded);
+			ResetSelection(featureTable, features, featuresData, 1, featureRowsAdded);
+			ResetSelection(commentTable, comments, commentsData, 2, commentsRowsAdded);
+
+			errorScrollView.Focus();
+			isTablesGenerated = true;
+			durationLabel.Text = values.Duration;
+
 			try {
 				if (errorsData[0] == "1") { // Checked checkbox
 					checkmarkButton.ToolTip = "Mark as incomplete";
@@ -456,45 +539,7 @@ namespace Project_Tracker {
 				stopwatch.Stop();
 				stopwatch.Reset();
 
-				// Save
-				StringBuilder sb = new StringBuilder();
-				StringWriter sw = new StringWriter(sb);
-
-				using (JsonWriter js = new JsonTextWriter(sw)) {
-					js.Formatting = Formatting.Indented;
-
-					js.WriteStartObject();
-
-					js.WritePropertyName("Title");
-					js.WriteValue(projectTitle);
-					js.WritePropertyName("Errors");
-					js.WriteStartArray();
-					foreach (string error in errors) {
-						js.WriteValue(error);
-					}
-					js.WriteEnd();
-					js.WritePropertyName("Features");
-					js.WriteStartArray();
-					foreach (string feature in features) {
-						js.WriteValue(feature);
-					}
-					js.WriteEnd();
-					js.WritePropertyName("Comments");
-					js.WriteStartArray();
-					foreach (string comment in comments) {
-						js.WriteValue(comment);
-					}
-					js.WriteEnd();
-					js.WritePropertyName("Duration");
-					js.WriteValue(duration);
-					js.WritePropertyName("Percent");
-					js.WriteValue(percentComplete);
-
-					js.WriteEndObject();
-				}
-				using (StreamWriter writer = File.CreateText(editingFile)) {
-					writer.WriteLine(sb.ToString());
-				}
+				Save();
 			}
 			else {
 				stopwatchButton.Foreground = new SolidColorBrush(greenStopwatch);
@@ -533,6 +578,9 @@ namespace Project_Tracker {
 
 			if (timerThread.IsAlive) {
 				timerThread.Abort();
+			}
+			if (readThread.IsAlive) {
+				readThread.Abort();
 			}
 		}
 
@@ -669,6 +717,37 @@ namespace Project_Tracker {
 		}
 
 		private void AddValue(object sender, MouseButtonEventArgs e) {
+			if (switchLabels.SelectedIndex == 0) {
+				errors.Add("");
+				errorsData.Add("0");
+			}
+			else if (switchLabels.SelectedIndex == 1) {
+				features.Add("");
+				featuresData.Add("0");
+			}
+			else if (switchLabels.SelectedIndex == 2) {
+				comments.Add("");
+				commentsData.Add("0");
+			}
+
+			Passthrough.Title = projectTitle;
+			Passthrough.Errors = errors.ToArray();
+			Passthrough.ErrorsData = errorsData.ToArray();
+			Passthrough.Features = features.ToArray();
+			Passthrough.FeaturesData = featuresData.ToArray();
+			Passthrough.Comments = comments.ToArray();
+			Passthrough.CommentsData = commentsData.ToArray();
+			Passthrough.Duration = duration;
+			Passthrough.Percent = percentComplete;
+			Passthrough.EditingFile = editingFile;
+			Passthrough.SelectedIndex = switchLabels.SelectedIndex;
+
+			Passthrough.IsAdding = true;
+			readThread = new Thread(Read);
+			readThread.Start();
+
+			AddNewItem newItem = new AddNewItem();			
+			newItem.Show();
 		}
 
 		private void CheckOff(object sender, MouseButtonEventArgs e) {

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Project_Tracker"
         mc:Ignorable="d"
-        Title="Edit Program - 0%" Height="700" Width="700" ResizeMode="NoResize" Closing="Window_Closing" PreviewKeyDown="KeyPress">
+        Title="Edit Program - 0%" Height="700" Width="700" ResizeMode="NoResize" Closing="Window_Closing" PreviewKeyDown="KeyPress" Icon="logo.png">
 	<Grid>
 		<TextBlock x:Name="durationLabel" HorizontalAlignment="Left" Margin="20,20,0,0" TextWrapping="Wrap" Text="00:00:00" VerticalAlignment="Top" FontSize="36" />
 
