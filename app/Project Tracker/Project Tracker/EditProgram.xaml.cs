@@ -48,9 +48,8 @@ namespace Project_Tracker {
 		private Stopwatch stopwatch;
 
 		// WARNING: READONLY VALUES. IF YOU CHANGE THESE, CHANGE IN OTHER FILES AS WELL
-		private readonly Color sortColor = Color.FromRgb(228, 233, 235);
-
 		private readonly Color greenStopwatch = Color.FromRgb(42, 112, 35);
+		private readonly Color completedColor = Color.FromRgb(108, 219, 86);
 		private readonly Color redStopwatch = Color.FromRgb(156, 9, 9);
 		private readonly Color selectionColor = Color.FromRgb(84, 207, 255);
 		private readonly FontFamily textFont = new FontFamily("Microsoft Sans Serif");
@@ -92,7 +91,7 @@ namespace Project_Tracker {
 			}
 
 			if (dataValues[index] == "1") {
-				newRow.Background = new SolidColorBrush(greenStopwatch);
+				newRow.Background = new SolidColorBrush(completedColor);
 			}
 
 			newRow.FontSize = 16;
@@ -131,7 +130,7 @@ namespace Project_Tracker {
 						previouslySelectedRow.Background = Brushes.White;
 					}
 					else if (dataValues[oldPos] == "1") { // Complete
-						previouslySelectedRow.Background = new SolidColorBrush(greenStopwatch);
+						previouslySelectedRow.Background = new SolidColorBrush(completedColor);
 					}
 				}
 			}
@@ -194,7 +193,7 @@ namespace Project_Tracker {
 						row.Background = Brushes.White;
 					}
 					else if (dataValues[i] == "1") { // Complete
-						row.Background = new SolidColorBrush(greenStopwatch);
+						row.Background = new SolidColorBrush(completedColor);
 					}
 				}
 				catch (ArgumentOutOfRangeException) { // This would occur if we just deleted something and the array is one smaller
