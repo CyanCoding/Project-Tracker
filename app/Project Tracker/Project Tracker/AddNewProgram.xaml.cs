@@ -148,47 +148,19 @@ namespace Project_Tracker {
 			errorAddButton.Visibility = Visibility.Hidden;
 
 			// Set up the next components
-			projectPercentInputBox.Visibility = Visibility.Visible;
-			projectPercentInputBox.Focus();
-			spacer1.Text = "%";
-			spacer1.Visibility = Visibility.Visible;
-			this.Height = 190;
-		}
+			nextButton.Content = "Finish";
+			projectTitleText.Text = projectTitle;
+			this.Height = 250;
 
-		private void SixthForward() { // Moving from percent complete to review
-			bool validPercent = CheckValid(projectPercentInputBox.Text, "percent");
-			if (validPercent) { // Percent is a valid number
-				if (projectPercentInputBox.Text == "" || projectPercentInputBox.Text == "0") {
-					projectPercentInputBox.Text = "00";
-				}
+			durationResult.Text = "Duration: " + duration;
+			errorResult.Text = "Errors: " + errors.Count;
+			featureResult.Text = "Features: " + features.Count;
+			commentResult.Text = "Comments: " + comments.Count;
 
-				if (projectPercentInputBox.Text[0] == '0') { // Replace 04% with 4%
-					projectPercentInputBox.Text = projectPercentInputBox.Text[1].ToString();
-				}
-
-				level = 6;
-
-				percentComplete = projectPercentInputBox.Text;
-				projectPercentInputBox.Visibility = Visibility.Hidden;
-				spacer1.Visibility = Visibility.Hidden;
-
-				// Set up the next components
-				nextButton.Content = "Finish";
-				projectTitleText.Text = projectTitle;
-				this.Height = 250;
-
-				durationResult.Text = "Duration: " + duration;
-				errorResult.Text = "Errors: " + errors.Count;
-				featureResult.Text = "Features: " + features.Count;
-				commentResult.Text = "Comments: " + comments.Count;
-				percentResult.Text = "Percent complete: " + percentComplete + "%";
-
-				durationResult.Visibility = Visibility.Visible;
-				errorResult.Visibility = Visibility.Visible;
-				featureResult.Visibility = Visibility.Visible;
-				commentResult.Visibility = Visibility.Visible;
-				percentResult.Visibility = Visibility.Visible;
-			}
+			durationResult.Visibility = Visibility.Visible;
+			errorResult.Visibility = Visibility.Visible;
+			featureResult.Visibility = Visibility.Visible;
+			commentResult.Visibility = Visibility.Visible;
 		}
 
 		private void Finish() { // Creating file for new project
@@ -268,7 +240,7 @@ namespace Project_Tracker {
 				js.WritePropertyName("Duration");
 				js.WriteValue(duration);
 				js.WritePropertyName("Percent");
-				js.WriteValue(percentComplete);
+				js.WriteValue("00");
 
 				js.WriteEndObject();
 			}
@@ -319,10 +291,6 @@ namespace Project_Tracker {
 					break;
 
 				case 5:
-					SixthForward();
-					break;
-
-				case 6:
 					Finish();
 					break;
 			}
@@ -519,11 +487,6 @@ namespace Project_Tracker {
 			}
 			else if (level == 5) {
 				if (e.Key == Key.Return) {
-					SixthForward();
-				}
-			}
-			else if (level == 6) {
-				if (e.Key == Key.Return) {
 					Finish();
 				}
 			}
@@ -598,29 +561,13 @@ namespace Project_Tracker {
 			projectCommentInputBox.Visibility = Visibility.Visible;
 			errorAddButton.Visibility = Visibility.Visible;
 			projectCommentInputBox.Focus();
-
-			// Hide old elements
-			projectPercentInputBox.Visibility = Visibility.Hidden;
-			spacer1.Text = ":";
-			spacer1.Visibility = Visibility.Hidden;
-		}
-
-		private void SixthBack() { // From results to percent complete
-			level = 5;
-
-			this.Height = 190;
-			projectTitleText.Text = "Percent complete";
 			nextButton.Content = "Next";
-			projectPercentInputBox.Visibility = Visibility.Visible;
-			projectPercentInputBox.Focus();
-			spacer1.Visibility = Visibility.Visible;
 
 			// Hide old elements
 			durationResult.Visibility = Visibility.Hidden;
 			errorResult.Visibility = Visibility.Hidden;
 			featureResult.Visibility = Visibility.Hidden;
 			commentResult.Visibility = Visibility.Hidden;
-			percentResult.Visibility = Visibility.Hidden;
 		}
 
 		private void cancelButton_Click(object sender, RoutedEventArgs e) {
@@ -647,10 +594,6 @@ namespace Project_Tracker {
 
 				case 5:
 					FifthBack();
-					break;
-
-				case 6:
-					SixthBack();
 					break;
 			}
 		}

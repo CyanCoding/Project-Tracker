@@ -79,14 +79,10 @@
 		</FlowDocumentScrollViewer>
 		<TextBox x:Name="projectCommentInputBox" HorizontalAlignment="Left" Margin="10,0,0,65" TextWrapping="Wrap" Text="" VerticalAlignment="Bottom" Width="417" FontSize="20" VerticalContentAlignment="Center" MaxLines="1" Height="36" Visibility="Hidden" Grid.ColumnSpan="2" SpellCheck.IsEnabled="True"/>
 
-		<!-- Percent elements -->
-		<TextBox x:Name="projectPercentInputBox" HorizontalAlignment="Left" Margin="10,54,0,0" TextWrapping="Wrap" Text="00" VerticalAlignment="Top" Width="64" FontSize="20" VerticalContentAlignment="Center" MaxLines="1" MaxLength="2" Height="36" TextAlignment="Center" Visibility="Hidden"/>
-
 		<!-- Result elements -->
 		<TextBlock x:Name="durationResult" HorizontalAlignment="Left" Margin="10,57,0,0" TextWrapping="Wrap" Text="Duration: 00:00:00" VerticalAlignment="Top" FontSize="14" Visibility="Hidden"/>
 		<TextBlock x:Name="errorResult" HorizontalAlignment="Left" Margin="10,81,0,0" TextWrapping="Wrap" Text="Errors: 0" VerticalAlignment="Top" FontSize="14" Visibility="Hidden"/>
 		<TextBlock x:Name="featureResult" HorizontalAlignment="Left" Margin="10,97,0,0" TextWrapping="Wrap" Text="Features: 0" VerticalAlignment="Top" FontSize="14" Visibility="Hidden"/>
 		<TextBlock x:Name="commentResult" HorizontalAlignment="Left" Margin="10,114,0,0" TextWrapping="Wrap" Text="Comments: 0" VerticalAlignment="Top" FontSize="14" Visibility="Hidden"/>
-		<TextBlock x:Name="percentResult" HorizontalAlignment="Left" Margin="10,138,0,0" TextWrapping="Wrap" Text="Percent complete: 00%" VerticalAlignment="Top" FontSize="14" Visibility="Hidden"/>
 	</Grid>
 </Window>
