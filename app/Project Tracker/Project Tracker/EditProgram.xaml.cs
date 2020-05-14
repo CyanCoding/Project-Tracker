@@ -135,6 +135,12 @@ namespace Project_Tracker {
 					}
 				}
 			}
+			else {
+				TableRow selectedRow = table.RowGroups[0].Rows[0];
+				selectedRow.Background = new SolidColorBrush(selectionColor);
+
+				rowSelectionID = 0;
+			}
 		}
 
 		/// <summary>
@@ -324,7 +330,6 @@ namespace Project_Tracker {
 
 				this.Dispatcher.Invoke(() =>
 				{
-					// TODO: Add features and comments tables
 					if (switchLabels.SelectedIndex == 0) { // Errors
 						errorRowsAdded = 0;
 						try {
@@ -335,6 +340,7 @@ namespace Project_Tracker {
 						catch (ArgumentOutOfRangeException) {
 							// They just added a new value
 							CalculatePercentage();
+							SelectionChange(0, 0, errorRowsAdded, errorTable, errorsData);
 						}
 						int index = 0;
 						foreach (string value in errors) {
@@ -353,6 +359,7 @@ namespace Project_Tracker {
 						catch (ArgumentOutOfRangeException) {
 							// They just added a new value
 							CalculatePercentage();
+							SelectionChange(0, 0, featureRowsAdded, featureTable, featuresData);
 						}
 						int index = 0;
 						foreach (string value in features) {
@@ -371,6 +378,7 @@ namespace Project_Tracker {
 						catch (ArgumentOutOfRangeException) {
 							// They just added a new value
 							CalculatePercentage();
+							SelectionChange(0, 0, commentsRowsAdded, commentTable, commentsData);
 						}
 						int index = 0;
 						foreach (string value in comments) {
@@ -579,8 +587,13 @@ namespace Project_Tracker {
 			if (timerThread.IsAlive) {
 				timerThread.Abort();
 			}
-			if (readThread.IsAlive) {
-				readThread.Abort();
+			try {
+				if (readThread.IsAlive) {
+					readThread.Abort();
+				}
+			}
+			catch (NullReferenceException) {
+				// We haven't tried to create a new item
 			}
 		}
 
@@ -696,18 +709,33 @@ namespace Project_Tracker {
 					errors.RemoveAt(rowSelectionID);
 					errorsData.RemoveAt(rowSelectionID);
 					ResetSelection(errorTable, errors, errorsData, 0, errorRowsAdded);
+
+					if (errors.Count == 0) {
+						checkmarkButton.ToolTip = "Mark as completed";
+						checkmarkButton.Text = "\xE739";
+					}
 				}
 				else if (switchLabels.SelectedIndex == 1) { // Features
 					SelectionChange(oldRowSelectionID, 0, featureRowsAdded, featureTable, featuresData);
 					features.RemoveAt(rowSelectionID);
 					featuresData.RemoveAt(rowSelectionID);
 					ResetSelection(featureTable, features, featuresData, 1, featureRowsAdded);
+
+					if (features.Count == 0) {
+						checkmarkButton.ToolTip = "Mark as completed";
+						checkmarkButton.Text = "\xE739";
+					}
 				}
 				else if (switchLabels.SelectedIndex == 2) { // Comments
 					SelectionChange(oldRowSelectionID, 0, commentsRowsAdded, commentTable, commentsData);
 					comments.RemoveAt(rowSelectionID);
 					commentsData.RemoveAt(rowSelectionID);
 					ResetSelection(commentTable, comments, commentsData, 2, commentsRowsAdded);
+
+					if (comments.Count == 0) {
+						checkmarkButton.ToolTip = "Mark as completed";
+						checkmarkButton.Text = "\xE739";
+					}
 				}
 			}
 			catch (ArgumentOutOfRangeException) { // They tried to press the delete button when there was no items in it
@@ -756,30 +784,59 @@ namespace Project_Tracker {
 					if (errorsData[rowSelectionID] == "0") { // Not checked, check it!
 						errorsData[rowSelectionID] = "1";
 						ResetSelection(errorTable, errors, errorsData, 0, errorRowsAdded);
+
+						if (errorRowsAdded == 1) {
+							checkmarkButton.ToolTip = "Mark as incomplete";
+							checkmarkButton.Text = "\xE73A";
+						}
 					}
 					else { // Uncheck it
 						errorsData[rowSelectionID] = "0";
 						ResetSelection(errorTable, errors, errorsData, 0, errorRowsAdded);
+
+						if (errorRowsAdded == 1) {
+							checkmarkButton.ToolTip = "Mark as completed";
+							checkmarkButton.Text = "\xE739";
+						}
 					}
 				}
 				else if (switchLabels.SelectedIndex == 1) { // Features
 					if (featuresData[rowSelectionID] == "0") {
 						featuresData[rowSelectionID] = "1";
 						ResetSelection(featureTable, features, featuresData, 1, featureRowsAdded);
+
+						if (featureRowsAdded == 1) {
+							checkmarkButton.ToolTip = "Mark as incomplete";
+							checkmarkButton.Text = "\xE73A";
+						}
 					}
 					else {
 						featuresData[rowSelectionID] = "0";
 						ResetSelection(featureTable, features, featuresData, 1, featureRowsAdded);
+
+						if (featureRowsAdded == 1) {
+							checkmarkButton.ToolTip = "Mark as completed";
+							checkmarkButton.Text = "\xE739";
+						}
 					}
 				}
 				else if (switchLabels.SelectedIndex == 2) { // Comments
 					if (commentsData[rowSelectionID] == "0") {
 						commentsData[rowSelectionID] = "1";
 						ResetSelection(commentTable, comments, commentsData, 2, commentsRowsAdded);
+
+						if (commentsRowsAdded == 1) {
+							checkmarkButton.ToolTip = "Mark as incomplete";
+							checkmarkButton.Text = "\xE73A";
+						}
 					}
 					else {
 						commentsData[rowSelectionID] = "0";
 						ResetSelection(commentTable, comments, commentsData, 2, commentsRowsAdded);
+						if (commentsRowsAdded == 1) {
+							checkmarkButton.ToolTip = "Mark as completed";
+							checkmarkButton.Text = "\xE739";
+						}
 					}
 				}
 			}
