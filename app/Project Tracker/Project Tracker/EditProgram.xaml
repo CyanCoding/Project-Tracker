@@ -9,7 +9,7 @@
 	<Grid>
 		<TextBlock x:Name="durationLabel" HorizontalAlignment="Left" Margin="20,20,0,0" TextWrapping="Wrap" Text="00:00:00" VerticalAlignment="Top" FontSize="36" />
 
-		<FlowDocumentScrollViewer x:Name="errorScrollView" IsToolBarVisible="False" Margin="10,140,10,60" VerticalScrollBarVisibility="Auto" BorderBrush="Black" BorderThickness="2">
+		<FlowDocumentScrollViewer x:Name="errorScrollView" IsToolBarVisible="False" Margin="10,140,10,60" VerticalScrollBarVisibility="Auto" BorderBrush="Black" BorderThickness="2" Cursor="Arrow">
 			<FlowDocument>
 				<Table x:Name="errorTable">
 					<TableRowGroup>
@@ -17,7 +17,7 @@
 				</Table>
 			</FlowDocument>
 		</FlowDocumentScrollViewer>
-		<FlowDocumentScrollViewer x:Name="featureScrollView" IsToolBarVisible="False" Margin="10,140,10,60" VerticalScrollBarVisibility="Auto" BorderBrush="Black" BorderThickness="2" Visibility="Hidden">
+		<FlowDocumentScrollViewer x:Name="featureScrollView" IsToolBarVisible="False" Margin="10,140,10,60" VerticalScrollBarVisibility="Auto" BorderBrush="Black" BorderThickness="2" Visibility="Hidden" Cursor="Arrow">
 			<FlowDocument>
 				<Table x:Name="featureTable">
 					<TableRowGroup>
@@ -25,7 +25,7 @@
 				</Table>
 			</FlowDocument>
 		</FlowDocumentScrollViewer>
-		<FlowDocumentScrollViewer x:Name="commentScrollView" IsToolBarVisible="False" Margin="10,140,10,60" HorizontalAlignment="Right" VerticalScrollBarVisibility="Auto" BorderBrush="Black" BorderThickness="2" Visibility="Hidden">
+		<FlowDocumentScrollViewer x:Name="commentScrollView" IsToolBarVisible="False" Margin="10,140,10,60" HorizontalAlignment="Right" VerticalScrollBarVisibility="Auto" BorderBrush="Black" BorderThickness="2" Visibility="Hidden" Cursor="Arrow">
 			<FlowDocument>
 				<Table x:Name="commentTable">
 					<TableRowGroup>
