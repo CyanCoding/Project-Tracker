@@ -19,9 +19,9 @@ namespace Project_Tracker_Installer {
     /// </summary>
     public partial class MainWindow : Window {
 
-        bool uninstall = false;
+        bool uninstall = false; // This is true if the program is already installed on the device
         bool retrying = false; // Used to determine whether the install button is actually being used as a retry button
-
+       
         readonly string PROGRAM_TITLE = "Project Tracker";
         string PROGRAM_VERSION = "calculating version...";
         readonly string PROGRAM_PATH = @"C:\Program Files\Project Tracker\Project Tracker.exe";
@@ -53,9 +53,13 @@ namespace Project_Tracker_Installer {
 
             File.Delete(VERSION_PATH);
             Dispatcher.Invoke(new Action(() => {
-                subTitle.Content = "Version: " + PROGRAM_VERSION;
+                if (!uninstall) {
+                    subTitle.Content = "Version: " + PROGRAM_VERSION;
+                }
+                
             }));
             installButton.IsEnabled = true;
+            reinstallButton.IsEnabled = true;
 
             if (subTitle.Content.ToString()== "Version: ") {
                 FinalResult("An error occured while installing");
@@ -69,12 +73,13 @@ namespace Project_Tracker_Installer {
             if ((Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\Project Tracker Installer.exe") != INSTALLER_PATH) {
                 string currentLocation = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\Project Tracker Installer.exe";
 
-                if (!File.Exists(INSTALLER_PATH)) {
+                if (!File.Exists(INSTALLER_PATH)) { // An installer file exists
                     try {
                         if (!Directory.Exists(INSTALL_DIRECTORY)) {
                             Directory.CreateDirectory(INSTALL_DIRECTORY);
                         }
 
+                        // Copy this program over to the new location
                         File.Copy(currentLocation, INSTALLER_PATH);
                         File.SetAttributes(INSTALLER_PATH, FileAttributes.Normal);
                     }
@@ -83,8 +88,9 @@ namespace Project_Tracker_Installer {
                         return;
                     }
                 }
-                else {
+                else { // No installer file exists
                     try {
+                        // Delete older installer and copy this one there
                         File.SetAttributes(INSTALLER_PATH, FileAttributes.Normal);
                         File.Delete(INSTALLER_PATH);
                         File.Copy(currentLocation, INSTALLER_PATH);
@@ -104,10 +110,22 @@ namespace Project_Tracker_Installer {
                     CreateNoWindow = true
                 };
                 Process.Start(start);
-                this.Hide();
+                this.Close();
 
                 return;
 
+            }
+            else { // We're in the right installation location but we need the version first for registry.
+                try {
+                    installButton.IsEnabled = false;
+                    reinstallButton.IsEnabled = false;
+                    WebClient client = new WebClient();
+                    client.DownloadFileCompleted += new AsyncCompletedEventHandler(GetVersion);
+                    client.DownloadFileAsync(new Uri(VERSION_DOWNLOAD_LINK), VERSION_PATH);
+                }
+                catch (WebException) {
+                    subTitle.Visibility = Visibility.Hidden; // Couldn't get version
+                }
             }
 
             if (!File.Exists(VERSION_FILE)) { // It's not an update
@@ -175,7 +193,7 @@ namespace Project_Tracker_Installer {
             subTitle.Content = "Installing";
 
             Uninstaller uninstaller = new Uninstaller();
-            uninstaller.Uninstall(DATA_DIRECTORY_PATH, INSTALLER_PATH, INSTALL_DIRECTORY);
+            uninstaller.Uninstall(DATA_DIRECTORY_PATH, INSTALLER_PATH, INSTALL_DIRECTORY, REGISTRY, SHORTCUT_LOCATION);
 
             Installer installer = new Installer();
 
