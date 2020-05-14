@@ -34,7 +34,7 @@ Head over to the [releases](https://github.com/CyanCoding/Project-Tracker/releas
 
 **If you already have a version of the Project Tracker installed**, when you launch the application you should be notified of the available update.
 
-**If you are reinstalling**, please uninstall and relaunch the installer to get this new version. There is currently a bug where the reinstall button does not work. We apologize if this is an inconvenience to you. A fix is already on the way!
+If you encounter an error while updating, please submit an [issue](https://github.com/CyanCoding/Project-Tracker/issues).
 
 Head over to the [roadmap](https://github.com/CyanCoding/Project-Tracker/blob/master/ROADMAP.md)
 for more information on future releases.
