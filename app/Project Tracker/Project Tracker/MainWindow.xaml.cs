@@ -15,12 +15,14 @@ namespace Project_Tracker {
 	public partial class MainWindow : Window {
 		private int rowsAdded = 0; // We use a global variable so the AddRow function knows what id of a row to edit
 		private int rowSelectionID = 0; // We use this to identify which row is currently selected
+		private int oldRowSelectionID = 1; // We use this to identify which row was last selected
 		private int filesUpdate = 0;
 		private bool addedProgram = false; // We do this so that we can only open a program if there is one to prevent an error
 		private static bool firstRun = true; // We use this to not call startup stuff more than once when MainWindow is called.
 		private List<string> tableValues = new List<string>();
 		public List<string> filesRead = new List<string>();
 		private Thread tableUpdateThread;
+		
 
 		// WARNING: READONLY VALUES. IF YOU CHANGE THESE, CHANGE IN OTHER FILES AS WELL
 		private readonly Color selectionColor = Color.FromRgb(84, 207, 255);
@@ -73,46 +75,43 @@ namespace Project_Tracker {
 			});
 		}
 
-		private void SelectionChange(bool isUp) {
-			this.Dispatcher.Invoke(() =>
-			{
-				if (rowSelectionID < 0) {
-					rowSelectionID = 0;
-				}
-				if (isUp == true && rowSelectionID != 0) { // REMEMBER: Going "up" actually brings the selection ID lower.
-					TableRow selectedRow = listTable.RowGroups[0].Rows[rowSelectionID];
-					selectedRow.Background = new SolidColorBrush(selectionColor);
+		/// <summary>
+		/// Changes which row is selected
+		/// </summary>
+		/// <param name="oldPos">The last selected row index.</param>
+		/// <param name="newPos">The index of the desired row to be selected.</param>
+		private void SelectionChange(int oldPos, int newPos) {
+			if (newPos < 1) {
+				newPos = 1;
+			}
 
-					if ((rowSelectionID - 1) % 2 == 0) {
-						TableRow previouslySelectedRow = listTable.RowGroups[0].Rows[rowSelectionID + 1];
-						previouslySelectedRow.Background = new SolidColorBrush(sortColor);
-					}
-					else {
-						TableRow previouslySelectedRow = listTable.RowGroups[0].Rows[rowSelectionID + 1];
+			if (newPos > oldPos && newPos > rowsAdded - 1) { // Moved down and newPos is too big
+				rowSelectionID--;
+				return;
+			}
+
+			if (rowsAdded > 1) {
+				// Set the color of the newly selected item
+				TableRow selectedRow = listTable.RowGroups[0].Rows[newPos];
+				selectedRow.Background = new SolidColorBrush(selectionColor);
+
+				if (oldPos != newPos) { // We don't want to draw over the already selected one
+					TableRow previouslySelectedRow = listTable.RowGroups[0].Rows[oldPos];
+					// Set the color of the old selected item
+					if (oldPos % 2 == 0) {
 						previouslySelectedRow.Background = Brushes.White;
 					}
-				}
-				else if (isUp == false) {
-					if (rowSelectionID < rowsAdded) {
-						TableRow selectedRow = listTable.RowGroups[0].Rows[rowSelectionID];
-						selectedRow.Background = new SolidColorBrush(selectionColor);
-
-						if (rowSelectionID != 0) {
-							if ((rowSelectionID - 1) % 2 == 0) {
-								TableRow previouslySelectedRow = listTable.RowGroups[0].Rows[rowSelectionID - 1];
-								previouslySelectedRow.Background = new SolidColorBrush(sortColor);
-							}
-							else {
-								TableRow previouslySelectedRow = listTable.RowGroups[0].Rows[rowSelectionID - 1];
-								previouslySelectedRow.Background = Brushes.White;
-							}
-						}
-					}
 					else {
-						rowSelectionID--;
+						previouslySelectedRow.Background = new SolidColorBrush(sortColor);
 					}
 				}
-			});
+			}
+			else if (rowsAdded == 1) {
+				TableRow selectedRow = listTable.RowGroups[0].Rows[0];
+				selectedRow.Background = new SolidColorBrush(selectionColor);
+
+				rowSelectionID = 0;
+			}
 		}
 
 		/*
@@ -122,6 +121,16 @@ namespace Project_Tracker {
 		private void UpdateTable() {
 			while (true) {
 				try {
+					if (Passthrough.IsDeleting) {
+						Passthrough.IsDeleting = false;
+
+						Dispatcher.Invoke(new Action(() =>
+						{
+							this.Hide();
+							this.Close();
+						}));
+						break;
+					}
 					if (Directory.Exists(DATA_DIRECTORY)) { // Check if data directory exists and read files
 						string[] files = Directory.GetFiles(DATA_DIRECTORY, pathExtension, SearchOption.AllDirectories);
 
@@ -150,13 +159,11 @@ namespace Project_Tracker {
 						filesUpdate = 0;
 						for (int i = 0; i < rowsAdded - 1; i++) {
 							string json = File.ReadAllText(filesRead[i]);
-							dynamic array = JsonConvert.DeserializeObject(json);
 
 							MainTableManifest.Rootobject mainTable = JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
 
 							Dispatcher.Invoke(new Action(() =>
 							{
-								// TODO: See if we can optimize this repetitive code
 								// Title
 								listTable.RowGroups[0].Rows[i + 1].Cells.RemoveRange(0, 1);
 								listTable.RowGroups[0].Rows[i + 1].Cells.Insert(0, new TableCell(new Paragraph(new Run(" " + mainTable.Title))));
@@ -235,11 +242,12 @@ namespace Project_Tracker {
 
 			tableUpdateThread = new Thread(UpdateTable); // Start the background resize thread
 			tableUpdateThread.Start();
+
+			SelectionChange(1, 1);
 		}
 
 		private void ShowUpdate(object sender, AsyncCompletedEventArgs e) {
 			string json = File.ReadAllText(VERSION_INFO);
-			dynamic array = JsonConvert.DeserializeObject(json);
 
 			UpdateManifest.Rootobject update = JsonConvert.DeserializeObject<UpdateManifest.Rootobject>(json);
 
@@ -249,17 +257,16 @@ namespace Project_Tracker {
 			}
 		}
 
-		private void KeyPress(object sender, System.Windows.Input.KeyEventArgs e) {
-			if (e.Key == Key.Down) {
-				rowSelectionID++;
-
-				SelectionChange(false);
-			}
-			else if (e.Key == Key.Up) {
-				if (rowSelectionID > 1) {
+		private void KeyPress(object sender, KeyEventArgs e) {
+			if (e.Key == Key.Down || e.Key == Key.Up) { // Either arrow is pressed
+				if (e.Key == Key.Down) {
+					rowSelectionID++;
+				}
+				else if (e.Key == Key.Up && rowSelectionID > 1) {
 					rowSelectionID--;
 				}
-				SelectionChange(true);
+				SelectionChange(oldRowSelectionID, rowSelectionID);
+				oldRowSelectionID = rowSelectionID;
 			}
 		}
 

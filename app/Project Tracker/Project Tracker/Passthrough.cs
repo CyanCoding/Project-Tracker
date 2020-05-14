@@ -26,5 +26,8 @@ namespace Project_Tracker {
 		// This is just used for optimization to not run the read thread
 		// If we're not about to add something
 		public static bool IsAdding { get; set; }
+
+		// Whether we're deleting the edit program file or not
+		public static bool IsDeleting { get; set; }
 	}
 }

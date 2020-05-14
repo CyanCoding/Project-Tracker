@@ -59,8 +59,6 @@ namespace Project_Tracker {
 
 			Startup();
 		}
-
-		// TODO: You can change values from the function. No need to repeat the code. Optimize NOW
 		/// <summary>
 		/// Adds a row to a certain table
 		/// </summary>
@@ -134,7 +132,7 @@ namespace Project_Tracker {
 					}
 				}
 			}
-			else {
+			else if (rowsAdded == 1) {
 				TableRow selectedRow = table.RowGroups[0].Rows[0];
 				selectedRow.Background = new SolidColorBrush(selectionColor);
 
@@ -297,22 +295,56 @@ namespace Project_Tracker {
 				}
 			}
 
-			long percent = (totalCheckedItems * 100) / totalItems;
+			long percent;
+			try {
+				percent = (totalCheckedItems * 100) / totalItems;
+			}
+			catch (DivideByZeroException) {
+				percent = 0;
+			}
 			percentComplete = percent.ToString();
 			if (percent <= 9) {
 				percentComplete = "0" + percent.ToString();
 				// Would convert 9% to 09%
 			}
-			
-			this.Title = projectTitle + " - " + percentComplete + "%";
+
+			this.Dispatcher.Invoke(() =>
+			{
+				if (Passthrough.Title != "") {
+					this.Title = Passthrough.Title + " - " + percentComplete + "%";
+				}
+				else {
+					this.Title = projectTitle + " - " + percentComplete + "%";
+				}
+			});
 			Save();
 		}
 
 		private void Read() {
 			while (Passthrough.IsAdding) {
 				Thread.Sleep(1000);
+
+				if (Passthrough.IsDeleting) {
+					Passthrough.IsAdding = false;
+
+					isStopwatchRunning = false;
+
+					// Exit out of all threads forcefully
+					if (timerThread.IsAlive) {
+						timerThread.Abort();
+					}
+
+					this.Dispatcher.Invoke(() =>
+					{
+						this.Hide();
+						this.Close();
+					});
+					break;
+				}
+
+
+				CalculatePercentage();
 				string json = File.ReadAllText(editingFile);
-				dynamic array = JsonConvert.DeserializeObject(json);
 				MainTableManifest.Rootobject values = JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
 
 				// Set values for saving feature to rewrite
@@ -338,7 +370,6 @@ namespace Project_Tracker {
 						}
 						catch (ArgumentOutOfRangeException) {
 							// They just added a new value
-							CalculatePercentage();
 							SelectionChange(0, 0, errorRowsAdded, errorTable, errorsData);
 						}
 						int index = 0;
@@ -357,7 +388,6 @@ namespace Project_Tracker {
 						}
 						catch (ArgumentOutOfRangeException) {
 							// They just added a new value
-							CalculatePercentage();
 							SelectionChange(0, 0, featureRowsAdded, featureTable, featuresData);
 						}
 						int index = 0;
@@ -376,7 +406,6 @@ namespace Project_Tracker {
 						}
 						catch (ArgumentOutOfRangeException) {
 							// They just added a new value
-							CalculatePercentage();
 							SelectionChange(0, 0, commentsRowsAdded, commentTable, commentsData);
 						}
 						int index = 0;
@@ -404,6 +433,16 @@ namespace Project_Tracker {
 						js.WriteStartObject();
 
 						js.WritePropertyName("Title");
+
+						if (Passthrough.Title != "") {
+							if (Passthrough.Title != projectTitle) {
+								projectTitle = Passthrough.Title; // Sync up values after changing title from details window
+							}
+						}
+						else { // Set title for passthrough
+							Passthrough.Title = projectTitle;
+						}
+
 						js.WriteValue(projectTitle);
 
 						js.WritePropertyName("Errors");
@@ -474,8 +513,9 @@ namespace Project_Tracker {
 
 			editingFile = Passthrough.EditingFile;
 
+			Passthrough.Title = "";
+
 			string json = File.ReadAllText(editingFile);
-			dynamic array = JsonConvert.DeserializeObject(json);
 			MainTableManifest.Rootobject values = JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
 
 			// Set values for saving feature to rewrite
@@ -556,7 +596,24 @@ namespace Project_Tracker {
 		}
 
 		private void Edit(object sender, MouseButtonEventArgs e) {
+			Passthrough.Title = projectTitle;
+			Passthrough.Errors = errors.ToArray();
+			Passthrough.ErrorsData = errorsData.ToArray();
+			Passthrough.Features = features.ToArray();
+			Passthrough.FeaturesData = featuresData.ToArray();
+			Passthrough.Comments = comments.ToArray();
+			Passthrough.CommentsData = commentsData.ToArray();
+			Passthrough.Duration = duration;
+			Passthrough.Percent = percentComplete;
+			Passthrough.EditingFile = editingFile;
+			Passthrough.SelectedIndex = switchLabels.SelectedIndex;
 
+			Passthrough.IsAdding = true;
+			readThread = new Thread(Read);
+			readThread.Start();
+
+			EditProgramDetails details = new EditProgramDetails();
+			details.Show();
 		}
 
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {

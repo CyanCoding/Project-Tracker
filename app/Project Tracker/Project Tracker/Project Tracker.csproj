@@ -69,6 +69,9 @@
     <Compile Include="EditProgram.xaml.cs">
       <DependentUpon>EditProgram.xaml</DependentUpon>
     </Compile>
+    <Compile Include="EditProgramDetails.xaml.cs">
+      <DependentUpon>EditProgramDetails.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Passthrough.cs" />
     <Compile Include="UpdateManifest.cs" />
     <Compile Include="UpdateWindow.xaml.cs">
@@ -83,6 +86,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="EditProgram.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EditProgramDetails.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
