@@ -105,9 +105,11 @@ namespace Project_Tracker {
 					selectedRow.Background = new SolidColorBrush(selectionColor);
 
 					if (dataValues[newPos] == "1") { // Checked checkmark
+						checkmarkButton.ToolTip = "Mark as incomplete";
 						checkmarkButton.Text = "\xE73A";
 					}
 					else { // Unchecked checkmark
+						checkmarkButton.ToolTip = "Mark as completed";
 						checkmarkButton.Text = "\xE739";
 					}
 
@@ -425,13 +427,16 @@ namespace Project_Tracker {
 			}
 			try {
 				if (errorsData[0] == "1") { // Checked checkbox
+					checkmarkButton.ToolTip = "Mark as incomplete";
 					checkmarkButton.Text = "\xE73A";
 				}
 				else { // Unchecked checkbox
+					checkmarkButton.ToolTip = "Mark as completed";
 					checkmarkButton.Text = "\xE739";
 				}
 			}
 			catch (ArgumentOutOfRangeException) { // No value there so uncheck it
+				checkmarkButton.ToolTip = "Mark as completed";
 				checkmarkButton.Text = "\xE739";
 			}
 
@@ -574,13 +579,16 @@ namespace Project_Tracker {
 
 					try {
 						if (errorsData[0] == "1") { // Checked checkbox
+							checkmarkButton.ToolTip = "Mark as incomplete";
 							checkmarkButton.Text = "\xE73A";
 						}
 						else { // Unchecked checkbox
+							checkmarkButton.ToolTip = "Mark as completed";
 							checkmarkButton.Text = "\xE739";
 						}
 					}
 					catch (ArgumentOutOfRangeException) { // No value there so uncheck it
+						checkmarkButton.ToolTip = "Mark as completed";
 						checkmarkButton.Text = "\xE739";
 					}
 
@@ -593,13 +601,16 @@ namespace Project_Tracker {
 
 					try {
 						if (featuresData[0] == "1") { // Checked checkbox
+							checkmarkButton.ToolTip = "Mark as incomplete";
 							checkmarkButton.Text = "\xE73A";
 						}
 						else { // Unchecked checkbox
+							checkmarkButton.ToolTip = "Mark as completed";
 							checkmarkButton.Text = "\xE739";
 						}
 					}
 					catch (ArgumentOutOfRangeException) { // No value there so uncheck it
+						checkmarkButton.ToolTip = "Mark as completed";
 						checkmarkButton.Text = "\xE739";
 					}
 
@@ -612,13 +623,16 @@ namespace Project_Tracker {
 
 					try {
 						if (commentsData[0] == "1") { // Checked checkbox
+							checkmarkButton.ToolTip = "Mark as incomplete";
 							checkmarkButton.Text = "\xE73A";
 						}
 						else { // Unchecked checkbox
+							checkmarkButton.ToolTip = "Mark as completed";
 							checkmarkButton.Text = "\xE739";
 						}
 					}
 					catch (ArgumentOutOfRangeException) { // No value there so uncheck it
+						checkmarkButton.ToolTip = "Mark as completed";
 						checkmarkButton.Text = "\xE739";
 					}
 

@@ -48,13 +48,13 @@
 		</Border>
 
 		<Border BorderBrush="LightGray" BorderThickness="0">
-			<TextBlock x:Name="removeButton" HorizontalAlignment="Right" Margin="0,0,10,10" TextWrapping="Wrap" Text="&#xECC9;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="RemoveValue" />
+			<TextBlock x:Name="removeButton" HorizontalAlignment="Right" Margin="0,0,10,10" TextWrapping="Wrap" Text="&#xECC9;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="RemoveValue" ToolTip="Delete this item" />
 		</Border>
 		<Border BorderBrush="LightGray" BorderThickness="0">
-			<TextBlock x:Name="addNewButton" HorizontalAlignment="Right" Margin="0,0,50,10" TextWrapping="Wrap" Text="&#xECC8;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="AddValue" />
+			<TextBlock x:Name="addNewButton" HorizontalAlignment="Right" Margin="0,0,50,10" TextWrapping="Wrap" Text="&#xECC8;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="AddValue" ToolTip="Add a new item" />
 		</Border>
 		<Border BorderBrush="LightGray" BorderThickness="0">
-			<TextBlock x:Name="checkmarkButton" HorizontalAlignment="Right" Margin="0,0,90,10" TextWrapping="Wrap" Text="&#xE739;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="CheckOff" />
+			<TextBlock x:Name="checkmarkButton" HorizontalAlignment="Right" Margin="0,0,90,10" TextWrapping="Wrap" Text="&#xE739;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="CheckOff" ToolTip="Mark as completed" />
 		</Border>
 	</Grid>
 </Window>
