@@ -184,6 +184,7 @@ namespace Project_Tracker {
 					break;
 				}
 			}
+
 			SelectionChange(0, 0, totalRows, table, dataValues);
 		}
 
@@ -259,6 +260,38 @@ namespace Project_Tracker {
 			}
 		}
 
+		private void CalculatePercentage() {
+			long totalItems = errorsData.Count + featuresData.Count + commentsData.Count;
+			long totalCheckedItems = 0;
+
+			foreach (string data in errorsData) {
+				if (data == "1") {
+					totalCheckedItems++;
+				}
+			}
+			foreach (string data in featuresData) {
+				if (data == "1") {
+					totalCheckedItems++;
+				}
+			}
+			foreach (string data in commentsData) {
+				if (data == "1") {
+					totalCheckedItems++;
+				}
+			}
+
+			long percent = (totalCheckedItems * 100) / totalItems;
+			percentComplete = percent.ToString();
+			if (percent <= 9) {
+				percentComplete = "0" + percent.ToString();
+				// Would convert 9% to 09%
+			}
+			
+			this.Title = projectTitle + " - " + percentComplete + "%";
+			Save();
+		}
+
+		// TODO: We need this to stop freezing
 		private void Save() {
 			StringBuilder sb = new StringBuilder();
 			StringWriter sw = new StringWriter(sb);
@@ -387,15 +420,25 @@ namespace Project_Tracker {
 				ResetSelection(commentTable, comments, commentsData, 2, commentsRowsAdded);
 
 				errorScrollView.Focus();
-
 				isTablesGenerated = true;
-
-				this.Title = values.Title + " - " + values.Percent + "%";
 				durationLabel.Text = values.Duration;
-
-				timerThread = new Thread(StopwatchTimer);
-				timerThread.Start();
 			}
+			try {
+				if (errorsData[0] == "1") { // Checked checkbox
+					checkmarkButton.Text = "\xE73A";
+				}
+				else { // Unchecked checkbox
+					checkmarkButton.Text = "\xE739";
+				}
+			}
+			catch (ArgumentOutOfRangeException) { // No value there so uncheck it
+				checkmarkButton.Text = "\xE739";
+			}
+
+			timerThread = new Thread(StopwatchTimer);
+			timerThread.Start();
+
+			CalculatePercentage();
 		}
 
 		private void Stopwatch(object sender, MouseButtonEventArgs e) {
@@ -529,6 +572,18 @@ namespace Project_Tracker {
 					featureScrollView.Visibility = Visibility.Hidden;
 					commentScrollView.Visibility = Visibility.Hidden;
 
+					try {
+						if (errorsData[0] == "1") { // Checked checkbox
+							checkmarkButton.Text = "\xE73A";
+						}
+						else { // Unchecked checkbox
+							checkmarkButton.Text = "\xE739";
+						}
+					}
+					catch (ArgumentOutOfRangeException) { // No value there so uncheck it
+						checkmarkButton.Text = "\xE739";
+					}
+
 					errorScrollView.Focus();
 				}
 				else if (switchLabels.SelectedIndex == 1) { // Features
@@ -536,12 +591,36 @@ namespace Project_Tracker {
 					featureScrollView.Visibility = Visibility.Visible;
 					commentScrollView.Visibility = Visibility.Hidden;
 
+					try {
+						if (featuresData[0] == "1") { // Checked checkbox
+							checkmarkButton.Text = "\xE73A";
+						}
+						else { // Unchecked checkbox
+							checkmarkButton.Text = "\xE739";
+						}
+					}
+					catch (ArgumentOutOfRangeException) { // No value there so uncheck it
+						checkmarkButton.Text = "\xE739";
+					}
+
 					featureScrollView.Focus();
 				}
 				else { // Comments
 					errorScrollView.Visibility = Visibility.Hidden;
 					featureScrollView.Visibility = Visibility.Hidden;
 					commentScrollView.Visibility = Visibility.Visible;
+
+					try {
+						if (commentsData[0] == "1") { // Checked checkbox
+							checkmarkButton.Text = "\xE73A";
+						}
+						else { // Unchecked checkbox
+							checkmarkButton.Text = "\xE739";
+						}
+					}
+					catch (ArgumentOutOfRangeException) { // No value there so uncheck it
+						checkmarkButton.Text = "\xE739";
+					}
 
 					commentScrollView.Focus();
 				}
@@ -572,46 +651,50 @@ namespace Project_Tracker {
 			catch (ArgumentOutOfRangeException) { // They tried to press the delete button when there was no items in it
 				return;
 			}
-
-			Save();
+			CalculatePercentage();
 		}
 
 		private void AddValue(object sender, MouseButtonEventArgs e) {
 		}
 
 		private void CheckOff(object sender, MouseButtonEventArgs e) {
-			if (switchLabels.SelectedIndex == 0) { // Errors
-				if (errorsData[rowSelectionID] == "0") { // Not checked, check it!
-					errorsData[rowSelectionID] = "1";
-					ResetSelection(errorTable, errors, errorsData, 0, errorRowsAdded);
+			try {
+				if (switchLabels.SelectedIndex == 0) { // Errors
+					if (errorsData[rowSelectionID] == "0") { // Not checked, check it!
+						errorsData[rowSelectionID] = "1";
+						ResetSelection(errorTable, errors, errorsData, 0, errorRowsAdded);
+					}
+					else { // Uncheck it
+						errorsData[rowSelectionID] = "0";
+						ResetSelection(errorTable, errors, errorsData, 0, errorRowsAdded);
+					}
 				}
-				else { // Uncheck it
-					errorsData[rowSelectionID] = "0";
-					ResetSelection(errorTable, errors, errorsData, 0, errorRowsAdded);
+				else if (switchLabels.SelectedIndex == 1) { // Features
+					if (featuresData[rowSelectionID] == "0") {
+						featuresData[rowSelectionID] = "1";
+						ResetSelection(featureTable, features, featuresData, 1, featureRowsAdded);
+					}
+					else {
+						featuresData[rowSelectionID] = "0";
+						ResetSelection(featureTable, features, featuresData, 1, featureRowsAdded);
+					}
+				}
+				else if (switchLabels.SelectedIndex == 2) { // Comments
+					if (commentsData[rowSelectionID] == "0") {
+						commentsData[rowSelectionID] = "1";
+						ResetSelection(commentTable, comments, commentsData, 2, commentsRowsAdded);
+					}
+					else {
+						commentsData[rowSelectionID] = "0";
+						ResetSelection(commentTable, comments, commentsData, 2, commentsRowsAdded);
+					}
 				}
 			}
-			else if (switchLabels.SelectedIndex == 1) { // Features
-				if (featuresData[rowSelectionID] == "0") {
-					featuresData[rowSelectionID] = "1";
-					ResetSelection(featureTable, features, featuresData, 1, featureRowsAdded);
-				}
-				else {
-					featuresData[rowSelectionID] = "0";
-					ResetSelection(featureTable, features, featuresData, 1, featureRowsAdded);
-				}
+			catch (ArgumentOutOfRangeException) {
+				// Happens if they try to check nothing
+				return;
 			}
-			else if (switchLabels.SelectedIndex == 2) { // Comments
-				if (commentsData[rowSelectionID] == "0") {
-					commentsData[rowSelectionID] = "1";
-					ResetSelection(commentTable, comments, commentsData, 2, commentsRowsAdded);
-				}
-				else {
-					commentsData[rowSelectionID] = "0";
-					ResetSelection(commentTable, comments, commentsData, 2, commentsRowsAdded);
-				}
-			}
-
-			Save();
+			CalculatePercentage();
 		}
 	}
 }
