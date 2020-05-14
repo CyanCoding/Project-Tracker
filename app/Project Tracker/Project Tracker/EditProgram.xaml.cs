@@ -556,25 +556,7 @@ namespace Project_Tracker {
 		}
 
 		private void Edit(object sender, MouseButtonEventArgs e) {
-			// Hide everything
-			durationLabel.Visibility = Visibility.Hidden;
-			commentScrollView.Visibility = Visibility.Hidden;
-			errorScrollView.Visibility = Visibility.Hidden;
-			featureScrollView.Visibility = Visibility.Hidden;
 
-			// Create new checkboxes
-			CheckBox box;
-			StackPanel panel = new StackPanel { Orientation = System.Windows.Controls.Orientation.Vertical };
-			for (int i = 0; i < errors.Count; i++) {
-				box = new CheckBox();
-				box.Content = errors[i];
-				box.VerticalAlignment = VerticalAlignment.Top;
-				box.HorizontalAlignment = HorizontalAlignment.Left;
-				box.Margin = new Thickness(10, i * 50, 50, 50);
-
-				panel.Children.Add(box);
-			}
-			this.Content = panel;
 		}
 
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {

@@ -41,7 +41,7 @@
 		</ComboBox>
 
 		<Border BorderBrush="LightGray" BorderThickness="0">
-			<TextBlock x:Name="editButton" HorizontalAlignment="Left" Margin="10,0,0,10" TextWrapping="Wrap" Text="&#xE70F;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="Edit" />
+			<TextBlock x:Name="settingsButton" HorizontalAlignment="Left" Margin="10,0,0,10" TextWrapping="Wrap" Text="&#xE713;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="Edit" />
 		</Border>
 		<Border BorderBrush="LightGray" BorderThickness="0">
 			<TextBlock x:Name="stopwatchButton" HorizontalAlignment="Left" Margin="50,0,0,10" TextWrapping="Wrap" Text="&#xE916;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="Stopwatch" Foreground="#FF9C0909" />
