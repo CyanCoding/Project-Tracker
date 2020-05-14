@@ -4,6 +4,9 @@ of their coding projects in one place. With the Project Tracker,
 you can easily view each project's errors, feature suggestions, 
 comments, time spent on the project, and percent complete!
 
+Head over to the [roadmap](https://github.com/CyanCoding/Project-Tracker/blob/master/ROADMAP.md)
+for information on future releases.
+
 ---
 ## Latest version:
 ### v1.0:
@@ -36,5 +39,3 @@ Head over to the [releases](https://github.com/CyanCoding/Project-Tracker/releas
 
 If you encounter an error while updating, please submit an [issue](https://github.com/CyanCoding/Project-Tracker/issues).
 
-Head over to the [roadmap](https://github.com/CyanCoding/Project-Tracker/blob/master/ROADMAP.md)
-for more information on future releases.
