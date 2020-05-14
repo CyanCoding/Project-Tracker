@@ -18,7 +18,7 @@ namespace Project_Tracker {
 
 		private readonly string INSTALLER_PATH = @"C:\Program Files\Project Tracker\Project Tracker Installer.exe";
 		private readonly string VERSION_FILE = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/update.txt";
-		private readonly string CURRENT_VERSION = "0.6";
+		private readonly string CURRENT_VERSION = "1.0";
 		private readonly Color sortColor = Color.FromRgb(228, 233, 235);
 		private readonly FontFamily textFont = new FontFamily("Microsoft Sans Serif");
 
