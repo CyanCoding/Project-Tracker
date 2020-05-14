@@ -4,37 +4,34 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Net;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Documents;
-using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Project_Tracker {
-	public partial class MainWindow : Window {
-		int rowsAdded = 0; // We use a global variable so the AddRow function knows what id of a row to edit
-		int rowSelectionID = 0; // We use this to identify which row is currently selected
-		int filesUpdate = 0;
-		bool addedProgram = false; // We do this so that we can only open a program if there is one to prevent an error
-		static bool firstRun = true; // We use this to not call startup stuff more than once when MainWindow is called.
-		List<string> tableValues = new List<string>();
-		public List<string> filesRead = new List<string>();
-		Thread tableUpdateThread;
 
+	public partial class MainWindow : Window {
+		private int rowsAdded = 0; // We use a global variable so the AddRow function knows what id of a row to edit
+		private int rowSelectionID = 0; // We use this to identify which row is currently selected
+		private int filesUpdate = 0;
+		private bool addedProgram = false; // We do this so that we can only open a program if there is one to prevent an error
+		private static bool firstRun = true; // We use this to not call startup stuff more than once when MainWindow is called.
+		private List<string> tableValues = new List<string>();
+		public List<string> filesRead = new List<string>();
+		private Thread tableUpdateThread;
 
 		// WARNING: READONLY VALUES. IF YOU CHANGE THESE, CHANGE IN OTHER FILES AS WELL
-		readonly Color selectionColor = Color.FromRgb(84, 207, 255);
-		readonly Color sortColor = Color.FromRgb(228, 233, 235);
-		readonly FontFamily textFont = new FontFamily("Microsoft Sans Serif");
-		readonly string pathExtension = "*.json";
-		readonly string DATA_DIRECTORY = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/data";
-		readonly string VERSION_MANIFEST_URL = "https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/version.json";
-		readonly string VERSION_INFO = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/version.json";
-		readonly string CURRENT_VERSION = "0.6"; // IF YOU CHANGE THIS, ALSO CHANGE IT IN UpdateWindow.xaml.cs
+		private readonly Color selectionColor = Color.FromRgb(84, 207, 255);
+
+		private readonly Color sortColor = Color.FromRgb(228, 233, 235);
+		private readonly FontFamily textFont = new FontFamily("Microsoft Sans Serif");
+		private readonly string pathExtension = "*.json";
+		private readonly string DATA_DIRECTORY = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/data";
+		private readonly string VERSION_MANIFEST_URL = "https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/version.json";
+		private readonly string VERSION_INFO = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/version.json";
+		private readonly string CURRENT_VERSION = "0.6"; // IF YOU CHANGE THIS, ALSO CHANGE IT IN UpdateWindow.xaml.cs
 
 		public MainWindow() {
 			InitializeComponent();
@@ -47,10 +44,10 @@ namespace Project_Tracker {
 			// rowsAdded++;
 			rowsAdded = listTable.RowGroups[0].Rows.Count - 1;
 
-			Dispatcher.Invoke(() => {
+			Dispatcher.Invoke(() =>
+			{
 				listTable.RowGroups[0].Rows.Add(new TableRow());
 				TableRow newRow = listTable.RowGroups[0].Rows[rowsAdded];
-
 
 				if (rowsAdded == 1) { // It's the first row so we add the selection to it
 					newRow.Background = new SolidColorBrush(selectionColor);
@@ -77,7 +74,8 @@ namespace Project_Tracker {
 		}
 
 		private void SelectionChange(bool isUp) {
-			this.Dispatcher.Invoke(() => {
+			this.Dispatcher.Invoke(() =>
+			{
 				if (rowSelectionID < 0) {
 					rowSelectionID = 0;
 				}
@@ -93,7 +91,6 @@ namespace Project_Tracker {
 						TableRow previouslySelectedRow = listTable.RowGroups[0].Rows[rowSelectionID + 1];
 						previouslySelectedRow.Background = Brushes.White;
 					}
-
 				}
 				else if (isUp == false) {
 					if (rowSelectionID < rowsAdded) {
@@ -121,6 +118,7 @@ namespace Project_Tracker {
 		/*
 		 * Updates the table by adding any new files to the table
 		 */
+
 		private void UpdateTable() {
 			while (true) {
 				try {
@@ -128,7 +126,6 @@ namespace Project_Tracker {
 						string[] files = Directory.GetFiles(DATA_DIRECTORY, pathExtension, SearchOption.AllDirectories);
 
 						foreach (string path in files) {
-
 							if (!filesRead.Contains(path)) {
 								// Convert each json file to a table row
 								using (StreamReader reader = new StreamReader(path)) {
@@ -143,7 +140,6 @@ namespace Project_Tracker {
 									// rowsAdded++;
 								}
 							}
-
 						}
 					}
 					else { // Data directory doesn't exist so we create it
@@ -155,7 +151,7 @@ namespace Project_Tracker {
 
 					if (filesUpdate == 50) {
 						filesUpdate = 0;
-						for (int i = 0; i < rowsAdded - 1; i ++) {
+						for (int i = 0; i < rowsAdded - 1; i++) {
 							using (StreamReader reader = new StreamReader(filesRead[i])) {
 								string json = reader.ReadToEnd();
 
@@ -163,7 +159,8 @@ namespace Project_Tracker {
 
 								MainTableManifest.Rootobject mainTable = JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
 
-								Dispatcher.Invoke(new Action(() => {
+								Dispatcher.Invoke(new Action(() =>
+								{
 									// TODO: See if we can optimize this repetitive code
 									// Title
 									listTable.RowGroups[0].Rows[i + 1].Cells.RemoveRange(0, 1);
@@ -185,9 +182,7 @@ namespace Project_Tracker {
 									listTable.RowGroups[0].Rows[i + 1].Cells.Insert(5, new TableCell(new Paragraph(new Run(" " + mainTable.Percent + "%"))));
 								}));
 							}
-
 						}
-
 					}
 				}
 				catch (IOException) { // File is being used by something else so just wait until we can do it
@@ -231,7 +226,6 @@ namespace Project_Tracker {
 					}
 				}
 				catch (IOException) {
-
 				}
 
 				if (File.Exists(VERSION_INFO)) {
@@ -250,7 +244,7 @@ namespace Project_Tracker {
 				firstRun = false;
 			}
 
-			tableUpdateThread = new Thread(UpdateTable); // Start the background resize thread			
+			tableUpdateThread = new Thread(UpdateTable); // Start the background resize thread
 			tableUpdateThread.Start();
 		}
 
@@ -272,7 +266,7 @@ namespace Project_Tracker {
 		private void KeyPress(object sender, System.Windows.Input.KeyEventArgs e) {
 			if (e.Key == Key.Down) {
 				rowSelectionID++;
-				
+
 				SelectionChange(false);
 			}
 			else if (e.Key == Key.Up) {

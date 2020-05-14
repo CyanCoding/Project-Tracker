@@ -14,48 +14,52 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Project_Tracker {
+
 	/// <summary>
 	/// Interaction logic for EditProgram.xaml
 	/// </summary>
 	public partial class EditProgram : Window {
+		private string projectTitle;
 
-		string projectTitle;
 		// We use a list for the items instead of an array because we have to remove values if the user deletes an item
-		List<string> errors = new List<string>();
-		List<string> errorsData = new List<string>();
-		List<string> features = new List<string>();
-		List<string> featuresData = new List<string>();
-		List<string> comments = new List<string>();
-		List<string> commentsData = new List<string>();
-		string duration;
-		string percentComplete;
+		private List<string> errors = new List<string>();
 
-		string editingFile;
-		int errorRowsAdded = 0;
-		int featureRowsAdded = 0;
-		int commentsRowsAdded = 0;
-		bool isStopwatchRunning = false;
-		Thread timerThread;
-		long lastSecond = 0;
-		long currentSecond = 0;
-		bool isTablesGenerated = false;
-		int rowSelectionID = 0; // We use this to identify which row is currently selected
-		int oldRowSelectionID = 0; // We use this to identify which row was last selected
+		private List<string> errorsData = new List<string>();
+		private List<string> features = new List<string>();
+		private List<string> featuresData = new List<string>();
+		private List<string> comments = new List<string>();
+		private List<string> commentsData = new List<string>();
+		private string duration;
+		private string percentComplete;
 
-		Stopwatch stopwatch;
+		private string editingFile;
+		private int errorRowsAdded = 0;
+		private int featureRowsAdded = 0;
+		private int commentsRowsAdded = 0;
+		private bool isStopwatchRunning = false;
+		private Thread timerThread;
+		private long lastSecond = 0;
+		private long currentSecond = 0;
+		private bool isTablesGenerated = false;
+		private int rowSelectionID = 0; // We use this to identify which row is currently selected
+		private int oldRowSelectionID = 0; // We use this to identify which row was last selected
+
+		private Stopwatch stopwatch;
 
 		// WARNING: READONLY VALUES. IF YOU CHANGE THESE, CHANGE IN OTHER FILES AS WELL
-		readonly Color sortColor = Color.FromRgb(228, 233, 235);
-		readonly Color greenStopwatch = Color.FromRgb(42, 112, 35);
-		readonly Color redStopwatch = Color.FromRgb(156, 9, 9);
-		readonly Color selectionColor = Color.FromRgb(84, 207, 255);
-		readonly FontFamily textFont = new FontFamily("Microsoft Sans Serif");
+		private readonly Color sortColor = Color.FromRgb(228, 233, 235);
+
+		private readonly Color greenStopwatch = Color.FromRgb(42, 112, 35);
+		private readonly Color redStopwatch = Color.FromRgb(156, 9, 9);
+		private readonly Color selectionColor = Color.FromRgb(84, 207, 255);
+		private readonly FontFamily textFont = new FontFamily("Microsoft Sans Serif");
 
 		public EditProgram() {
 			InitializeComponent();
 
 			Startup();
 		}
+
 		// TODO: You can change values from the function. No need to repeat the code. Optimize NOW
 		private void AddRow(Table table, int rowsAddedValue, string value, int index, List<string> dataValues) {
 			table.RowGroups[0].Rows.Add(new TableRow());
@@ -84,7 +88,8 @@ namespace Project_Tracker {
 		}
 
 		private void SelectionChange(int oldPos, int newPos, int rowsAdded, Table table, List<string> dataValues) {
-			this.Dispatcher.Invoke(() => {
+			this.Dispatcher.Invoke(() =>
+			{
 				if (newPos < 0) {
 					newPos = 0;
 				}
@@ -105,7 +110,6 @@ namespace Project_Tracker {
 					else { // Unchecked checkmark
 						checkmarkButton.Text = "\xE739";
 					}
-
 
 					if (oldPos != newPos) { // We don't want to draw over the already selected one
 						TableRow previouslySelectedRow = table.RowGroups[0].Rows[oldPos];
@@ -135,7 +139,7 @@ namespace Project_Tracker {
 			if (totalRows == 0) { // Shouldn't do anything if there's nothing to do it to
 				return;
 			}
-			
+
 			rowSelectionID = 0;
 			oldRowSelectionID = 0;
 
@@ -158,7 +162,6 @@ namespace Project_Tracker {
 				AddRow(table, rowsAddedValue, value, index, dataValues);
 				index++;
 			}
-			
 
 			TableRow selectedRow = table.RowGroups[0].Rows[0];
 			selectedRow.Background = new SolidColorBrush(selectionColor);
@@ -167,7 +170,7 @@ namespace Project_Tracker {
 			// element and try and fix it.
 			for (int i = 0; i < totalRows; i++) {
 				TableRow row = table.RowGroups[0].Rows[i];
-				
+
 				try {
 					if (dataValues[i] == "0") { // Normal
 						row.Background = Brushes.White;
@@ -197,7 +200,8 @@ namespace Project_Tracker {
 					if (currentSecond > lastSecond) {
 						lastSecond = currentSecond;
 						try {
-							Dispatcher.Invoke(new Action(() => {
+							Dispatcher.Invoke(new Action(() =>
+							{
 								string[] durationCut = durationLabel.Text.Split(':');
 								int hours = Int32.Parse(durationCut[0]);
 								int minutes = Int32.Parse(durationCut[1]);
@@ -258,7 +262,6 @@ namespace Project_Tracker {
 		private void Save() {
 			StringBuilder sb = new StringBuilder();
 			StringWriter sw = new StringWriter(sb);
-
 
 			// Make 10 attempts to save the file.
 			for (int i = 0; i < 10; i++) {
@@ -327,7 +330,6 @@ namespace Project_Tracker {
 					break;
 				}
 				catch (ObjectDisposedException) {
-					
 				}
 				catch (IOException) {
 					Save();
@@ -522,7 +524,6 @@ namespace Project_Tracker {
 				ResetSelection(featureTable, features, featuresData, 1, featureRowsAdded);
 				ResetSelection(commentTable, comments, commentsData, 2, commentsRowsAdded);
 
-
 				if (switchLabels.SelectedIndex == 0) { // Errors
 					errorScrollView.Visibility = Visibility.Visible;
 					featureScrollView.Visibility = Visibility.Hidden;
@@ -546,6 +547,7 @@ namespace Project_Tracker {
 				}
 			}
 		}
+
 		// TODO: We need to change the SelectionChange function to change the selection before resetting. Do this by creating params like int newIndex, int oldIndex.
 		private void RemoveValue(object sender, MouseButtonEventArgs e) {
 			try {
@@ -571,14 +573,14 @@ namespace Project_Tracker {
 			catch (ArgumentOutOfRangeException) { // They tried to press the delete button when there was no items in it
 				return;
 			}
-			
+
 			Save();
 		}
+
 		private void AddValue(object sender, MouseButtonEventArgs e) {
-
 		}
-		private void CheckOff(object sender, MouseButtonEventArgs e) {
 
+		private void CheckOff(object sender, MouseButtonEventArgs e) {
 		}
 	}
 }

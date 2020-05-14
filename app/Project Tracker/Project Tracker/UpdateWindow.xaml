@@ -7,8 +7,8 @@
         mc:Ignorable="d"
         Title="An update to the Project Tracker is available!" Height="480" Width="600" ResizeMode="NoResize">
 	<Grid>
-		<TextBlock x:Name="versionTitle" HorizontalAlignment="Center" Margin="0,30,0,0" TextWrapping="Wrap" Text="Version --- → ---" VerticalAlignment="Top" FontSize="22"/>
-		<TextBlock x:Name="featureTitle" HorizontalAlignment="Left" Margin="10,100,0,0" TextWrapping="Wrap" Text="New features (-):" VerticalAlignment="Top" FontSize="20"/>
+		<TextBlock x:Name="versionTitle" HorizontalAlignment="Center" Margin="0,30,0,0" TextWrapping="Wrap" Text="Version --- → ---" VerticalAlignment="Top" FontSize="22" />
+		<TextBlock x:Name="featureTitle" HorizontalAlignment="Left" Margin="10,100,0,0" TextWrapping="Wrap" Text="New features (-):" VerticalAlignment="Top" FontSize="20" />
 		<FlowDocumentScrollViewer x:Name="featureScrollView" IsToolBarVisible="False" Margin="10,132,10,214" VerticalScrollBarVisibility="Auto">
 			<FlowDocument>
 				<Table x:Name="featureTable">
@@ -17,7 +17,7 @@
 				</Table>
 			</FlowDocument>
 		</FlowDocumentScrollViewer>
-		<TextBlock x:Name="fixTitle" HorizontalAlignment="Left" Margin="10,237,0,0" TextWrapping="Wrap" Text="Fixes (-):" VerticalAlignment="Top" FontSize="20" RenderTransformOrigin="0.515,0.001"/>
+		<TextBlock x:Name="fixTitle" HorizontalAlignment="Left" Margin="10,237,0,0" TextWrapping="Wrap" Text="Fixes (-):" VerticalAlignment="Top" FontSize="20" RenderTransformOrigin="0.515,0.001" />
 		<FlowDocumentScrollViewer x:Name="fixesScrollView" IsToolBarVisible="False" Margin="10,269,10,77" VerticalScrollBarVisibility="Auto">
 			<FlowDocument>
 				<Table x:Name="fixTable">
@@ -26,6 +26,6 @@
 				</Table>
 			</FlowDocument>
 		</FlowDocumentScrollViewer>
-		<Button x:Name="updateButton" Content="Update" HorizontalAlignment="Center" Margin="0,0,0,25" VerticalAlignment="Bottom" Width="91" Height="33" Click="Button_Click"/>
+		<Button x:Name="updateButton" Content="Update" HorizontalAlignment="Center" Margin="0,0,0,25" VerticalAlignment="Bottom" Width="91" Height="33" Click="Button_Click" />
 	</Grid>
 </Window>

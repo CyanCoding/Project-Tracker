@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Project_Tracker {
 
-namespace Project_Tracker {
-	class MainTableManifest {
+	internal class MainTableManifest {
 		/*
 		 * Hey this is the manifest class file for reading each variable
 		 * From the individual json files for each project the user creates.
-		 * 
+		 *
 		 * Here's an explanation of each variable:
-		 * 
+		 *
 		 * Title: the title of the program: "Key Statistics"
 		 * Errors: an array of all of the errors: "error 1", "error 2"
 		 * ErrorData: an array of each error's completion (0 = incomplete, 1 = complete, 2 = deleted): "0", "2"
@@ -34,6 +29,5 @@ namespace Project_Tracker {
 			public string Duration { get; set; }
 			public string Percent { get; set; }
 		}
-
 	}
 }

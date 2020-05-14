@@ -13,12 +13,12 @@
 			<FlowDocument x:Name="flowDocument" Cursor="Arrow">
 				<Table x:Name="listTable" Cursor="Arrow">
 					<Table.Columns>
-						<TableColumn Width="325"/>
-						<TableColumn Width="35"/>
-						<TableColumn Width="35"/>
-						<TableColumn Width="125"/>
-						<TableColumn Width="150"/>
-						<TableColumn/>
+						<TableColumn Width="325" />
+						<TableColumn Width="35" />
+						<TableColumn Width="35" />
+						<TableColumn Width="125" />
+						<TableColumn Width="150" />
+						<TableColumn />
 					</Table.Columns>
 					<TableRowGroup>
 						<TableRow>
@@ -70,10 +70,10 @@
 			</FlowDocument>
 		</FlowDocumentScrollViewer>
 		<Border BorderBrush="LightGray" BorderThickness="0">
-			<TextBlock HorizontalAlignment="Left" Margin="10,0,0,10" TextWrapping="Wrap" Text="&#xE8A7;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="EditProgram"/>
+			<TextBlock HorizontalAlignment="Left" Margin="10,0,0,10" TextWrapping="Wrap" Text="&#xE8A7;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="EditProgram" />
 		</Border>
 		<Border BorderBrush="LightGray" BorderThickness="0">
-			<TextBlock HorizontalAlignment="Left"  Margin="50,0,0,10" TextWrapping="Wrap" Text="&#xE710;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="AddProgram"/>
+			<TextBlock HorizontalAlignment="Left"  Margin="50,0,0,10" TextWrapping="Wrap" Text="&#xE710;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="AddProgram" />
 		</Border>
 	</Grid>
 </Window>

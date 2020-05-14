@@ -9,36 +9,36 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Project_Tracker {
+
 	/// <summary>
 	/// Interaction logic for AddNewProgram.xaml
 	/// </summary>
 	public partial class AddNewProgram : Window {
-
-		string projectTitle;
-		List<string> errors = new List<string>();
-		List<string> features = new List<string>();
-		List<string> comments = new List<string>();
-		string duration;
-		string percentComplete;
+		private string projectTitle;
+		private List<string> errors = new List<string>();
+		private List<string> features = new List<string>();
+		private List<string> comments = new List<string>();
+		private string duration;
+		private string percentComplete;
 
 		// WARNING: READONLY VALUES. IF YOU CHANGE THESE, CHANGE IN OTHER FILES AS WELL
-		readonly string DATA_DIRECTORY = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/data";
-		// readonly Color selectionColor = Color.FromRgb(84, 207, 255);
-		readonly Color sortColor = Color.FromRgb(228, 233, 235);
-		readonly FontFamily textFont = new FontFamily("Microsoft Sans Serif");
+		private readonly string DATA_DIRECTORY = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/data";
 
-		int errorRowsAdded = 0; // We use a global variable so the AddRow function knows what id of a row to edit
-		int featureRowsAdded = 0;
-		int commentsRowsAdded = 0; 
+		// readonly Color selectionColor = Color.FromRgb(84, 207, 255);
+		private readonly Color sortColor = Color.FromRgb(228, 233, 235);
+
+		private readonly FontFamily textFont = new FontFamily("Microsoft Sans Serif");
+
+		private int errorRowsAdded = 0; // We use a global variable so the AddRow function knows what id of a row to edit
+		private int featureRowsAdded = 0;
+		private int commentsRowsAdded = 0;
 		// int rowSelectionID = 0; // We use this to identify which row is currently selected
 
-
-
-		bool[] durationSuccess = { false, false, false };
+		private bool[] durationSuccess = { false, false, false };
 
 		/*
 		 * Current progression through the form
-		 * 
+		 *
 		 * 0: Project title
 		 * 1: Duration
 		 * 2: Errors
@@ -47,8 +47,7 @@ namespace Project_Tracker {
 		 * 5: Percent complete
 		 * 6: Review
 		 */
-		int level = 0;
-		
+		private int level = 0;
 
 		public AddNewProgram() {
 			InitializeComponent();
@@ -57,7 +56,6 @@ namespace Project_Tracker {
 
 		private void FirstForward() { // Moving from project title to project duration
 			if (projectTitleInputBox.Text != "") {
-				
 				level = 1;
 
 				projectTitle = projectTitleInputBox.Text;
@@ -73,7 +71,7 @@ namespace Project_Tracker {
 				spacer1.Visibility = Visibility.Visible;
 				spacer2.Visibility = Visibility.Visible;
 				projectHourInputBox.Focus();
-			} 
+			}
 			else { // They haven't inputted a title
 				projectTitleWarning.Visibility = Visibility.Visible;
 			}
@@ -85,7 +83,6 @@ namespace Project_Tracker {
 			durationSuccess[2] = CheckValid(projectSecondInputBox.Text, "second");
 
 			if (durationSuccess[0] && durationSuccess[1] && durationSuccess[2]) { // All are valid numbers!
-				
 				level = 2;
 
 				if (projectHourInputBox.Text.Length == 1) {
@@ -158,7 +155,6 @@ namespace Project_Tracker {
 			this.Height = 190;
 		}
 
-
 		private void SixthForward() { // Moving from percent complete to review
 			bool validPercent = CheckValid(projectPercentInputBox.Text, "percent");
 			if (validPercent) { // Percent is a valid number
@@ -175,7 +171,7 @@ namespace Project_Tracker {
 				percentComplete = projectPercentInputBox.Text;
 				projectPercentInputBox.Visibility = Visibility.Hidden;
 				spacer1.Visibility = Visibility.Hidden;
-				
+
 				// Set up the next components
 				nextButton.Content = "Finish";
 				projectTitleText.Text = projectTitle;
@@ -277,7 +273,6 @@ namespace Project_Tracker {
 				js.WriteEndObject();
 			}
 
-
 			using (StreamWriter writer = File.CreateText(path)) {
 				writer.WriteLine(sb.ToString());
 			}
@@ -288,39 +283,45 @@ namespace Project_Tracker {
 		/*
 		 * Checks the validitiy of the duration values to make sure they are real numbers.
 		 */
+
 		private bool CheckValid(string value, string identifier) {
 			try {
 				Int32.Parse(value);
 				return true;
-			} catch(FormatException) {
+			}
+			catch (FormatException) {
 				projectTitleWarning.Text = "The " + identifier + " value is invalid.";
 				projectTitleWarning.Visibility = Visibility.Visible;
 				return false;
 			}
 		}
 
-		
-
 		private void nextButton_Click(object sender, RoutedEventArgs e) {
 			switch (level) {
 				case 0:
 					FirstForward();
 					break;
+
 				case 1:
 					SecondForward();
 					break;
+
 				case 2:
 					ThirdForward();
 					break;
+
 				case 3:
 					FourthForward();
 					break;
+
 				case 4:
 					FifthForward();
 					break;
+
 				case 5:
 					SixthForward();
 					break;
+
 				case 6:
 					Finish();
 					break;
@@ -375,9 +376,6 @@ namespace Project_Tracker {
 				}
 			}
 
-
-
-
 			newRow.FontSize = 16;
 			newRow.FontFamily = textFont;
 			newRow.Cells.Add(new TableCell(new Paragraph(new Run(value))));
@@ -401,7 +399,6 @@ namespace Project_Tracker {
 						previouslySelectedRow.Background = Brushes.White;
 					}
 				}
-
 			}
 			else if (isUp == false) {
 				if (rowSelectionID < rowsAdded) {
@@ -631,21 +628,27 @@ namespace Project_Tracker {
 				case 0:
 					this.Hide();
 					break;
+
 				case 1:
 					FirstBack();
 					break;
+
 				case 2:
 					SecondBack();
 					break;
+
 				case 3:
 					ThirdBack();
 					break;
+
 				case 4:
 					FourthBack();
 					break;
+
 				case 5:
 					FifthBack();
 					break;
+
 				case 6:
 					SixthBack();
 					break;

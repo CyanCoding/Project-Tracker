@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Edit Program - 0%" Height="700" Width="700" ResizeMode="NoResize" Closing="Window_Closing" PreviewKeyDown="KeyPress">
 	<Grid>
-		<TextBlock x:Name="durationLabel" HorizontalAlignment="Left" Margin="20,20,0,0" TextWrapping="Wrap" Text="00:00:00" VerticalAlignment="Top" FontSize="36"/>
+		<TextBlock x:Name="durationLabel" HorizontalAlignment="Left" Margin="20,20,0,0" TextWrapping="Wrap" Text="00:00:00" VerticalAlignment="Top" FontSize="36" />
 
 		<FlowDocumentScrollViewer x:Name="errorScrollView" IsToolBarVisible="False" Margin="10,140,10,60" VerticalScrollBarVisibility="Auto" BorderBrush="Black" BorderThickness="2">
 			<FlowDocument>
@@ -35,27 +35,26 @@
 		</FlowDocumentScrollViewer>
 
 		<ComboBox x:Name="switchLabels" Width="200" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,100,0,0" FontSize="16" SelectionChanged="ComboBox_SelectionChanged">
-			<ComboBoxItem x:Name="errorSelection" Content="Errors" IsSelected="True" FontSize="16"/>
-			<ComboBoxItem x:Name="featureSelection" Content="Features" FontSize="16"/>
-			<ComboBoxItem x:Name="commentSelection" Content="Comments" FontSize="16"/>
+			<ComboBoxItem x:Name="errorSelection" Content="Errors" IsSelected="True" FontSize="16" />
+			<ComboBoxItem x:Name="featureSelection" Content="Features" FontSize="16" />
+			<ComboBoxItem x:Name="commentSelection" Content="Comments" FontSize="16" />
 		</ComboBox>
 
 		<Border BorderBrush="LightGray" BorderThickness="0">
-			<TextBlock x:Name="editButton" HorizontalAlignment="Left" Margin="10,0,0,10" TextWrapping="Wrap" Text="&#xE70F;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="Edit"/>
+			<TextBlock x:Name="editButton" HorizontalAlignment="Left" Margin="10,0,0,10" TextWrapping="Wrap" Text="&#xE70F;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="Edit" />
 		</Border>
 		<Border BorderBrush="LightGray" BorderThickness="0">
-			<TextBlock x:Name="stopwatchButton" HorizontalAlignment="Left" Margin="50,0,0,10" TextWrapping="Wrap" Text="&#xE916;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="Stopwatch" Foreground="#FF9C0909"/>
+			<TextBlock x:Name="stopwatchButton" HorizontalAlignment="Left" Margin="50,0,0,10" TextWrapping="Wrap" Text="&#xE916;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="Stopwatch" Foreground="#FF9C0909" />
 		</Border>
-		
-		
+
 		<Border BorderBrush="LightGray" BorderThickness="0">
-			<TextBlock x:Name="removeButton" HorizontalAlignment="Right" Margin="0,0,10,10" TextWrapping="Wrap" Text="&#xECC9;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="RemoveValue"/>
-		</Border>
-		<Border BorderBrush="LightGray" BorderThickness="0">
-			<TextBlock x:Name="addNewButton" HorizontalAlignment="Right" Margin="0,0,50,10" TextWrapping="Wrap" Text="&#xECC8;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="AddValue"/>
+			<TextBlock x:Name="removeButton" HorizontalAlignment="Right" Margin="0,0,10,10" TextWrapping="Wrap" Text="&#xECC9;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="RemoveValue" />
 		</Border>
 		<Border BorderBrush="LightGray" BorderThickness="0">
-			<TextBlock x:Name="checkmarkButton" HorizontalAlignment="Right" Margin="0,0,90,10" TextWrapping="Wrap" Text="&#xE739;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="CheckOff"/>
+			<TextBlock x:Name="addNewButton" HorizontalAlignment="Right" Margin="0,0,50,10" TextWrapping="Wrap" Text="&#xECC8;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="AddValue" />
+		</Border>
+		<Border BorderBrush="LightGray" BorderThickness="0">
+			<TextBlock x:Name="checkmarkButton" HorizontalAlignment="Right" Margin="0,0,90,10" TextWrapping="Wrap" Text="&#xE739;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="CheckOff" />
 		</Border>
 	</Grid>
 </Window>
