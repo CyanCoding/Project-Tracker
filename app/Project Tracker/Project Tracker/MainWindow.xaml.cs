@@ -150,13 +150,13 @@ namespace Project_Tracker {
 						Directory.CreateDirectory(DATA_DIRECTORY);
 					}
 
-					Thread.Sleep(100);
+					Thread.Sleep(10);
 					filesUpdate++;
 
 					if (filesUpdate == 50) {
 						filesUpdate = 0;
-						foreach (string item in filesRead) {
-							using (StreamReader reader = new StreamReader(item)) {
+						for (int i = 0; i < rowsAdded - 1; i ++) {
+							using (StreamReader reader = new StreamReader(filesRead[i])) {
 								string json = reader.ReadToEnd();
 
 								dynamic array = JsonConvert.DeserializeObject(json);
@@ -164,8 +164,25 @@ namespace Project_Tracker {
 								MainTableManifest.Rootobject mainTable = JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
 
 								Dispatcher.Invoke(new Action(() => {
-									listTable.RowGroups[0].Rows[rowsAdded - 1].Cells.RemoveRange(4, 1);
-									listTable.RowGroups[0].Rows[rowsAdded - 1].Cells.Insert(4, new TableCell(new Paragraph(new Run(" " + mainTable.Duration))));
+									// TODO: See if we can optimize this repetitive code
+									// Title
+									listTable.RowGroups[0].Rows[i + 1].Cells.RemoveRange(0, 1);
+									listTable.RowGroups[0].Rows[i + 1].Cells.Insert(0, new TableCell(new Paragraph(new Run(" " + mainTable.Title))));
+									// Errors
+									listTable.RowGroups[0].Rows[i + 1].Cells.RemoveRange(1, 1);
+									listTable.RowGroups[0].Rows[i + 1].Cells.Insert(1, new TableCell(new Paragraph(new Run(" " + mainTable.Errors.Length))));
+									// Features
+									listTable.RowGroups[0].Rows[i + 1].Cells.RemoveRange(2, 1);
+									listTable.RowGroups[0].Rows[i + 1].Cells.Insert(2, new TableCell(new Paragraph(new Run(" " + mainTable.Features.Length))));
+									// Comments
+									listTable.RowGroups[0].Rows[i + 1].Cells.RemoveRange(3, 1);
+									listTable.RowGroups[0].Rows[i + 1].Cells.Insert(3, new TableCell(new Paragraph(new Run(" " + mainTable.Comments.Length))));
+									// Duration
+									listTable.RowGroups[0].Rows[i + 1].Cells.RemoveRange(4, 1);
+									listTable.RowGroups[0].Rows[i + 1].Cells.Insert(4, new TableCell(new Paragraph(new Run(" " + mainTable.Duration))));
+									// Percent
+									listTable.RowGroups[0].Rows[i + 1].Cells.RemoveRange(5, 1);
+									listTable.RowGroups[0].Rows[i + 1].Cells.Insert(5, new TableCell(new Paragraph(new Run(" " + mainTable.Percent + "%"))));
 								}));
 							}
 

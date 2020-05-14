@@ -244,9 +244,7 @@ namespace Project_Tracker {
 								durationLabel.Text = reparsedDuration;
 							}));
 
-							if (lastSecond % 10 == 0) { // Save every 10 seconds of the timer running
-								Save();
-							}
+							Save();
 						}
 						catch (TaskCanceledException) { // Happens when the user tries to close the program
 							isStopwatchRunning = false;
@@ -268,12 +266,7 @@ namespace Project_Tracker {
 					using (JsonWriter js = new JsonTextWriter(sw)) {
 						js.Formatting = Formatting.Indented;
 
-						try {
-							js.WriteStartObject();
-						}
-						catch (ObjectDisposedException) { // Couldn't write for some reason
-							continue;
-						}
+						js.WriteStartObject();
 
 						js.WritePropertyName("Title");
 						js.WriteValue(projectTitle);
@@ -333,10 +326,17 @@ namespace Project_Tracker {
 					}
 					break;
 				}
+				catch (ObjectDisposedException) {
+					
+				}
 				catch (IOException) {
+					Save();
 					Thread.Sleep(1000);
 				}
 			}
+
+			sb.Clear();
+			sw.Close();
 		}
 
 		private void Startup() {
@@ -476,8 +476,6 @@ namespace Project_Tracker {
 		}
 
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
-			Save();
-
 			MainWindow main = new MainWindow();
 			main.filesRead.Remove(editingFile);
 
@@ -488,7 +486,7 @@ namespace Project_Tracker {
 			}
 		}
 
-		private void KeyPress(object sender, System.Windows.Input.KeyEventArgs e) {
+		private void KeyPress(object sender, KeyEventArgs e) {
 			// Remember that combo box values can be changed by the arrow keys.
 			// We don't want to change the table selection when we're doing this.
 			if (!errorSelection.IsFocused && !featureSelection.IsFocused && !commentSelection.IsFocused) {
