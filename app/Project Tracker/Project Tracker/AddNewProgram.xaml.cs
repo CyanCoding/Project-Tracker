@@ -19,7 +19,6 @@ namespace Project_Tracker {
 		private List<string> features = new List<string>();
 		private List<string> comments = new List<string>();
 		private string duration;
-		private string percentComplete;
 
 		// WARNING: READONLY VALUES. IF YOU CHANGE THESE, CHANGE IN OTHER FILES AS WELL
 		private readonly string DATA_DIRECTORY = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/data";
@@ -44,8 +43,7 @@ namespace Project_Tracker {
 		 * 2: Errors
 		 * 3: Features
 		 * 4: Comments
-		 * 5: Percent complete
-		 * 6: Review
+		 * 5: Review
 		 */
 		private int level = 0;
 
@@ -306,11 +304,6 @@ namespace Project_Tracker {
 
 				errorRowsAdded++;
 
-				/*if (errorRowsAdded == 1) { // It's the first row so we add the selection to it
-					newRow.Background = new SolidColorBrush(selectionColor);
-					rowSelectionID++;
-				}*/
-
 				if (errorRowsAdded % 2 == 0) { // Every other, change the color for readability purposes
 					newRow.Background = new SolidColorBrush(sortColor);
 				}
@@ -319,11 +312,6 @@ namespace Project_Tracker {
 				newRow = table.RowGroups[0].Rows[featureRowsAdded];
 
 				featureRowsAdded++;
-
-				/*if (featureRowsAdded == 1) { // It's the first row so we add the selection to it
-					newRow.Background = new SolidColorBrush(selectionColor);
-					rowSelectionID++;
-				}*/
 
 				if (featureRowsAdded % 2 == 0) { // Every other, change the color for readability purposes
 					newRow.Background = new SolidColorBrush(sortColor);
@@ -334,11 +322,6 @@ namespace Project_Tracker {
 
 				commentsRowsAdded++;
 
-				/*if (commentsRowsAdded == 1) { // It's the first row so we add the selection to it
-					newRow.Background = new SolidColorBrush(selectionColor);
-					rowSelectionID++;
-				}*/
-
 				if (commentsRowsAdded % 2 == 0) { // Every other, change the color for readability purposes
 					newRow.Background = new SolidColorBrush(sortColor);
 				}
@@ -348,47 +331,6 @@ namespace Project_Tracker {
 			newRow.FontFamily = textFont;
 			newRow.Cells.Add(new TableCell(new Paragraph(new Run(value))));
 		}
-
-		/*private void SelectionChange(bool isUp) {
-			if (rowSelectionID < 0) {
-				rowSelectionID = 0;
-			}
-			if (isUp == true && rowSelectionID != 0) { // REMEMBER: Going "up" actually brings the selection ID lower.
-				TableRow selectedRow = errorTable.RowGroups[0].Rows[rowSelectionID - 1];
-				selectedRow.Background = new SolidColorBrush(selectionColor);
-
-				if (rowSelectionID != rowsAdded) {
-					if ((rowSelectionID - 1) % 2 == 0) {
-						TableRow previouslySelectedRow = errorTable.RowGroups[0].Rows[rowSelectionID];
-						previouslySelectedRow.Background = new SolidColorBrush(sortColor);
-					}
-					else {
-						TableRow previouslySelectedRow = errorTable.RowGroups[0].Rows[rowSelectionID];
-						previouslySelectedRow.Background = Brushes.White;
-					}
-				}
-			}
-			else if (isUp == false) {
-				if (rowSelectionID < rowsAdded) {
-					TableRow selectedRow = errorTable.RowGroups[0].Rows[rowSelectionID];
-					selectedRow.Background = new SolidColorBrush(selectionColor);
-
-					if (rowSelectionID != 0) {
-						if ((rowSelectionID - 1) % 2 == 0) {
-							TableRow previouslySelectedRow = errorTable.RowGroups[0].Rows[rowSelectionID - 1];
-							previouslySelectedRow.Background = new SolidColorBrush(sortColor);
-						}
-						else {
-							TableRow previouslySelectedRow = errorTable.RowGroups[0].Rows[rowSelectionID - 1];
-							previouslySelectedRow.Background = Brushes.White;
-						}
-					}
-				}
-				else {
-					rowSelectionID--;
-				}
-			}
-		}*/
 
 		private void AddValue(object sender, MouseButtonEventArgs e) {
 			if (level == 2) { // Error table
@@ -415,81 +357,41 @@ namespace Project_Tracker {
 		}
 
 		private void KeyPress(object sender, KeyEventArgs e) {
-			if (level == 0) {
-				if (e.Key == Key.Return) {
+			if (e.Key == Key.Return) {
+				if (level == 0) { // Title page
 					FirstForward();
 				}
-			}
-			else if (level == 1) {
-				if (e.Key == Key.Return) {
+				else if (level == 1) { // Duration page
 					SecondForward();
 				}
-			}
-			else if (level == 2) { // Errors/Features page
-				/*if (e.Key == Key.Down) {
-					SelectionChange(false);
-					rowSelectionID++;
-				}
-				else if (e.Key == Key.Up) {
-					SelectionChange(true);
-
-					if (rowSelectionID > 1) {
-						rowSelectionID--;
-					}
-				}*/
-				if (e.Key == Key.Return) {
+				else if (level == 2) { // Errors page
 					if (projectErrorInputBox.Text != "") {
 						errors.Add(projectErrorInputBox.Text);
 						AddRow(projectErrorInputBox.Text, errorTable, 0);
 						projectErrorInputBox.Text = "";
 					}
 				}
-			}
-			else if (level == 3) { // Errors/Features page
-				/*if (e.Key == Key.Down) {
-					SelectionChange(false);
-					rowSelectionID++;
-				}
-				else if (e.Key == Key.Up) {
-					SelectionChange(true);
-
-					if (rowSelectionID > 1) {
-						rowSelectionID--;
-					}
-				}*/
-				if (e.Key == Key.Return) {
-					if (projectFeatureInputBox.Text != "") {
-						features.Add(projectFeatureInputBox.Text);
-						AddRow(projectFeatureInputBox.Text, featureTable, 1);
-						projectFeatureInputBox.Text = "";
+				else if (level == 3) { // Features page
+					if (e.Key == Key.Return) {
+						if (projectFeatureInputBox.Text != "") {
+							features.Add(projectFeatureInputBox.Text);
+							AddRow(projectFeatureInputBox.Text, featureTable, 1);
+							projectFeatureInputBox.Text = "";
+						}
 					}
 				}
-			}
-			else if (level == 4) { // Errors/Features page
-				/*if (e.Key == Key.Down) {
-					SelectionChange(false);
-					rowSelectionID++;
-				}
-				else if (e.Key == Key.Up) {
-					SelectionChange(true);
-
-					if (rowSelectionID > 1) {
-						rowSelectionID--;
-					}
-				}*/
-				if (e.Key == Key.Return) {
+				else if (level == 4) { // Comments page
 					if (projectCommentInputBox.Text != "") {
 						comments.Add(projectCommentInputBox.Text);
 						AddRow(projectCommentInputBox.Text, commentTable, 2);
 						projectCommentInputBox.Text = "";
 					}
 				}
-			}
-			else if (level == 5) {
-				if (e.Key == Key.Return) {
+				else if (level == 5) { // Review page
 					Finish();
 				}
 			}
+
 		}
 
 		private void FirstBack() { // From duration to project title
