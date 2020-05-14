@@ -15,7 +15,7 @@ project gets close to the estimated release date, either an updated estimate or 
 date will be posted allowing you to stay up to date with when new updates will be available.
 
 ### v1.0:
-**Release date:** `May 14th, 2020`
+**Released:** `May 14th, 2020`
 
 - [x] Create installer.
 - [x] Create Project Tracker.
@@ -24,7 +24,7 @@ date will be posted allowing you to stay up to date with when new updates will b
 - [x] Enable auto-updates.
 - [x] Add updating information on main table functionality.
 - [x] Move installation files to GitHub.
-- [ ] Finish view-program window.
+- [x] Finish view-program window.
 
 ### v2.0:
 **Estimated release date:** `June 10th, 2020`
