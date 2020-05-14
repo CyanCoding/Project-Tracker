@@ -1,13 +1,7 @@
 {
-  "Version": "0.6",
+  "Version": "1",
   "Updates": [
-      "Finished installer.",
-      "Changed view program logo.",
-      "Added some view program functionality.",
-      "Created stopwatch in view program.",
-      "Added an auto-update feature to the main table."
+      "Officially released Project Tracker"
       ],
-  "Fixes": [
-      "Fixed quite a few bugs with the installer."
-      ]
+  "Fixes": []
 }
