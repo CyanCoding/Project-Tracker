@@ -28,8 +28,8 @@ namespace Project_Tracker {
 
 		private readonly FontFamily textFont = new FontFamily("Microsoft Sans Serif");
 
-		private int errorRowsAdded = 0; // We use a global variable so the AddRow function knows what id of a row to edit
-		private int featureRowsAdded = 0;
+		private int errorsRowsAdded = 0; // We use a global variable so the AddRow function knows what id of a row to edit
+		private int featuresRowsAdded = 0;
 		private int commentsRowsAdded = 0;
 		// int rowSelectionID = 0; // We use this to identify which row is currently selected
 
@@ -333,20 +333,20 @@ namespace Project_Tracker {
 			TableRow newRow = null;
 
 			if (tableCount == 0) { // Error table
-				newRow = table.RowGroups[0].Rows[errorRowsAdded];
+				newRow = table.RowGroups[0].Rows[errorsRowsAdded];
 
-				errorRowsAdded++;
+				errorsRowsAdded++;
 
-				if (errorRowsAdded % 2 == 0) { // Every other, change the color for readability purposes
+				if (errorsRowsAdded % 2 == 0) { // Every other, change the color for readability purposes
 					newRow.Background = new SolidColorBrush(sortColor);
 				}
 			}
 			else if (tableCount == 1) { // Error table
-				newRow = table.RowGroups[0].Rows[featureRowsAdded];
+				newRow = table.RowGroups[0].Rows[featuresRowsAdded];
 
-				featureRowsAdded++;
+				featuresRowsAdded++;
 
-				if (featureRowsAdded % 2 == 0) { // Every other, change the color for readability purposes
+				if (featuresRowsAdded % 2 == 0) { // Every other, change the color for readability purposes
 					newRow.Background = new SolidColorBrush(sortColor);
 				}
 			}

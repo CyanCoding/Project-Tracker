@@ -23,7 +23,6 @@ namespace Project_Tracker {
 
 		// We use a list for the items instead of an array because we have to remove values if the user deletes an item
 		private List<string> errors = new List<string>();
-
 		private List<string> errorsData = new List<string>();
 		private List<string> features = new List<string>();
 		private List<string> featuresData = new List<string>();
@@ -33,8 +32,8 @@ namespace Project_Tracker {
 		private string percentComplete;
 
 		private string editingFile;
-		private int errorRowsAdded = 0;
-		private int featureRowsAdded = 0;
+		private int errorsRowsAdded = 0;
+		private int featuresRowsAdded = 0;
 		private int commentsRowsAdded = 0;
 		private bool isStopwatchRunning = false;
 		private Thread timerThread;
@@ -77,12 +76,12 @@ namespace Project_Tracker {
 			TableRow newRow = null;
 
 			if (rowsAddedValue == 0) {
-				newRow = table.RowGroups[0].Rows[errorRowsAdded];
-				errorRowsAdded++;
+				newRow = table.RowGroups[0].Rows[errorsRowsAdded];
+				errorsRowsAdded++;
 			}
 			else if (rowsAddedValue == 1) {
-				newRow = table.RowGroups[0].Rows[featureRowsAdded];
-				featureRowsAdded++;
+				newRow = table.RowGroups[0].Rows[featuresRowsAdded];
+				featuresRowsAdded++;
 			}
 			else if (rowsAddedValue == 2) {
 				newRow = table.RowGroups[0].Rows[commentsRowsAdded];
@@ -170,10 +169,10 @@ namespace Project_Tracker {
 			}
 
 			if (rowsAddedValue == 0) {
-				errorRowsAdded = 0;
+				errorsRowsAdded = 0;
 			}
 			else if (rowsAddedValue == 1) {
-				featureRowsAdded = 0;
+				featuresRowsAdded = 0;
 			}
 			else if (rowsAddedValue == 2) {
 				commentsRowsAdded = 0;
@@ -378,7 +377,7 @@ namespace Project_Tracker {
 				this.Dispatcher.Invoke(() =>
 				{
 					if (switchLabels.SelectedIndex == 0) { // Errors
-						errorRowsAdded = 0;
+						errorsRowsAdded = 0;
 						try {
 							for (int i = 0; i < errors.Count; i++) {
 								errorTable.RowGroups[0].Rows[i].Cells.RemoveRange(0, 1);
@@ -386,17 +385,17 @@ namespace Project_Tracker {
 						}
 						catch (ArgumentOutOfRangeException) {
 							// They just added a new value
-							SelectionChange(0, 0, errorRowsAdded, errorTable, errorsData);
+							SelectionChange(0, 0, errorsRowsAdded, errorTable, errorsData);
 						}
 						int index = 0;
 						foreach (string value in errors) {
 							AddRow(errorTable, 0, value, index, errorsData);
 							index++;
 						}
-						SelectionChange(rowSelectionID, rowSelectionID, errorRowsAdded, errorTable, errorsData);
+						SelectionChange(rowSelectionID, rowSelectionID, errorsRowsAdded, errorTable, errorsData);
 					}
 					else if (switchLabels.SelectedIndex == 1) { // Features
-						featureRowsAdded = 0;
+						featuresRowsAdded = 0;
 						try {
 							for (int i = 0; i < features.Count; i++) {
 								featureTable.RowGroups[0].Rows[i].Cells.RemoveRange(0, 1);
@@ -404,14 +403,14 @@ namespace Project_Tracker {
 						}
 						catch (ArgumentOutOfRangeException) {
 							// They just added a new value
-							SelectionChange(0, 0, featureRowsAdded, featureTable, featuresData);
+							SelectionChange(0, 0, featuresRowsAdded, featureTable, featuresData);
 						}
 						int index = 0;
 						foreach (string value in features) {
 							AddRow(featureTable, 1, value, index, featuresData);
 							index++;
 						}
-						SelectionChange(rowSelectionID, rowSelectionID, featureRowsAdded, featureTable, featuresData);
+						SelectionChange(rowSelectionID, rowSelectionID, featuresRowsAdded, featureTable, featuresData);
 					}
 					else if (switchLabels.SelectedIndex == 2) { // Comments
 						commentsRowsAdded = 0;
@@ -569,8 +568,8 @@ namespace Project_Tracker {
 				AddRow(commentTable, 2, comment, index, commentsData);
 				index++;
 			}
-			ResetSelection(errorTable, errors, errorsData, 0, errorRowsAdded);
-			ResetSelection(featureTable, features, featuresData, 1, featureRowsAdded);
+			ResetSelection(errorTable, errors, errorsData, 0, errorsRowsAdded);
+			ResetSelection(featureTable, features, featuresData, 1, featuresRowsAdded);
 			ResetSelection(commentTable, comments, commentsData, 2, commentsRowsAdded);
 
 			errorScrollView.Focus();
@@ -681,10 +680,10 @@ namespace Project_Tracker {
 						rowSelectionID--;
 					}
 					if (switchLabels.SelectedIndex == 0) { // Error table is selected
-						SelectionChange(oldRowSelectionID, rowSelectionID, errorRowsAdded, errorTable, errorsData);
+						SelectionChange(oldRowSelectionID, rowSelectionID, errorsRowsAdded, errorTable, errorsData);
 					}
 					else if (switchLabels.SelectedIndex == 1) { // Feature table is selected
-						SelectionChange(oldRowSelectionID, rowSelectionID, featureRowsAdded, featureTable, featuresData);
+						SelectionChange(oldRowSelectionID, rowSelectionID, featuresRowsAdded, featureTable, featuresData);
 					}
 					else { // Comment table is selected
 						SelectionChange(oldRowSelectionID, rowSelectionID, commentsRowsAdded, commentTable, commentsData);
@@ -704,8 +703,8 @@ namespace Project_Tracker {
 			// then it'll obviously return an error. So we wait until AFTER
 			// the tables have been initialized, aka after startup.
 			if (isTablesGenerated) {
-				ResetSelection(errorTable, errors, errorsData, 0, errorRowsAdded);
-				ResetSelection(featureTable, features, featuresData, 1, featureRowsAdded);
+				ResetSelection(errorTable, errors, errorsData, 0, errorsRowsAdded);
+				ResetSelection(featureTable, features, featuresData, 1, featuresRowsAdded);
 				ResetSelection(commentTable, comments, commentsData, 2, commentsRowsAdded);
 
 				if (switchLabels.SelectedIndex == 0) { // Errors
@@ -783,10 +782,10 @@ namespace Project_Tracker {
 		private void RemoveValue(object sender, MouseButtonEventArgs e) {
 			try {
 				if (switchLabels.SelectedIndex == 0) { // Errors
-					SelectionChange(oldRowSelectionID, 0, errorRowsAdded, errorTable, errorsData);
+					SelectionChange(oldRowSelectionID, 0, errorsRowsAdded, errorTable, errorsData);
 					errors.RemoveAt(rowSelectionID);
 					errorsData.RemoveAt(rowSelectionID);
-					ResetSelection(errorTable, errors, errorsData, 0, errorRowsAdded);
+					ResetSelection(errorTable, errors, errorsData, 0, errorsRowsAdded);
 
 					if (errors.Count == 0) {
 						checkmarkButton.ToolTip = "Mark as completed";
@@ -794,10 +793,10 @@ namespace Project_Tracker {
 					}
 				}
 				else if (switchLabels.SelectedIndex == 1) { // Features
-					SelectionChange(oldRowSelectionID, 0, featureRowsAdded, featureTable, featuresData);
+					SelectionChange(oldRowSelectionID, 0, featuresRowsAdded, featureTable, featuresData);
 					features.RemoveAt(rowSelectionID);
 					featuresData.RemoveAt(rowSelectionID);
-					ResetSelection(featureTable, features, featuresData, 1, featureRowsAdded);
+					ResetSelection(featureTable, features, featuresData, 1, featuresRowsAdded);
 
 					if (features.Count == 0) {
 						checkmarkButton.ToolTip = "Mark as completed";
@@ -867,18 +866,18 @@ namespace Project_Tracker {
 				if (switchLabels.SelectedIndex == 0) { // Errors
 					if (errorsData[rowSelectionID] == "0") { // Not checked, check it!
 						errorsData[rowSelectionID] = "1";
-						ResetSelection(errorTable, errors, errorsData, 0, errorRowsAdded);
+						ResetSelection(errorTable, errors, errorsData, 0, errorsRowsAdded);
 
-						if (errorRowsAdded == 1) {
+						if (errorsRowsAdded == 1) {
 							checkmarkButton.ToolTip = "Mark as incomplete";
 							checkmarkButton.Text = "\xE73A";
 						}
 					}
 					else { // Uncheck it
 						errorsData[rowSelectionID] = "0";
-						ResetSelection(errorTable, errors, errorsData, 0, errorRowsAdded);
+						ResetSelection(errorTable, errors, errorsData, 0, errorsRowsAdded);
 
-						if (errorRowsAdded == 1) {
+						if (errorsRowsAdded == 1) {
 							checkmarkButton.ToolTip = "Mark as completed";
 							checkmarkButton.Text = "\xE739";
 						}
@@ -887,18 +886,18 @@ namespace Project_Tracker {
 				else if (switchLabels.SelectedIndex == 1) { // Features
 					if (featuresData[rowSelectionID] == "0") {
 						featuresData[rowSelectionID] = "1";
-						ResetSelection(featureTable, features, featuresData, 1, featureRowsAdded);
+						ResetSelection(featureTable, features, featuresData, 1, featuresRowsAdded);
 
-						if (featureRowsAdded == 1) {
+						if (featuresRowsAdded == 1) {
 							checkmarkButton.ToolTip = "Mark as incomplete";
 							checkmarkButton.Text = "\xE73A";
 						}
 					}
 					else {
 						featuresData[rowSelectionID] = "0";
-						ResetSelection(featureTable, features, featuresData, 1, featureRowsAdded);
+						ResetSelection(featureTable, features, featuresData, 1, featuresRowsAdded);
 
-						if (featureRowsAdded == 1) {
+						if (featuresRowsAdded == 1) {
 							checkmarkButton.ToolTip = "Mark as completed";
 							checkmarkButton.Text = "\xE739";
 						}
