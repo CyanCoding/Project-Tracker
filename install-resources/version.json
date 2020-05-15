@@ -1,7 +1,7 @@
 {
-  "Version": "1.0",
-  "Updates": [
-      "Officially released Project Tracker"
-      ],
-  "Fixes": []
+  "Version": "1.2",
+  "Updates": [],
+  "Fixes": [
+    "Fixed some bugs with the add new item system."
+  ]
 }
