@@ -35,7 +35,6 @@ namespace Project_Tracker {
 					Passthrough.Title = inputBox.Text;
 					Save();
 
-					Passthrough.IsAdding = false;
 					this.Hide();
 				}
 				else {
@@ -150,6 +149,8 @@ namespace Project_Tracker {
 					Thread.Sleep(100);
 				}
 			}
+
+			Passthrough.IsAdding = true;
 		}
 
 		/// <summary>
@@ -159,6 +160,7 @@ namespace Project_Tracker {
 			var deleteData = System.Windows.Forms.MessageBox.Show("Are you sure you wish to delete " + Passthrough.Title + "?", "Confirm project deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
 			if (deleteData == System.Windows.Forms.DialogResult.Yes) {
+				Passthrough.IsAdding = false;
 				Passthrough.IsDeleting = true;
 				this.Close();
 				File.Delete(Passthrough.EditingFile);

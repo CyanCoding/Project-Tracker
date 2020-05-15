@@ -16,6 +16,7 @@ namespace Project_Tracker {
 
 		public AddNewItem() {
 			InitializeComponent();
+
 			inputBox.Focus();
 		}
 
@@ -36,7 +37,6 @@ namespace Project_Tracker {
 					}
 					Save();
 
-					Passthrough.IsAdding = false;
 					this.Hide();
 				}
 				else {
@@ -61,7 +61,6 @@ namespace Project_Tracker {
 				}
 				Save();
 
-				Passthrough.IsAdding = false;
 				this.Hide();
 			}
 			else {
@@ -159,6 +158,8 @@ namespace Project_Tracker {
 					Thread.Sleep(100);
 				}
 			}
+
+			Passthrough.IsAdding = true;
 		}
 	}
 }
