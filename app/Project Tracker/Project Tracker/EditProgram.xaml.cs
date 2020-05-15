@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -68,10 +69,6 @@ namespace Project_Tracker {
 		/// <param name="index">The index where the value is in the array.</param>
 		/// <param name="dataValues">The array of data.</param>
 		private void AddRow(Table table, int rowsAddedValue, string value, int index, List<string> dataValues) {
-			//if (value == "") {
-			//	return;
-			//}
-
 			table.RowGroups[0].Rows.Add(new TableRow());
 			TableRow newRow = null;
 
@@ -336,12 +333,102 @@ namespace Project_Tracker {
 		/// Updates values from editing file.
 		/// </summary>
 		private void Read() {
-			while (Passthrough.IsAdding) {
+			while (true) {
 				Thread.Sleep(1000);
-
-				if (Passthrough.IsDeleting) {
+				if (Passthrough.IsAdding) {
 					Passthrough.IsAdding = false;
+					string json = File.ReadAllText(editingFile);
+					MainTableManifest.Rootobject values = JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
 
+					// Set values for saving feature to rewrite
+					projectTitle = values.Title;
+					errors = values.Errors.ToList();
+					errorsData = values.ErrorsData.ToList();
+					features = values.Features.ToList();
+					featuresData = values.FeaturesData.ToList();
+					comments = values.Comments.ToList();
+					commentsData = values.CommentsData.ToList();
+					duration = values.Duration;
+					percentComplete = values.Percent;
+
+					for (int i = 0; i < errors.Count; i++) {
+						if (errors[i] == "") {
+							errors.RemoveAt(i);
+						}
+					}
+					for (int i = 0; i < features.Count; i++) {
+						if (features[i] == "") {
+							features.RemoveAt(i);
+						}
+					}
+					for (int i = 0; i < comments.Count; i++) {
+						if (comments[i] == "") {
+							comments.RemoveAt(i);
+						}
+					}
+
+					CalculatePercentage();
+
+					this.Dispatcher.Invoke(() =>
+					{
+						if (switchLabels.SelectedIndex == 0) { // Errors
+							errorsRowsAdded = 0;
+							try {
+								for (int i = 0; i < errors.Count; i++) {
+									errorTable.RowGroups[0].Rows[i].Cells.RemoveRange(0, 1);
+								}
+							}
+							catch (ArgumentOutOfRangeException) {
+								// They just added a new value
+								SelectionChange(0, 0, errorsRowsAdded, errorTable, errorsData);
+							}
+							int index = 0;
+							foreach (string value in errors) {
+								AddRow(errorTable, 0, value, index, errorsData);
+								index++;
+							}
+							SelectionChange(rowSelectionID, rowSelectionID, errorsRowsAdded, errorTable, errorsData);
+						}
+						else if (switchLabels.SelectedIndex == 1) { // Features
+							featuresRowsAdded = 0;
+							try {
+								for (int i = 0; i < features.Count; i++) {
+									featureTable.RowGroups[0].Rows[i].Cells.RemoveRange(0, 1);
+								}
+							}
+							catch (ArgumentOutOfRangeException) {
+								// They just added a new value
+								SelectionChange(0, 0, featuresRowsAdded, featureTable, featuresData);
+							}
+							int index = 0;
+							foreach (string value in features) {
+								AddRow(featureTable, 1, value, index, featuresData);
+								index++;
+							}
+							SelectionChange(rowSelectionID, rowSelectionID, featuresRowsAdded, featureTable, featuresData);
+						}
+						else if (switchLabels.SelectedIndex == 2) { // Comments
+							commentsRowsAdded = 0;
+							try {
+								for (int i = 0; i < comments.Count; i++) {
+									commentTable.RowGroups[0].Rows[i].Cells.RemoveRange(0, 1);
+								}
+							}
+							catch (ArgumentOutOfRangeException) {
+								// They just added a new value
+								SelectionChange(0, 0, commentsRowsAdded, commentTable, commentsData);
+							}
+							int index = 0;
+							foreach (string value in comments) {
+								AddRow(commentTable, 2, value, index, commentsData);
+								index++;
+							}
+							SelectionChange(rowSelectionID, rowSelectionID, commentsRowsAdded, commentTable, commentsData);
+						}
+					});
+					break;
+				}
+				else if (Passthrough.IsDeleting) {
 					isStopwatchRunning = false;
 
 					// Exit out of all threads forcefully
@@ -356,82 +443,6 @@ namespace Project_Tracker {
 					});
 					break;
 				}
-
-
-				CalculatePercentage();
-				string json = File.ReadAllText(editingFile);
-				MainTableManifest.Rootobject values = JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
-
-				// Set values for saving feature to rewrite
-				projectTitle = values.Title;
-				errors = values.Errors.ToList();
-				errorsData = values.ErrorsData.ToList();
-				features = values.Features.ToList();
-				featuresData = values.FeaturesData.ToList();
-				comments = values.Comments.ToList();
-				commentsData = values.CommentsData.ToList();
-				duration = values.Duration;
-				percentComplete = values.Percent;
-
-
-				this.Dispatcher.Invoke(() =>
-				{
-					if (switchLabels.SelectedIndex == 0) { // Errors
-						errorsRowsAdded = 0;
-						try {
-							for (int i = 0; i < errors.Count; i++) {
-								errorTable.RowGroups[0].Rows[i].Cells.RemoveRange(0, 1);
-							}
-						}
-						catch (ArgumentOutOfRangeException) {
-							// They just added a new value
-							SelectionChange(0, 0, errorsRowsAdded, errorTable, errorsData);
-						}
-						int index = 0;
-						foreach (string value in errors) {
-							AddRow(errorTable, 0, value, index, errorsData);
-							index++;
-						}
-						SelectionChange(rowSelectionID, rowSelectionID, errorsRowsAdded, errorTable, errorsData);
-					}
-					else if (switchLabels.SelectedIndex == 1) { // Features
-						featuresRowsAdded = 0;
-						try {
-							for (int i = 0; i < features.Count; i++) {
-								featureTable.RowGroups[0].Rows[i].Cells.RemoveRange(0, 1);
-							}
-						}
-						catch (ArgumentOutOfRangeException) {
-							// They just added a new value
-							SelectionChange(0, 0, featuresRowsAdded, featureTable, featuresData);
-						}
-						int index = 0;
-						foreach (string value in features) {
-							AddRow(featureTable, 1, value, index, featuresData);
-							index++;
-						}
-						SelectionChange(rowSelectionID, rowSelectionID, featuresRowsAdded, featureTable, featuresData);
-					}
-					else if (switchLabels.SelectedIndex == 2) { // Comments
-						commentsRowsAdded = 0;
-						try {
-							for (int i = 0; i < comments.Count; i++) {
-								commentTable.RowGroups[0].Rows[i].Cells.RemoveRange(0, 1);
-							}
-						}
-						catch (ArgumentOutOfRangeException) {
-							// They just added a new value
-							SelectionChange(0, 0, commentsRowsAdded, commentTable, commentsData);
-						}
-						int index = 0;
-						foreach (string value in comments) {
-							AddRow(commentTable, 2, value, index, commentsData);
-							index++;
-						}
-						SelectionChange(rowSelectionID, rowSelectionID, commentsRowsAdded, commentTable, commentsData);
-					}
-				});
-				
 			}
 		}
 
@@ -635,7 +646,6 @@ namespace Project_Tracker {
 			Passthrough.EditingFile = editingFile;
 			Passthrough.SelectedIndex = switchLabels.SelectedIndex;
 
-			Passthrough.IsAdding = true;
 			readThread = new Thread(Read);
 			readThread.Start();
 
@@ -850,7 +860,6 @@ namespace Project_Tracker {
 			Passthrough.EditingFile = editingFile;
 			Passthrough.SelectedIndex = switchLabels.SelectedIndex;
 
-			Passthrough.IsAdding = true;
 			readThread = new Thread(Read);
 			readThread.Start();
 
