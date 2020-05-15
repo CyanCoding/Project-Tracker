@@ -42,6 +42,9 @@ namespace Project_Tracker_Installer {
             startup();
         }
 
+        /// <summary>
+        /// Retrieves the latest available version from the server.
+        /// </summary>
         private void GetVersion(object sender, AsyncCompletedEventArgs e) {
             try {
                 PROGRAM_VERSION = File.ReadAllText(VERSION_PATH);
@@ -66,6 +69,9 @@ namespace Project_Tracker_Installer {
             }
         }
 
+        /// <summary>
+        /// Startup method, runs when code execution begins.
+        /// </summary>
         void startup() {
             subTitle.Content = "Version: " + PROGRAM_VERSION;
 
@@ -168,9 +174,9 @@ namespace Project_Tracker_Installer {
             }
         }
 
-        /*
-         * When the user clicks to open the Projet Tracker program
-         */
+         /// <summary>
+         /// Launches the program from PROGRAM_PATH.
+         /// </summary>
         private void LaunchButtonClick(object sender, RoutedEventArgs e) {
             ProcessStartInfo start = new ProcessStartInfo {
                 // Enter the executable to run, including the complete path
@@ -183,10 +189,10 @@ namespace Project_Tracker_Installer {
             Environment.Exit(0);
         }
 
-
-        /* When the user clicks the reinstall button
-        * This runs the same install button procedure, just deletes the contents of the program first and sets uninstall to false
-        */
+        /// <summary>
+        /// Runs when the user clicks on the reinstall button.
+        /// Uninstalls and then installs the program.
+        /// </summary>
         private void ReinstallButtonClick(object sender, RoutedEventArgs e) {
             reinstallButton.Visibility = Visibility.Hidden;
             installButton.Visibility = Visibility.Hidden;
@@ -218,9 +224,11 @@ namespace Project_Tracker_Installer {
 
             FinalResult("Project Tracker has been installed!");
         }
-        /*
-         * When the user clicks on the install button
-         */
+
+         /// <summary>
+         /// Runs when the user clicks on the install button.
+         /// If the program is already installed, it becomes an uninstall button.
+         /// </summary>
         private void InstallButtonClick(object sender, RoutedEventArgs e) {
             if (retrying == true) {
                 installButton.Content = "Install";
@@ -329,11 +337,15 @@ namespace Project_Tracker_Installer {
 
                     FinalResult("Successfully uninstalled!");
                 }));
-
             }
 
         }
 
+        /// <summary>
+        /// A final display presented to the user after code execution has finished.
+        /// Used to display the success or failure of the installation.
+        /// </summary>
+        /// <param name="main">The main title text.</param>
         public void FinalResult(string main) {
             Dispatcher.Invoke(new Action(() => {
                 installBar.Visibility = Visibility.Hidden;
@@ -366,6 +378,9 @@ namespace Project_Tracker_Installer {
             }));
         }
 
+        /// <summary>
+        /// Runs before window is closed after the user closes the program.
+        /// </summary>
         private void Window_Closing(object sender, CancelEventArgs e) {
             Environment.Exit(0);
         }

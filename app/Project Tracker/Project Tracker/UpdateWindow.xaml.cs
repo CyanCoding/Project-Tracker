@@ -31,6 +31,12 @@ namespace Project_Tracker {
 			Startup();
 		}
 
+		/// <summary>
+		/// Adds a row to the provided table.
+		/// </summary>
+		/// <param name="value">The value to add to the table.</param>
+		/// <param name="table">The table to add a value to.</param>
+		/// <param name="tableCount">The id of the table (0 = updates, 1 = fixes)</param>
 		private void AddRow(string value, Table table, int tableCount) {
 			table.RowGroups[0].Rows.Add(new TableRow());
 
@@ -73,11 +79,6 @@ namespace Project_Tracker {
 
 				fixRowsAdded++;
 
-				/*if (featureRowsAdded == 1) { // It's the first row so we add the selection to it
-					newRow.Background = new SolidColorBrush(selectionColor);
-					rowSelectionID++;
-				}*/
-
 				if (fixRowsAdded % 2 == 0) { // Every other, change the color for readability purposes
 					newRow.Background = new SolidColorBrush(sortColor);
 				}
@@ -88,6 +89,9 @@ namespace Project_Tracker {
 			newRow.Cells.Add(new TableCell(new Paragraph(new Run(value))));
 		}
 
+		/// <summary>
+		/// Startup function that runs when code execution begins.
+		/// </summary>
 		private void Startup() {
 			if (File.Exists(VERSION_FILE)) {
 				File.Delete(VERSION_FILE);
@@ -123,6 +127,9 @@ namespace Project_Tracker {
 			}
 		}
 
+		/// <summary>
+		/// Launches the installer when the update button is pressed.
+		/// </summary>
 		private void Button_Click(object sender, RoutedEventArgs e) {
 			ProcessStartInfo start = new ProcessStartInfo {
 				// Enter in the command line arguments, everything you would enter after the executable name itself
