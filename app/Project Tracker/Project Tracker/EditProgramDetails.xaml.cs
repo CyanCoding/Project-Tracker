@@ -26,6 +26,9 @@ namespace Project_Tracker {
 			inputBox.CaretIndex = inputBox.Text.Length;
 		}
 
+		/// <summary>
+		/// Sets the title of the project when the enter key is pressed.
+		/// </summary>
 		private void KeyPress(object sender, System.Windows.Input.KeyEventArgs e) {
 			if (e.Key == Key.Return) {
 				if (inputBox.Text != "") {
@@ -41,6 +44,9 @@ namespace Project_Tracker {
 			}
 		}
 
+		/// <summary>
+		/// Sets the title of the project when the button is presssed.
+		/// </summary>
 		private void finishButton_Click(object sender, RoutedEventArgs e) {
 			if (inputBox.Text != "") {
 				Passthrough.Title = inputBox.Text;
@@ -54,11 +60,17 @@ namespace Project_Tracker {
 			}
 		}
 
+		/// <summary>
+		/// Closes the window and cancels the title change.
+		/// </summary>
 		private void cancelButton_Click(object sender, RoutedEventArgs e) {
 			Passthrough.IsAdding = false;
 			this.Hide();
 		}
 
+		/// <summary>
+		/// Saves the current file after finalizing title change.
+		/// </summary>
 		private void Save() {
 			StringBuilder sb = new StringBuilder();
 			StringWriter sw = new StringWriter(sb);
@@ -140,6 +152,9 @@ namespace Project_Tracker {
 			}
 		}
 
+		/// <summary>
+		/// Deletes the current file, closes every window, and launches a new instance.
+		/// </summary>
 		private void deleteButton_Click(object sender, RoutedEventArgs e) {
 			var deleteData = System.Windows.Forms.MessageBox.Show("Are you sure you wish to delete " + Passthrough.Title + "?", "Confirm project deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 

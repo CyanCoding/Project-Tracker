@@ -40,7 +40,17 @@ namespace Project_Tracker {
 			Startup();
 		}
 
-		private void AddRow(string title, int warnings, int features, int comments, string time, string percent) {
+
+		/// <summary>
+		/// Adds a row to the main table.
+		/// </summary>
+		/// <param name="title">The title of the project to add.</param>
+		/// <param name="errors">The amount of errors.</param>
+		/// <param name="features">The amount of features.</param>
+		/// <param name="comments">The amount of comments.</param>
+		/// <param name="duration">The duration of the project.</param>
+		/// <param name="percent">The percent of the project.</param>
+		private void AddRow(string title, int errors, int features, int comments, string duration, string percent) {
 			addedProgram = true;
 
 			// rowsAdded++;
@@ -63,10 +73,10 @@ namespace Project_Tracker {
 				newRow.FontSize = 16;
 				newRow.FontFamily = textFont;
 				newRow.Cells.Add(new TableCell(new Paragraph(new Run(" " + title))));
-				newRow.Cells.Add(new TableCell(new Paragraph(new Run(" " + warnings.ToString()))));
+				newRow.Cells.Add(new TableCell(new Paragraph(new Run(" " + errors.ToString()))));
 				newRow.Cells.Add(new TableCell(new Paragraph(new Run(" " + features.ToString()))));
 				newRow.Cells.Add(new TableCell(new Paragraph(new Run(" " + comments.ToString()))));
-				newRow.Cells.Add(new TableCell(new Paragraph(new Run(" " + time))));
+				newRow.Cells.Add(new TableCell(new Paragraph(new Run(" " + duration))));
 				newRow.Cells.Add(new TableCell(new Paragraph(new Run(" " + percent + "%"))));
 
 				tableValues.Add(title);
@@ -76,7 +86,7 @@ namespace Project_Tracker {
 		}
 
 		/// <summary>
-		/// Changes which row is selected
+		/// Changes which row is selected.
 		/// </summary>
 		/// <param name="oldPos">The last selected row index.</param>
 		/// <param name="newPos">The index of the desired row to be selected.</param>
@@ -114,10 +124,9 @@ namespace Project_Tracker {
 			}
 		}
 
-		/*
-		 * Updates the table by adding any new files to the table
-		 */
-
+		/// <summary>
+		/// Updates the table by adding any new files to the table.
+		/// </summary>
 		private void UpdateTable() {
 			while (true) {
 				try {
@@ -192,6 +201,9 @@ namespace Project_Tracker {
 			}
 		}
 
+		/// <summary>
+		/// Startup function that runs when code execution starts.
+		/// </summary>
 		private void Startup() {
 			// Init the table and add the first row (the title row that's already in the XAML that we don't want to edit)
 			listTable.RowGroups.Add(new TableRowGroup());
@@ -246,6 +258,9 @@ namespace Project_Tracker {
 			SelectionChange(1, 1);
 		}
 
+		/// <summary>
+		/// Runs UpdateWindow when an update is detected.
+		/// </summary>
 		private void ShowUpdate(object sender, AsyncCompletedEventArgs e) {
 			string json = File.ReadAllText(VERSION_INFO);
 
@@ -257,6 +272,10 @@ namespace Project_Tracker {
 			}
 		}
 
+		/// <summary>
+		/// Runs when a key is pressed.
+		/// Controls selection of main table.
+		/// </summary>
 		private void KeyPress(object sender, KeyEventArgs e) {
 			if (e.Key == Key.Down || e.Key == Key.Up) { // Either arrow is pressed
 				if (e.Key == Key.Down) {
@@ -270,11 +289,17 @@ namespace Project_Tracker {
 			}
 		}
 
+		/// <summary>
+		/// Launches AddProgram.
+		/// </summary>
 		private void AddProgram(object sender, MouseButtonEventArgs e) {
 			AddNewProgram newProgram = new AddNewProgram();
 			newProgram.Show();
 		}
 
+		/// <summary>
+		/// Launches EditProgram.
+		/// </summary>
 		private void EditProgram(object sender, MouseButtonEventArgs e) {
 			if (addedProgram == true) {
 				Passthrough.EditingFile = filesRead[rowSelectionID - 1];
@@ -284,6 +309,9 @@ namespace Project_Tracker {
 			}
 		}
 
+		/// <summary>
+		/// Closes threads and shuts down the program.
+		/// </summary>
 		private void Window_Closing(object sender, CancelEventArgs e) {
 			tableUpdateThread.Abort();
 			Application.Current.Shutdown(); // If we don't do this, the AddNewProgram window doesn't close and the program keeps running in the bg

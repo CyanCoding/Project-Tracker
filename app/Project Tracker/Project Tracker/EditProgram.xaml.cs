@@ -59,10 +59,11 @@ namespace Project_Tracker {
 
 			Startup();
 		}
+
 		/// <summary>
-		/// Adds a row to a certain table
+		/// Adds a row to a certain table.
 		/// </summary>
-		/// <param name="table">The table to add to.</param>
+		/// <param name="table">The table to add an item to.</param>
 		/// <param name="rowsAddedValue">The table number we're adding to (errors = 0, features = 1, comments = 2)</param>
 		/// <param name="value">The text of the row.</param>
 		/// <param name="index">The index where the value is in the array.</param>
@@ -97,6 +98,14 @@ namespace Project_Tracker {
 			newRow.Cells.Add(new TableCell(new Paragraph(new Run(value))));
 		}
 
+		/// <summary>
+		/// Changes the selection on the current table.
+		/// </summary>
+		/// <param name="oldPos">The position the selection was.</param>
+		/// <param name="newPos">The position the selection is going to.</param>
+		/// <param name="rowsAdded">The count of rows in this table.</param>
+		/// <param name="table">The table we're editing.</param>
+		/// <param name="dataValues">The data values of the table we're editing.</param>
 		private void SelectionChange(int oldPos, int newPos, int rowsAdded, Table table, List<string> dataValues) {
 			if (newPos < 0) {
 				newPos = 0;
@@ -141,9 +150,7 @@ namespace Project_Tracker {
 		}
 
 		/// <summary>
-		/// Resets the selection for the table. This might occur if
-		/// you changed tables or changed the value of a table element.
-		/// We need to reset the table to refresh the view.
+		/// Resets the selection for the table and remakes all rows.
 		/// </summary>
 		/// <param name="table">The table to edit.</param>
 		/// <param name="values">The value of each item for when we re-add elements.</param>
@@ -203,6 +210,9 @@ namespace Project_Tracker {
 			SelectionChange(0, 0, totalRows, table, dataValues);
 		}
 
+		/// <summary>
+		/// A thread that keeps track of duration since the stopwtach button was pressed.
+		/// </summary>
 		private void StopwatchTimer() {
 			while (true) {
 				// I believe this is a more accurate way of counting. It creates a stopwatch
@@ -275,6 +285,9 @@ namespace Project_Tracker {
 			}
 		}
 
+		/// <summary>
+		/// Calculates the percentage of compeletion.
+		/// </summary>
 		private void CalculatePercentage() {
 			long totalItems = errorsData.Count + featuresData.Count + commentsData.Count;
 			long totalCheckedItems = 0;
@@ -320,6 +333,9 @@ namespace Project_Tracker {
 			Save();
 		}
 
+		/// <summary>
+		/// Updates values from editing file.
+		/// </summary>
 		private void Read() {
 			while (Passthrough.IsAdding) {
 				Thread.Sleep(1000);
@@ -420,6 +436,9 @@ namespace Project_Tracker {
 			}
 		}
 
+		/// <summary>
+		/// Writes the changes to the editing file.
+		/// </summary>
 		private void Save() {
 			StringBuilder sb = new StringBuilder();
 			StringWriter sw = new StringWriter(sb);
@@ -508,6 +527,9 @@ namespace Project_Tracker {
 			}
 		}
 
+		/// <summary>
+		/// Startup function that runs when code execution begins.
+		/// </summary>
 		private void Startup() {
 			stopwatch = new Stopwatch();
 
@@ -576,6 +598,9 @@ namespace Project_Tracker {
 			CalculatePercentage();
 		}
 
+		/// <summary>
+		/// Stopwatch start/stop function that runs when the stopwatch button is pressed.
+		/// </summary>
 		private void Stopwatch(object sender, MouseButtonEventArgs e) {
 			if (isStopwatchRunning) {
 				stopwatchButton.Foreground = new SolidColorBrush(redStopwatch);
@@ -595,6 +620,9 @@ namespace Project_Tracker {
 			}
 		}
 
+		/// <summary>
+		/// Launches the EditProgramDetails window to edit the program title.
+		/// </summary>
 		private void Edit(object sender, MouseButtonEventArgs e) {
 			Passthrough.Title = projectTitle;
 			Passthrough.Errors = errors.ToArray();
@@ -616,6 +644,9 @@ namespace Project_Tracker {
 			details.Show();
 		}
 
+		/// <summary>
+		/// Aborts threads and closes the window.
+		/// </summary>
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
 			MainWindow main = new MainWindow();
 			main.filesRead.Remove(editingFile);
@@ -635,6 +666,9 @@ namespace Project_Tracker {
 			}
 		}
 
+		/// <summary>
+		/// Takes key inputs to change the selection on the current table.
+		/// </summary>
 		private void KeyPress(object sender, KeyEventArgs e) {
 			// Remember that combo box values can be changed by the arrow keys.
 			// We don't want to change the table selection when we're doing this.
@@ -660,6 +694,9 @@ namespace Project_Tracker {
 			}
 		}
 
+		/// <summary>
+		/// Refreshes table data when the comboBox selection is changed.
+		/// </summary>
 		private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
 			// The selection "changes" (is automatically set) when the window
 			// is first opened, but if we try to make changes to one of the
@@ -740,6 +777,9 @@ namespace Project_Tracker {
 			}
 		}
 
+		/// <summary>
+		/// Deletes an item from the current table.
+		/// </summary>
 		private void RemoveValue(object sender, MouseButtonEventArgs e) {
 			try {
 				if (switchLabels.SelectedIndex == 0) { // Errors
@@ -782,6 +822,9 @@ namespace Project_Tracker {
 			CalculatePercentage();
 		}
 
+		/// <summary>
+		/// Launches AddNewItem to add a new item to the current table.
+		/// </summary>
 		private void AddValue(object sender, MouseButtonEventArgs e) {
 			if (switchLabels.SelectedIndex == 0) {
 				errors.Add("");
@@ -816,6 +859,9 @@ namespace Project_Tracker {
 			newItem.Show();
 		}
 
+		/// <summary>
+		/// Checks off the selected item.
+		/// </summary>
 		private void CheckOff(object sender, MouseButtonEventArgs e) {
 			try {
 				if (switchLabels.SelectedIndex == 0) { // Errors

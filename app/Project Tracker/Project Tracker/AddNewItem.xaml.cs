@@ -19,6 +19,9 @@ namespace Project_Tracker {
 			inputBox.Focus();
 		}
 
+		/// <summary>
+		/// Adds the item to the current table when the return key is pressed.
+		/// </summary>
 		private void KeyPress(object sender, KeyEventArgs e) {
 			if (e.Key == Key.Return) {
 				if (inputBox.Text != "") {
@@ -42,6 +45,9 @@ namespace Project_Tracker {
 			}
 		}
 
+		/// <summary>
+		/// Adds the item to the current table when the finish button is pressed.
+		/// </summary>
 		private void finishButton_Click(object sender, RoutedEventArgs e) {
 			if (inputBox.Text != "") {
 				if (Passthrough.SelectedIndex == 0) {
@@ -63,11 +69,17 @@ namespace Project_Tracker {
 			}
 		}
 
+		/// <summary>
+		/// Cancels the operation and hides the window.
+		/// </summary>
 		private void cancelButton_Click(object sender, RoutedEventArgs e) {
 			Passthrough.IsAdding = false;
 			this.Hide();
 		}
 
+		/// <summary>
+		/// Saves the item to the editing file.
+		/// </summary>
 		private void Save() {
 			StringBuilder sb = new StringBuilder();
 			StringWriter sw = new StringWriter(sb);

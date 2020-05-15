@@ -52,7 +52,10 @@ namespace Project_Tracker {
 			projectTitleInputBox.Focus();
 		}
 
-		private void FirstForward() { // Moving from project title to project duration
+		/// <summary>
+		/// Moves the form from the project title to the project duration.
+		/// </summary>
+		private void FirstForward() {
 			if (projectTitleInputBox.Text != "") {
 				level = 1;
 
@@ -75,7 +78,10 @@ namespace Project_Tracker {
 			}
 		}
 
-		private void SecondForward() { // Moving from project duration to error list
+		/// <summary>
+		/// Moves the form from the project duration to the error list.
+		/// </summary>
+		private void SecondForward() {
 			durationSuccess[0] = CheckValid(projectHourInputBox.Text, "hour");
 			durationSuccess[1] = CheckValid(projectMinuteInputBox.Text, "minute");
 			durationSuccess[2] = CheckValid(projectSecondInputBox.Text, "second");
@@ -111,7 +117,10 @@ namespace Project_Tracker {
 			}
 		}
 
-		private void ThirdForward() { // Moving from error list to feature list
+		/// <summary>
+		/// Moves the form from the error list to the feature list.
+		/// </summary>
+		private void ThirdForward() {
 			level = 3;
 			projectTitleText.Text = "Features";
 
@@ -124,7 +133,10 @@ namespace Project_Tracker {
 			projectFeatureInputBox.Focus();
 		}
 
-		private void FourthForward() { // Moving from feature list to comment list
+		/// <summary>
+		/// Moves the form from the feature list to the comment list.
+		/// </summary>
+		private void FourthForward() {
 			level = 4;
 			projectTitleText.Text = "Comments";
 
@@ -137,7 +149,10 @@ namespace Project_Tracker {
 			projectCommentInputBox.Focus();
 		}
 
-		private void FifthForward() { // Moving from comment list to percent complete
+		/// <summary>
+		/// Moves the form from the comment list to the final result
+		/// </summary>
+		private void FifthForward() {
 			level = 5;
 			projectTitleText.Text = "Percent complete";
 
@@ -161,6 +176,9 @@ namespace Project_Tracker {
 			commentResult.Visibility = Visibility.Visible;
 		}
 
+		/// <summary>
+		/// Finalizes the project and writes the files to the data folder.
+		/// </summary>
 		private void Finish() { // Creating file for new project
 			if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker")) {
 				Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker");
@@ -254,6 +272,12 @@ namespace Project_Tracker {
 		 * Checks the validitiy of the duration values to make sure they are real numbers.
 		 */
 
+		/// <summary>
+		/// Checks to make sure that numbers are valid.
+		/// </summary>
+		/// <param name="value">The string of the number to test.</param>
+		/// <param name="identifier">The name for that number.</param>
+		/// <returns>Returns true if a valid number and false if not.</returns>
 		private bool CheckValid(string value, string identifier) {
 			try {
 				Int32.Parse(value);
@@ -266,6 +290,9 @@ namespace Project_Tracker {
 			}
 		}
 
+		/// <summary>
+		/// Advances to the next item in the form.
+		/// </summary>
 		private void nextButton_Click(object sender, RoutedEventArgs e) {
 			switch (level) {
 				case 0:
@@ -294,6 +321,12 @@ namespace Project_Tracker {
 			}
 		}
 
+		/// <summary>
+		/// Adds a row to the current table.
+		/// </summary>
+		/// <param name="value">The value to add to the table.</param>
+		/// <param name="table">The table to add to.</param>
+		/// <param name="tableCount">Which table we're adding to (0 = error, 1 = feature, 2 = comment).</param>
 		private void AddRow(string value, Table table, int tableCount) {
 			table.RowGroups[0].Rows.Add(new TableRow());
 
@@ -332,6 +365,9 @@ namespace Project_Tracker {
 			newRow.Cells.Add(new TableCell(new Paragraph(new Run(value))));
 		}
 
+		/// <summary>
+		/// Checks the table input box value and adds a row if valid.
+		/// </summary>
 		private void AddValue(object sender, MouseButtonEventArgs e) {
 			if (level == 2) { // Error table
 				if (projectErrorInputBox.Text != "") {
@@ -356,6 +392,9 @@ namespace Project_Tracker {
 			}
 		}
 
+		/// <summary>
+		/// Advances through the thread or adds to the table depending on current view.
+		/// </summary>
 		private void KeyPress(object sender, KeyEventArgs e) {
 			if (e.Key == Key.Return) {
 				if (level == 0) { // Title page
@@ -394,7 +433,10 @@ namespace Project_Tracker {
 
 		}
 
-		private void FirstBack() { // From duration to project title
+		/// <summary>
+		/// Moves the form from the project duration to the project title. 
+		/// </summary>
+		private void FirstBack() {
 			level = 0;
 
 			cancelButton.Content = "Cancel";
@@ -410,7 +452,10 @@ namespace Project_Tracker {
 			projectTitleInputBox.Focus();
 		}
 
-		private void SecondBack() { // From errors to duration
+		/// <summary>
+		/// Moves the form from the error list to the project duration.
+		/// </summary>
+		private void SecondBack() {
 			level = 1;
 
 			this.Height = 190;
@@ -428,7 +473,10 @@ namespace Project_Tracker {
 			errorAddButton.Visibility = Visibility.Hidden;
 		}
 
-		private void ThirdBack() { // From features to errors
+		/// <summary>
+		/// Moves the form from the feature list to the error list.
+		/// </summary>
+		private void ThirdBack() {
 			level = 2;
 
 			projectTitleText.Text = "Errors";
@@ -441,7 +489,10 @@ namespace Project_Tracker {
 			projectFeatureInputBox.Visibility = Visibility.Hidden;
 		}
 
-		private void FourthBack() { // From comments to features
+		/// <summary>
+		/// Moves the form from the comment list to the feature list.
+		/// </summary>
+		private void FourthBack() {
 			level = 3;
 
 			projectTitleText.Text = "Features";
@@ -454,7 +505,10 @@ namespace Project_Tracker {
 			projectCommentInputBox.Visibility = Visibility.Hidden;
 		}
 
-		private void FifthBack() { // From percent complete to comments
+		/// <summary>
+		/// Moves the form from the final window to the comment list.
+		/// </summary>
+		private void FifthBack() {
 			level = 4;
 
 			this.Height = 350;
@@ -472,6 +526,9 @@ namespace Project_Tracker {
 			commentResult.Visibility = Visibility.Hidden;
 		}
 
+		/// <summary>
+		/// Moves the form in a reverse order when the back/cancel button is pressed.
+		/// </summary>
 		private void cancelButton_Click(object sender, RoutedEventArgs e) {
 			switch (level) {
 				case 0:
