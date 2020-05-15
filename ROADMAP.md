@@ -1,11 +1,11 @@
 # Roadmap
 This is the roadmap of future Project Tracker releases. If you're interested in trying
-out pre-release builds, there currently aren't any available. Please check the [releases](https://github.com/CyanCoding/Project-Tracker/releases) tab for the latest release. The future releases here are the main big
-releases. You'll see things like v1.0 and v2.0 here, but often intermittent updates
+out pre-release builds, there currently aren't any available. Please check the [releases](https://github.com/CyanCoding/Project-Tracker/releases) tab for the latest release. The future releases here are major
+releases. You'll see things like v1.0 and v2.0 here, but often minor releases
 will be made such as v1.2 to fix a few things or add a new feature.
 
 ---
-## Future releases:
+## Major releases:
 Note: estimated release dates are **estimated**. Based on how quickly the project is progressing,
 these may change. It's not uncommon for a project to be finished ahead of schedule. When the
 project gets close to the estimated release date, either an updated estimate or an official
