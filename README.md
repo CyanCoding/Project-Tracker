@@ -9,7 +9,7 @@ for information on future releases.
 
 ---
 # Latest major release:
-## v1.0:
+## Version 1.0:
 The Project Tracker is a project management software application tailored to software developers allowing them to easily track each project they might be working on. Quickly add, edit, or delete existing projects and monitor each project's progress, duration, percent completion, and more!
 
 ### Features available in this release:
