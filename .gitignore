@@ -345,3 +345,6 @@ healthchecksdb
 *.ico
 *.png
 *.dll
+*.settings
+*.resx
+Properties/
