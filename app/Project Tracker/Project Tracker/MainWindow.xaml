@@ -5,11 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Project_Tracker"
         mc:Ignorable="d"
-        Title="Project Tracker" Height="450" Width="850" Icon="logo.png" MinWidth="850" MinHeight="300" PreviewKeyDown="KeyPress" Closing="Window_Closing">
+        Title="Project Tracker" Height="800" Width="800" Icon="logo.png" PreviewKeyDown="KeyPress" Closing="Window_Closing" WindowStyle="None">
 	<!-- This logo is not mine. It was created by dDara on flaticon.com -->
 
 	<Grid>
-		<FlowDocumentScrollViewer x:Name="scrollView" IsToolBarVisible="False" Margin="0,0,0,43" VerticalScrollBarVisibility="Auto" SelectionBrush="{x:Null}" Foreground="Black">
+		<Rectangle Fill="#FF212121" HorizontalAlignment="Left" Height="769" VerticalAlignment="Top" Width="250"/>
+		<Label Content="Project Tracker" HorizontalAlignment="Left" Margin="10,30,0,0" VerticalAlignment="Top" Foreground="White" FontSize="24"/>
+		<Label Content="Version 1.5" HorizontalAlignment="Left" Margin="10,65,0,0" VerticalAlignment="Top" Foreground="#FFB8B8B8"/>
+		<!-- We need this to be 10 from each side in the code -->
+		<Border HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="1" CornerRadius="2,2,2,2" BorderBrush="Black" Background="#FF9B9B9B" Width="225" Height="4" Margin="10,91,0,0"/>
+
+
+
+
+		<FlowDocumentScrollViewer x:Name="scrollView" IsToolBarVisible="False" Margin="0,0,0,43" VerticalScrollBarVisibility="Auto" SelectionBrush="{x:Null}" Foreground="Black" Visibility="Hidden">
 			<FlowDocument x:Name="flowDocument" Cursor="Arrow">
 				<Table x:Name="listTable" Cursor="Arrow">
 					<Table.Columns>
@@ -69,11 +78,13 @@
 				</Table>
 			</FlowDocument>
 		</FlowDocumentScrollViewer>
-		<Border BorderBrush="LightGray" BorderThickness="0">
+		<Border BorderBrush="LightGray" BorderThickness="0" Visibility="Hidden">
 			<TextBlock HorizontalAlignment="Left" Margin="10,0,0,10" TextWrapping="Wrap" Text="&#xE8A7;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="EditProgram" />
 		</Border>
-		<Border BorderBrush="LightGray" BorderThickness="0">
+		<Border BorderBrush="LightGray" BorderThickness="0" Visibility="Hidden">
 			<TextBlock HorizontalAlignment="Left"  Margin="50,0,0,10" TextWrapping="Wrap" Text="&#xE710;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="AddProgram" />
 		</Border>
+		
+
 	</Grid>
 </Window>
