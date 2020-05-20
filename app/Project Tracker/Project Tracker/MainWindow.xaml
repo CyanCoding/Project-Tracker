@@ -22,8 +22,9 @@
 		<!-- We need this to be 10 from each side in the code -->
 		<Border HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0" CornerRadius="4,4,4,4" BorderBrush="Black" Background="#FF9B9B9B" Width="325" Height="4" Margin="10,98,0,0"/>
 
-		<Border BorderThickness="1" HorizontalAlignment="Left" Height="45" Margin="10,107,0,0" VerticalAlignment="Top" Width="325"/>
-		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,107,0,0" Width="325">
+		<!-- First project -->
+		<Border BorderThickness="1" HorizontalAlignment="Left" Height="45" Margin="10,115,0,0" VerticalAlignment="Top" Width="325"/>
+		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,115,0,0" Width="325">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="32"/>
 				<ColumnDefinition Width="240"/>
@@ -35,6 +36,150 @@
 			</Canvas>
 			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
 			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+		</Grid>
+
+		<!-- Second project -->
+		<Border BorderThickness="1" HorizontalAlignment="Left" Height="45" Margin="10,165,0,0" VerticalAlignment="Top" Width="325"/>
+		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,165,0,0" Width="325">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="32"/>
+				<ColumnDefinition Width="240"/>
+				<ColumnDefinition Width="44"/>
+			</Grid.ColumnDefinitions>
+
+			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
+				<Image Source="{StaticResource javaDrawingImage}" Height="30" Width="30"/>
+			</Canvas>
+			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
+			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+		</Grid>
+
+		<!-- Third project -->
+		<Border BorderThickness="1" HorizontalAlignment="Left" Height="45" Margin="10,215,0,0" VerticalAlignment="Top" Width="325"/>
+		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,215,0,0" Width="325">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="32"/>
+				<ColumnDefinition Width="240"/>
+				<ColumnDefinition Width="44"/>
+			</Grid.ColumnDefinitions>
+
+			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
+				<Image Source="{StaticResource javaDrawingImage}" Height="30" Width="30"/>
+			</Canvas>
+			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
+			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+		</Grid>
+
+		<!-- Fourth project -->
+		<Border BorderThickness="1" HorizontalAlignment="Left" Height="45" Margin="10,265,0,0" VerticalAlignment="Top" Width="325"/>
+		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,265,0,0" Width="325">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="32"/>
+				<ColumnDefinition Width="240"/>
+				<ColumnDefinition Width="44"/>
+			</Grid.ColumnDefinitions>
+
+			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
+				<Image Source="{StaticResource javaDrawingImage}" Height="30" Width="30"/>
+			</Canvas>
+			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
+			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+		</Grid>
+
+		<!-- Fifth project -->
+		<Border BorderThickness="1" HorizontalAlignment="Left" Height="45" Margin="10,315,0,0" VerticalAlignment="Top" Width="325"/>
+		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,315,0,0" Width="325">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="32"/>
+				<ColumnDefinition Width="240"/>
+				<ColumnDefinition Width="44"/>
+			</Grid.ColumnDefinitions>
+
+			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
+				<Image Source="{StaticResource javaDrawingImage}" Height="30" Width="30"/>
+			</Canvas>
+			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
+			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+		</Grid>
+
+		<!-- Sixth project -->
+		<Border BorderThickness="1" HorizontalAlignment="Left" Height="45" Margin="10,365,0,0" VerticalAlignment="Top" Width="325"/>
+		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,365,0,0" Width="325">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="32"/>
+				<ColumnDefinition Width="240"/>
+				<ColumnDefinition Width="44"/>
+			</Grid.ColumnDefinitions>
+
+			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
+				<Image Source="{StaticResource javaDrawingImage}" Height="30" Width="30"/>
+			</Canvas>
+			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
+			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+		</Grid>
+
+		<!-- Seventh project -->
+		<Border BorderThickness="1" HorizontalAlignment="Left" Height="45" Margin="10,415,0,0" VerticalAlignment="Top" Width="325"/>
+		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,415,0,0" Width="325">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="32"/>
+				<ColumnDefinition Width="240"/>
+				<ColumnDefinition Width="44"/>
+			</Grid.ColumnDefinitions>
+
+			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
+				<Image Source="{StaticResource javaDrawingImage}" Height="30" Width="30"/>
+			</Canvas>
+			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
+			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+		</Grid>
+
+		<!-- Eighth project -->
+		<Border BorderThickness="1" HorizontalAlignment="Left" Height="45" Margin="10,465,0,0" VerticalAlignment="Top" Width="325"/>
+		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,465,0,0" Width="325">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="32"/>
+				<ColumnDefinition Width="240"/>
+				<ColumnDefinition Width="44"/>
+			</Grid.ColumnDefinitions>
+
+			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
+				<Image Source="{StaticResource javaDrawingImage}" Height="30" Width="30"/>
+			</Canvas>
+			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
+			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+		</Grid>
+
+		<!-- Ninth project -->
+		<Border BorderThickness="1" HorizontalAlignment="Left" Height="45" Margin="10,515,0,0" VerticalAlignment="Top" Width="325"/>
+		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,515,0,0" Width="325">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="32"/>
+				<ColumnDefinition Width="240"/>
+				<ColumnDefinition Width="44"/>
+			</Grid.ColumnDefinitions>
+
+			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
+				<Image Source="{StaticResource javaDrawingImage}" Height="30" Width="30"/>
+			</Canvas>
+			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
+			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+		</Grid>
+
+		<!-- Tenth project -->
+		<Border BorderThickness="1" HorizontalAlignment="Left" Height="45" Margin="10,565,0,0" VerticalAlignment="Top" Width="325"/>
+		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,565,0,0" Width="325">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="32"/>
+				<ColumnDefinition Width="240"/>
+				<ColumnDefinition Width="44"/>
+			</Grid.ColumnDefinitions>
+
+			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
+				<Image Source="{StaticResource none}" Height="30" Width="30"/>
+			</Canvas>
+			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
+			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
 
 		<FlowDocumentScrollViewer x:Name="scrollView" IsToolBarVisible="False" Margin="0,0,0,43" VerticalScrollBarVisibility="Auto" SelectionBrush="{x:Null}" Foreground="Black" Visibility="Hidden">
