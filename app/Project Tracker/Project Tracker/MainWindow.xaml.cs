@@ -145,6 +145,10 @@ namespace Project_Tracker {
 			}
 		}
 
+		/// <summary>
+		/// Runs when the update file has been downloaded. 
+		/// Notifies the user of an update if one is available.
+		/// </summary>
 		private void Update(object sender, AsyncCompletedEventArgs e) {
 			string json = File.ReadAllText(VERSION_INFO);
 
@@ -448,6 +452,9 @@ namespace Project_Tracker {
 			// If we don't do this, the AddNewProgram window doesn't close and the program keeps running in the bg
 		}
 
+		/// <summary>
+		/// Runs when the user presses the update button when an update is available.
+		/// </summary>
 		private void UpdateButtonPressed(object sender, MouseButtonEventArgs e) {
 			Thread thread = new Thread(() => {
 				Dispatcher.Invoke(new Action(() => {
@@ -467,6 +474,9 @@ namespace Project_Tracker {
 			updateWindow.Show();
 		}
 
+		/// <summary>
+		/// Runs when the user chooses to ignore a shown update.
+		/// </summary>
 		private void IgnoreUpdate(object sender, MouseButtonEventArgs e) {
 			Thread thread = new Thread(() => {		
 				Dispatcher.Invoke(new Action(() => {
