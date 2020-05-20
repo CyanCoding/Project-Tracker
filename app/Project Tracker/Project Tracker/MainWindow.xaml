@@ -32,10 +32,10 @@
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image Source="{StaticResource javaDrawingImage}" Height="30" Width="30"/>
+				<Image x:Name="image1"  Source="{StaticResource javaDrawingImage}" Height="30" Width="30"/>
 			</Canvas>
-			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
-			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+			<Label x:Name="name1" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
+			<Label x:Name="percent1" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
 
 		<!-- Second project -->
@@ -181,73 +181,5 @@
 			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
-
-		<FlowDocumentScrollViewer x:Name="scrollView" IsToolBarVisible="False" Margin="0,0,0,43" VerticalScrollBarVisibility="Auto" SelectionBrush="{x:Null}" Foreground="Black" Visibility="Hidden">
-			<FlowDocument x:Name="flowDocument" Cursor="Arrow">
-				<Table x:Name="listTable" Cursor="Arrow">
-					<Table.Columns>
-						<TableColumn Width="325" />
-						<TableColumn Width="35" />
-						<TableColumn Width="35" />
-						<TableColumn Width="125" />
-						<TableColumn Width="150" />
-						<TableColumn />
-					</Table.Columns>
-					<TableRowGroup>
-						<TableRow>
-							<TableCell>
-								<Paragraph>
-									<Border BorderBrush="LightGray" BorderThickness="0">
-										<TextBox Cursor="Arrow" FontFamily="Microsoft Sans Serif" Height="25" Margin="0,5,0,0" FontSize="16" IsReadOnly="True" IsUndoEnabled="False" BorderThickness="0" BorderBrush="{x:Null}" SelectionOpacity="1" SelectionBrush="{x:Null}" IsEnabled="True" Focusable="False" Background="White" FontWeight="Bold">Title</TextBox>
-									</Border>
-								</Paragraph>
-							</TableCell>
-							<TableCell>
-								<Paragraph>
-									<Border BorderBrush="LightGray" BorderThickness="0">
-										<TextBox Cursor="Arrow" FontFamily="Segoe MDL2 Assets" Height="25" Margin="0,5,0,0" FontSize="16" IsReadOnly="True" IsUndoEnabled="False" BorderThickness="0" BorderBrush="{x:Null}" SelectionOpacity="1" SelectionBrush="{x:Null}" IsEnabled="True" Focusable="False" FontWeight="Bold" ToolTip="The amount of errors">&#xE7BA;</TextBox>
-									</Border>
-								</Paragraph>
-							</TableCell>
-							<TableCell>
-								<Paragraph>
-									<Border BorderBrush="LightGray" BorderThickness="0">
-										<TextBox Cursor="Arrow" FontFamily="Segoe MDL2 Assets" Height="25" Margin="0,5,0,0" FontSize="16" IsReadOnly="True" IsUndoEnabled="False" BorderThickness="0" BorderBrush="{x:Null}" SelectionOpacity="1" SelectionBrush="{x:Null}" IsEnabled="True" Focusable="False" FontWeight="Bold" ToolTip="The amount of ideas">&#xEA80;</TextBox>
-									</Border>
-								</Paragraph>
-							</TableCell>
-							<TableCell>
-								<Paragraph>
-									<Border BorderBrush="LightGray" BorderThickness="0">
-										<TextBox Cursor="Arrow" FontFamily="Segoe MDL2 Assets" Height="25" Margin="0,5,0,0" FontSize="16" IsReadOnly="True" IsUndoEnabled="False" BorderThickness="0" BorderBrush="{x:Null}" SelectionOpacity="1" SelectionBrush="{x:Null}" IsEnabled="True" Focusable="False" FontWeight="Bold" ToolTip="The amount of comments">&#xE90A;</TextBox>
-									</Border>
-								</Paragraph>
-							</TableCell>
-							<TableCell>
-								<Paragraph>
-									<Border BorderBrush="LightGray" BorderThickness="0">
-										<TextBox Cursor="Arrow" FontFamily="Microsoft Sans Serif" Height="25" Margin="0,5,0,0" FontSize="16" IsReadOnly="True" IsUndoEnabled="False" BorderThickness="0" BorderBrush="{x:Null}" SelectionOpacity="1" SelectionBrush="{x:Null}" IsEnabled="True" Focusable="False" FontWeight="Bold">Duration</TextBox>
-									</Border>
-								</Paragraph>
-							</TableCell>
-							<TableCell>
-								<Paragraph>
-									<Border BorderBrush="LightGray" BorderThickness="0">
-										<TextBox Cursor="Arrow" FontFamily="Microsoft Sans Serif" Height="25" Margin="0,5,0,0" FontSize="16" IsReadOnly="True" IsUndoEnabled="False" BorderThickness="0" BorderBrush="{x:Null}" SelectionOpacity="1" SelectionBrush="{x:Null}" IsEnabled="True" Focusable="False" FontWeight="Bold">Percent</TextBox>
-									</Border>
-								</Paragraph>
-							</TableCell>
-						</TableRow>
-					</TableRowGroup>
-				</Table>
-			</FlowDocument>
-		</FlowDocumentScrollViewer>
-		<Border BorderBrush="LightGray" BorderThickness="0" Visibility="Hidden">
-			<TextBlock HorizontalAlignment="Left" Margin="10,0,0,10" TextWrapping="Wrap" Text="&#xE8A7;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="EditProgram" />
-		</Border>
-		<Border BorderBrush="LightGray" BorderThickness="0" Visibility="Hidden">
-			<TextBlock HorizontalAlignment="Left"  Margin="50,0,0,10" TextWrapping="Wrap" Text="&#xE710;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="AddProgram" />
-		</Border>
-
 	</Grid>
 </Window>

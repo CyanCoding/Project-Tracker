@@ -15,8 +15,10 @@
 		 * Comments: an array of all of the comments: "comment 1", "comment 2"
 		 * CommentsData: see ErrorData except for comments
 		 * Duration: a string of the current runtime on the project: "00:00:19"
+		 * Icon: the icon for the program: "javascript"
 		 * Percent: a string of the current percent completion: "09"
 		 */
+
 
 		public class Rootobject {
 			public string Title { get; set; }
@@ -27,6 +29,7 @@
 			public string[] Comments { get; set; }
 			public string[] CommentsData { get; set; }
 			public string Duration { get; set; }
+			public string Icon { get; set; }
 			public string Percent { get; set; }
 		}
 	}
