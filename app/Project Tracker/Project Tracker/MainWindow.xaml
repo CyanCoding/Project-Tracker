@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Project_Tracker"
         mc:Ignorable="d"
-        Title="Project Tracker" Height="800" Width="800" Icon="logo.png" PreviewKeyDown="KeyPress" Closing="Window_Closing">
+        Title="Project Tracker" Height="800" Width="1200" Icon="logo.png" PreviewKeyDown="KeyPress" Closing="Window_Closing">
 
 	<Window.Resources>
 		<ResourceDictionary >
@@ -105,7 +105,7 @@
 				</Style>
 			</Border.Style>
 		</Border>
-		
+
 		<!-- Fourth project -->
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,265,0,0" Width="325">
 			<Grid.ColumnDefinitions>
@@ -161,7 +161,7 @@
 				</Style>
 			</Border.Style>
 		</Border>
-		
+
 		<!-- Sixth project -->
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,365,0,0" Width="325">
 			<Grid.ColumnDefinitions>
@@ -217,7 +217,7 @@
 				</Style>
 			</Border.Style>
 		</Border>
-		
+
 		<!-- Eighth project -->
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,465,0,0" Width="325">
 			<Grid.ColumnDefinitions>
@@ -245,7 +245,7 @@
 				</Style>
 			</Border.Style>
 		</Border>
-		
+
 		<!-- Ninth project -->
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,515,0,0" Width="325">
 			<Grid.ColumnDefinitions>
@@ -273,7 +273,7 @@
 				</Style>
 			</Border.Style>
 		</Border>
-		
+
 		<!-- Tenth project -->
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,565,0,0" Width="325">
 			<Grid.ColumnDefinitions>
@@ -302,13 +302,19 @@
 			</Border.Style>
 		</Border>
 
-		
+
 		<!-- Update notifier-->
 		<Grid x:Name="updateGrid" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="792" Background="#FFE67C11" Visibility="Hidden">
 			<Label Content="An update to the Project Tracker is available!" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" FontSize="24" Margin="10,10,0,0" Height="49"/>
 			<Button x:Name="updateButton" Content="Update" HorizontalAlignment="Left" Margin="677,26,0,0" VerticalAlignment="Top" Width="97" Height="33" FontSize="16" PreviewMouseDown="UpdateButtonPressed"/>
 			<Button x:Name="ignoreButton" Content="Ignore" HorizontalAlignment="Left" Margin="565,26,0,0" VerticalAlignment="Top" Width="97" Height="33" FontSize="16" PreviewMouseDown="IgnoreUpdate"/>
-
 		</Grid>
+
+		<!-- Display window content -->
+		<Canvas HorizontalAlignment="Right" VerticalAlignment="Top" Height="45" Width="45" Margin="0,31,756,0">
+			<Image x:Name="displayingImage"  Source="{StaticResource javaIcon}" Height="45" Width="45" />
+		</Canvas>
+		<Label x:Name="displayingTitle" VerticalContentAlignment="Top" Width="657" HorizontalAlignment="Right" Content="Project Tracker" FontSize="40" Margin="0,21,94,666" FontWeight="Medium"/>
+
 	</Grid>
 </Window>
