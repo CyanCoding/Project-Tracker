@@ -1,13 +1,88 @@
-Icon
-----
-This software uses an icon from dDara on www.flaticon.com.
-
-<https://www.flaticon.com/authors/ddara>
-
+== External Libraries ==
 
 Newtonsoft.Json
 ---------------
 This software uses Newtonsoft.Json libries licensed
 under the MIT license.
-
 <https://github.com/JamesNK/Newtonsoft.Json/blob/master/LICENSE.md>
+
+
+== Icons ==
+
+Project Tracker Icon
+--------------------
+This software uses an icon from dDara on www.flaticon.com.
+<https://www.flaticon.com/authors/ddara>
+
+
+C Programming Icon
+------------------
+This software uses the C Programming Icon by Icons8.
+<https://icons8.com/icons/set/c-programming>
+
+
+C++ Programming Icon
+--------------------
+This software uses the C++ icon by Icons8.
+<https://icons8.com/icons/set/c-plus-plus-logo>
+
+
+C# Programming Icon
+-------------------
+This software uses the C Sharp Logo icon by Icons8.
+<https://icons8.com/icons/set/c-sharp-logo>
+
+
+JavaScript Programming Icon
+---------------------------
+This software uses the JavaScript icon icon by icons8.
+<https://icons8.com/icons/set/javascript>
+
+
+PHP Programming Icon
+--------------------
+This software uses the PHP logo created by Colin Viebrock
+and is licensed under the Creative Commons Attribution-ShareAlike 
+4.0 International license.
+No changes were made to the logo.
+<https://creativecommons.org/licenses/by-sa/4.0/>
+
+
+SQL Programming Icon
+--------------------
+This software uses an icon from Smashicons on www.flaticon.com.
+<https://www.flaticon.com/authors/smashicons>
+
+
+R Programming Icon
+------------------
+This software uses the R Logo (c) 2016 The R Foundation.
+It is licensed under the Creative Commons Attribution-ShareAlike
+4.0 International license.
+No changes were made to the logo.
+<https://creativecommons.org/licenses/by-sa/4.0/>
+
+
+Ruby Programming Icon
+---------------------
+This software uses the Official Ruby logo created by Yukihiro
+Matsumoto. It is licensed under the Creative Commons
+Attribution-ShareAlike 2.5 Generic license.
+No changes were made to the logo.
+<https://creativecommons.org/licenses/by-sa/2.5/>
+
+
+Perl Programming Icon
+---------------------
+This software uses the Perl icon from dnmfarrell on
+GitHub. It is licensed under the FreeBSD License.
+<https://github.com/dnmfarrell/Perl-Icons/blob/master/Icons/Perl_Onion_Color.svg>
+
+
+Groovy Programming Icon
+-----------------------
+This software uses the Logo of the Groovy project created
+by Zorak1103. It is licensed under the Creative Commons
+Attribution-ShareAlike 3.0 Unported license.
+No changes were made to the logo.
+<https://creativecommons.org/licenses/by-sa/3.0/>

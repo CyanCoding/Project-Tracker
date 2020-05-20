@@ -5,18 +5,28 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Project_Tracker"
         mc:Ignorable="d"
-        Title="Project Tracker" Height="800" Width="800" Icon="logo.png" PreviewKeyDown="KeyPress" Closing="Window_Closing" WindowStyle="None">
-	<!-- This logo is not mine. It was created by dDara on flaticon.com -->
+        Title="Project Tracker" Height="800" Width="800" Icon="logo.png" PreviewKeyDown="KeyPress" Closing="Window_Closing">
+
+	<Window.Resources>
+		<ResourceDictionary >
+			<ResourceDictionary.MergedDictionaries >
+				<ResourceDictionary Source="icons.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Window.Resources>
 
 	<Grid>
 		<Rectangle Fill="#FF212121" HorizontalAlignment="Left" Height="769" VerticalAlignment="Top" Width="250"/>
 		<Label Content="Project Tracker" HorizontalAlignment="Left" Margin="10,30,0,0" VerticalAlignment="Top" Foreground="White" FontSize="24"/>
 		<Label Content="Version 1.5" HorizontalAlignment="Left" Margin="10,65,0,0" VerticalAlignment="Top" Foreground="#FFB8B8B8"/>
 		<!-- We need this to be 10 from each side in the code -->
-		<Border HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="1" CornerRadius="2,2,2,2" BorderBrush="Black" Background="#FF9B9B9B" Width="225" Height="4" Margin="10,91,0,0"/>
+		<Border HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0" CornerRadius="2,2,2,2" BorderBrush="Black" Background="#FF9B9B9B" Width="225" Height="2" Margin="10,91,0,0"/>
 
-
-
+		<Border BorderThickness="1" HorizontalAlignment="Left" Height="28" Margin="10,98,0,0" VerticalAlignment="Top" Width="225"/>
+		<!-- Get a new rust logo (without a dark foreground) and get one more icon for a perfect 20 -->
+		<Canvas>
+			<Image Source="{StaticResource cDrawingImage}" Canvas.Left="10" Canvas.Top="107" Height="30" Width="30" />
+		</Canvas>
 
 		<FlowDocumentScrollViewer x:Name="scrollView" IsToolBarVisible="False" Margin="0,0,0,43" VerticalScrollBarVisibility="Auto" SelectionBrush="{x:Null}" Foreground="Black" Visibility="Hidden">
 			<FlowDocument x:Name="flowDocument" Cursor="Arrow">
@@ -84,7 +94,7 @@
 		<Border BorderBrush="LightGray" BorderThickness="0" Visibility="Hidden">
 			<TextBlock HorizontalAlignment="Left"  Margin="50,0,0,10" TextWrapping="Wrap" Text="&#xE710;" VerticalAlignment="Bottom" Width="30" FontFamily="Segoe MDL2 Assets" FontSize="24" Cursor="Hand" Focusable="False" FontWeight="Bold" TextAlignment="Center" PreviewMouseDown="AddProgram" />
 		</Border>
-		
+
 
 	</Grid>
 </Window>
