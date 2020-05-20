@@ -18,12 +18,11 @@
 	<Grid>
 		<Rectangle Fill="#FF212121" HorizontalAlignment="Left" Height="769" VerticalAlignment="Top" Width="350"/>
 		<Label Content="Project Tracker" HorizontalAlignment="Left" Margin="10,30,0,0" VerticalAlignment="Top" Foreground="White" FontSize="26"/>
-		<Label x:Name="versionLabel" Content="Version 1.5" HorizontalAlignment="Left" Margin="10,69,0,0" VerticalAlignment="Top" Foreground="#FFB8B8B8" FontSize="14"/>
+		<Label x:Name="versionLabel" Content="" HorizontalAlignment="Left" Margin="10,69,0,0" VerticalAlignment="Top" Foreground="#FFB8B8B8" FontSize="14"/>
 		<!-- We need this to be 10 from each side in the code -->
 		<Border HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0" CornerRadius="4,4,4,4" BorderBrush="Black" Background="#FF9B9B9B" Width="325" Height="4" Margin="10,98,0,0"/>
 
 		<!-- First project -->
-		<Border BorderThickness="1" HorizontalAlignment="Left" Height="45" Margin="10,115,0,0" VerticalAlignment="Top" Width="325"/>
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,115,0,0" Width="325">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="32"/>
@@ -37,9 +36,21 @@
 			<Label x:Name="name1" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent1" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
+		<Border x:Name="border1" VerticalAlignment="Top" HorizontalAlignment="Left" Height="45" Margin="0,115,0,0" Width="350" Visibility="Hidden">
+			<Border.Style>
+				<Style>
+					<Setter Property="Border.Background" Value="LightGray"/>
+					<Setter Property="Border.Opacity" Value="0"/>
+					<Style.Triggers>
+						<Trigger Property="Border.IsMouseOver" Value="True">
+							<Setter Property="Border.Opacity" Value="0.2"/>
+						</Trigger>
+					</Style.Triggers>
+				</Style>
+			</Border.Style>
+		</Border>
 
 		<!-- Second project -->
-		<Border BorderThickness="1" HorizontalAlignment="Left" Height="45" Margin="10,165,0,0" VerticalAlignment="Top" Width="325"/>
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,165,0,0" Width="325">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="32"/>
@@ -53,9 +64,21 @@
 			<Label x:Name="name2" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent2" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
+		<Border x:Name="border2" VerticalAlignment="Top" HorizontalAlignment="Left" Height="45" Margin="0,165,0,0" Width="350" Visibility="Hidden">
+			<Border.Style>
+				<Style>
+					<Setter Property="Border.Background" Value="LightGray"/>
+					<Setter Property="Border.Opacity" Value="0"/>
+					<Style.Triggers>
+						<Trigger Property="Border.IsMouseOver" Value="True">
+							<Setter Property="Border.Opacity" Value="0.2"/>
+						</Trigger>
+					</Style.Triggers>
+				</Style>
+			</Border.Style>
+		</Border>
 
 		<!-- Third project -->
-		<Border BorderThickness="1" HorizontalAlignment="Left" Height="45" Margin="10,215,0,0" VerticalAlignment="Top" Width="325"/>
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,215,0,0" Width="325">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="32"/>
@@ -69,9 +92,21 @@
 			<Label x:Name="name3" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent3" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
-
+		<Border x:Name="border3" VerticalAlignment="Top" HorizontalAlignment="Left" Height="45" Margin="0,215,0,0" Width="350" Visibility="Hidden">
+			<Border.Style>
+				<Style>
+					<Setter Property="Border.Background" Value="LightGray"/>
+					<Setter Property="Border.Opacity" Value="0"/>
+					<Style.Triggers>
+						<Trigger Property="Border.IsMouseOver" Value="True">
+							<Setter Property="Border.Opacity" Value="0.2"/>
+						</Trigger>
+					</Style.Triggers>
+				</Style>
+			</Border.Style>
+		</Border>
+		
 		<!-- Fourth project -->
-		<Border BorderThickness="1" HorizontalAlignment="Left" Height="45" Margin="10,265,0,0" VerticalAlignment="Top" Width="325"/>
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,265,0,0" Width="325">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="32"/>
@@ -85,9 +120,21 @@
 			<Label x:Name="name4" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent4" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
+		<Border x:Name="border4" VerticalAlignment="Top" HorizontalAlignment="Left" Height="45" Margin="0,265,0,0" Width="350" Visibility="Hidden">
+			<Border.Style>
+				<Style>
+					<Setter Property="Border.Background" Value="LightGray"/>
+					<Setter Property="Border.Opacity" Value="0"/>
+					<Style.Triggers>
+						<Trigger Property="Border.IsMouseOver" Value="True">
+							<Setter Property="Border.Opacity" Value="0.2"/>
+						</Trigger>
+					</Style.Triggers>
+				</Style>
+			</Border.Style>
+		</Border>
 
 		<!-- Fifth project -->
-		<Border BorderThickness="1" HorizontalAlignment="Left" Height="45" Margin="10,315,0,0" VerticalAlignment="Top" Width="325"/>
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,315,0,0" Width="325">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="32"/>
@@ -101,9 +148,21 @@
 			<Label x:Name="name5" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent5" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
-
+		<Border x:Name="border5" VerticalAlignment="Top" HorizontalAlignment="Left" Height="45" Margin="0,315,0,0" Width="350" Visibility="Hidden">
+			<Border.Style>
+				<Style>
+					<Setter Property="Border.Background" Value="LightGray"/>
+					<Setter Property="Border.Opacity" Value="0"/>
+					<Style.Triggers>
+						<Trigger Property="Border.IsMouseOver" Value="True">
+							<Setter Property="Border.Opacity" Value="0.2"/>
+						</Trigger>
+					</Style.Triggers>
+				</Style>
+			</Border.Style>
+		</Border>
+		
 		<!-- Sixth project -->
-		<Border BorderThickness="1" HorizontalAlignment="Left" Height="45" Margin="10,365,0,0" VerticalAlignment="Top" Width="325"/>
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,365,0,0" Width="325">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="32"/>
@@ -117,9 +176,21 @@
 			<Label x:Name="name6" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent6" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
+		<Border x:Name="border6" VerticalAlignment="Top" HorizontalAlignment="Left" Height="45" Margin="0,365,0,0" Width="350" Visibility="Hidden">
+			<Border.Style>
+				<Style>
+					<Setter Property="Border.Background" Value="LightGray"/>
+					<Setter Property="Border.Opacity" Value="0"/>
+					<Style.Triggers>
+						<Trigger Property="Border.IsMouseOver" Value="True">
+							<Setter Property="Border.Opacity" Value="0.2"/>
+						</Trigger>
+					</Style.Triggers>
+				</Style>
+			</Border.Style>
+		</Border>
 
 		<!-- Seventh project -->
-		<Border BorderThickness="1" HorizontalAlignment="Left" Height="45" Margin="10,415,0,0" VerticalAlignment="Top" Width="325"/>
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,415,0,0" Width="325">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="32"/>
@@ -133,9 +204,21 @@
 			<Label x:Name="name7" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent7" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
-
+		<Border x:Name="border7" VerticalAlignment="Top" HorizontalAlignment="Left" Height="45" Margin="0,415,0,0" Width="350" Visibility="Hidden">
+			<Border.Style>
+				<Style>
+					<Setter Property="Border.Background" Value="LightGray"/>
+					<Setter Property="Border.Opacity" Value="0"/>
+					<Style.Triggers>
+						<Trigger Property="Border.IsMouseOver" Value="True">
+							<Setter Property="Border.Opacity" Value="0.2"/>
+						</Trigger>
+					</Style.Triggers>
+				</Style>
+			</Border.Style>
+		</Border>
+		
 		<!-- Eighth project -->
-		<Border BorderThickness="1" HorizontalAlignment="Left" Height="45" Margin="10,465,0,0" VerticalAlignment="Top" Width="325"/>
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,465,0,0" Width="325">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="32"/>
@@ -149,9 +232,21 @@
 			<Label x:Name="name8" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent8" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
-
+		<Border x:Name="border8" VerticalAlignment="Top" HorizontalAlignment="Left" Height="45" Margin="0,465,0,0" Width="350" Visibility="Hidden">
+			<Border.Style>
+				<Style>
+					<Setter Property="Border.Background" Value="LightGray"/>
+					<Setter Property="Border.Opacity" Value="0"/>
+					<Style.Triggers>
+						<Trigger Property="Border.IsMouseOver" Value="True">
+							<Setter Property="Border.Opacity" Value="0.2"/>
+						</Trigger>
+					</Style.Triggers>
+				</Style>
+			</Border.Style>
+		</Border>
+		
 		<!-- Ninth project -->
-		<Border BorderThickness="1" HorizontalAlignment="Left" Height="45" Margin="10,515,0,0" VerticalAlignment="Top" Width="325"/>
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,515,0,0" Width="325">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="32"/>
@@ -165,9 +260,21 @@
 			<Label x:Name="name9" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent9" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
-
+		<Border x:Name="border9" VerticalAlignment="Top" HorizontalAlignment="Left" Height="45" Margin="0,515,0,0" Width="350" Visibility="Hidden">
+			<Border.Style>
+				<Style>
+					<Setter Property="Border.Background" Value="LightGray"/>
+					<Setter Property="Border.Opacity" Value="0"/>
+					<Style.Triggers>
+						<Trigger Property="Border.IsMouseOver" Value="True">
+							<Setter Property="Border.Opacity" Value="0.2"/>
+						</Trigger>
+					</Style.Triggers>
+				</Style>
+			</Border.Style>
+		</Border>
+		
 		<!-- Tenth project -->
-		<Border BorderThickness="1" HorizontalAlignment="Left" Height="45" Margin="10,565,0,0" VerticalAlignment="Top" Width="325"/>
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,565,0,0" Width="325">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="32"/>
@@ -181,8 +288,21 @@
 			<Label x:Name="name10" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent10" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
+		<Border x:Name="border10" VerticalAlignment="Top" HorizontalAlignment="Left" Height="45" Margin="0,565,0,0" Width="350" Visibility="Hidden">
+			<Border.Style>
+				<Style>
+					<Setter Property="Border.Background" Value="LightGray"/>
+					<Setter Property="Border.Opacity" Value="0"/>
+					<Style.Triggers>
+						<Trigger Property="Border.IsMouseOver" Value="True">
+							<Setter Property="Border.Opacity" Value="0.2"/>
+						</Trigger>
+					</Style.Triggers>
+				</Style>
+			</Border.Style>
+		</Border>
 
-
+		
 		<!-- Update notifier-->
 		<Grid x:Name="updateGrid" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="792" Background="#FFE67C11" Visibility="Hidden">
 			<Label Content="An update to the Project Tracker is available!" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" FontSize="24" Margin="10,10,0,0" Height="49"/>

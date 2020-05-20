@@ -39,7 +39,10 @@ namespace Project_Tracker {
 			"https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/version.json";
 		private readonly string VERSION_INFO = Environment.GetFolderPath
 			(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/version.json";
-		private readonly string CURRENT_VERSION = "1.2"; // IF YOU CHANGE THIS, ALSO CHANGE IT IN UpdateWindow.xaml.cs
+		private readonly string CURRENT_VERSION = "1.5"; // IF YOU CHANGE THIS, ALSO CHANGE IT IN UpdateWindow.xaml.cs
+		private readonly string APPDATA_DIRECTORY =
+			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
+			+ "/Project Tracker";
 
 		public MainWindow() {
 			InitializeComponent();
@@ -96,51 +99,61 @@ namespace Project_Tracker {
 					image1.Source = (ImageSource)TryFindResource(icon);
 					name1.Content = title;
 					percent1.Content = percent + "%";
+					border1.Visibility = Visibility.Visible;
 					break;
 				case 2:
 					image2.Source = (ImageSource)TryFindResource(icon);
 					name2.Content = title;
 					percent2.Content = percent + "%";
+					border2.Visibility = Visibility.Visible;
 					break;
 				case 3:
 					image3.Source = (ImageSource)TryFindResource(icon);
 					name3.Content = title;
 					percent3.Content = percent + "%";
+					border3.Visibility = Visibility.Visible;
 					break;
 				case 4:
 					image4.Source = (ImageSource)TryFindResource(icon);
 					name4.Content = title;
 					percent4.Content = percent + "%";
+					border4.Visibility = Visibility.Visible;
 					break;
 				case 5:
 					image5.Source = (ImageSource)TryFindResource(icon);
 					name5.Content = title;
 					percent5.Content = percent + "%";
+					border5.Visibility = Visibility.Visible;
 					break;
 				case 6:
 					image6.Source = (ImageSource)TryFindResource(icon);
 					name6.Content = title;
 					percent6.Content = percent + "%";
+					border6.Visibility = Visibility.Visible;
 					break;
 				case 7:
 					image7.Source = (ImageSource)TryFindResource(icon);
 					name7.Content = title;
 					percent7.Content = percent + "%";
+					border7.Visibility = Visibility.Visible;
 					break;
 				case 8:
 					image8.Source = (ImageSource)TryFindResource(icon);
 					name8.Content = title;
 					percent8.Content = percent + "%";
+					border8.Visibility = Visibility.Visible;
 					break;
 				case 9:
 					image9.Source = (ImageSource)TryFindResource(icon);
 					name9.Content = title;
 					percent9.Content = percent + "%";
+					border9.Visibility = Visibility.Visible;
 					break;
 				case 10:
 					image10.Source = (ImageSource)TryFindResource(icon);
 					name10.Content = title;
 					percent10.Content = percent + "%";
+					border10.Visibility = Visibility.Visible;
 					break;
 			}
 		}
@@ -176,11 +189,8 @@ namespace Project_Tracker {
 		/// Startup function that runs when code execution starts.
 		/// </summary>
 		private void Startup() {
-			if (!Directory.Exists(
-				Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker")) {
-
-				Directory.CreateDirectory(
-					Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker");
+			if (!Directory.Exists(APPDATA_DIRECTORY)) {
+				Directory.CreateDirectory(APPDATA_DIRECTORY);
 			}
 			if (!Directory.Exists(DATA_DIRECTORY)) {
 				Directory.CreateDirectory(DATA_DIRECTORY);
