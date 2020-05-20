@@ -32,7 +32,7 @@
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image x:Name="image1"  Source="{StaticResource javaDrawingImage}" Height="30" Width="30"/>
+				<Image x:Name="image1"  Source="{StaticResource noIcon}" Height="30" Width="30"/>
 			</Canvas>
 			<Label x:Name="name1" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent1" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
@@ -48,7 +48,7 @@
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image Source="{StaticResource javaDrawingImage}" Height="30" Width="30"/>
+				<Image Source="{StaticResource noIcon}" Height="30" Width="30"/>
 			</Canvas>
 			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
 			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
@@ -64,7 +64,7 @@
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image Source="{StaticResource javaDrawingImage}" Height="30" Width="30"/>
+				<Image Source="{StaticResource noIcon}" Height="30" Width="30"/>
 			</Canvas>
 			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
 			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
@@ -80,7 +80,7 @@
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image Source="{StaticResource javaDrawingImage}" Height="30" Width="30"/>
+				<Image Source="{StaticResource noIcon}" Height="30" Width="30"/>
 			</Canvas>
 			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
 			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
@@ -96,7 +96,7 @@
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image Source="{StaticResource javaDrawingImage}" Height="30" Width="30"/>
+				<Image Source="{StaticResource noIcon}" Height="30" Width="30"/>
 			</Canvas>
 			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
 			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
@@ -112,7 +112,7 @@
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image Source="{StaticResource javaDrawingImage}" Height="30" Width="30"/>
+				<Image Source="{StaticResource noIcon}" Height="30" Width="30"/>
 			</Canvas>
 			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
 			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
@@ -128,7 +128,7 @@
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image Source="{StaticResource javaDrawingImage}" Height="30" Width="30"/>
+				<Image Source="{StaticResource noIcon}" Height="30" Width="30"/>
 			</Canvas>
 			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
 			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
@@ -144,7 +144,7 @@
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image Source="{StaticResource javaDrawingImage}" Height="30" Width="30"/>
+				<Image Source="{StaticResource noIcon}" Height="30" Width="30"/>
 			</Canvas>
 			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
 			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
@@ -160,7 +160,7 @@
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image Source="{StaticResource javaDrawingImage}" Height="30" Width="30"/>
+				<Image Source="{StaticResource noIcon}" Height="30" Width="30"/>
 			</Canvas>
 			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
 			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>

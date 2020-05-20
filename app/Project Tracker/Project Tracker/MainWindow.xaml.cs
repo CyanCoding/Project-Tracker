@@ -68,7 +68,6 @@ namespace Project_Tracker {
 						if (!filesRead.Contains(path)) {
 							// Convert each json file to a table row
 							string json = File.ReadAllText(path);
-							dynamic array = JsonConvert.DeserializeObject(json);
 							MainTableManifest.Rootobject mainTable = JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
 
 							name1.Content = mainTable.Title;
