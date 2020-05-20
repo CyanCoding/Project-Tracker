@@ -34,8 +34,8 @@
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
 				<Image x:Name="image1"  Source="{StaticResource noIcon}" Height="30" Width="30"/>
 			</Canvas>
-			<Label x:Name="name1" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
-			<Label x:Name="percent1" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+			<Label x:Name="name1" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
+			<Label x:Name="percent1" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
 
 		<!-- Second project -->
@@ -48,10 +48,10 @@
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image Source="{StaticResource noIcon}" Height="30" Width="30"/>
+				<Image x:Name="image2" Source="{StaticResource noIcon}" Height="30" Width="30"/>
 			</Canvas>
-			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
-			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+			<Label x:Name="name2" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
+			<Label x:Name="percent2" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
 
 		<!-- Third project -->
@@ -64,10 +64,10 @@
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image Source="{StaticResource noIcon}" Height="30" Width="30"/>
+				<Image x:Name="image3" Source="{StaticResource noIcon}" Height="30" Width="30"/>
 			</Canvas>
-			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
-			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+			<Label x:Name="name3" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
+			<Label x:Name="percent3" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
 
 		<!-- Fourth project -->
@@ -80,10 +80,10 @@
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image Source="{StaticResource noIcon}" Height="30" Width="30"/>
+				<Image x:Name="image4" Source="{StaticResource noIcon}" Height="30" Width="30"/>
 			</Canvas>
-			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
-			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+			<Label x:Name="name4" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
+			<Label x:Name="percent4" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
 
 		<!-- Fifth project -->
@@ -96,10 +96,10 @@
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image Source="{StaticResource noIcon}" Height="30" Width="30"/>
+				<Image x:Name="image5" Source="{StaticResource noIcon}" Height="30" Width="30"/>
 			</Canvas>
-			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
-			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+			<Label x:Name="name5" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
+			<Label x:Name="percent5" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
 
 		<!-- Sixth project -->
@@ -112,10 +112,10 @@
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image Source="{StaticResource noIcon}" Height="30" Width="30"/>
+				<Image x:Name="image6" Source="{StaticResource noIcon}" Height="30" Width="30"/>
 			</Canvas>
-			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
-			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+			<Label x:Name="name6" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
+			<Label x:Name="percent6" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
 
 		<!-- Seventh project -->
@@ -128,10 +128,10 @@
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image Source="{StaticResource noIcon}" Height="30" Width="30"/>
+				<Image x:Name="image7" Source="{StaticResource noIcon}" Height="30" Width="30"/>
 			</Canvas>
-			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
-			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+			<Label x:Name="name7" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
+			<Label x:Name="percent7" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
 
 		<!-- Eighth project -->
@@ -144,10 +144,10 @@
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image Source="{StaticResource noIcon}" Height="30" Width="30"/>
+				<Image x:Name="image8" Source="{StaticResource noIcon}" Height="30" Width="30"/>
 			</Canvas>
-			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
-			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+			<Label x:Name="name8" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
+			<Label x:Name="percent8" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
 
 		<!-- Ninth project -->
@@ -160,10 +160,10 @@
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image Source="{StaticResource noIcon}" Height="30" Width="30"/>
+				<Image x:Name="image9" Source="{StaticResource noIcon}" Height="30" Width="30"/>
 			</Canvas>
-			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="Project Tracker" Foreground="White" FontSize="22"/>
-			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="35%" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+			<Label x:Name="name9" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
+			<Label x:Name="percent9" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
 
 		<!-- Tenth project -->
@@ -176,10 +176,10 @@
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image Source="{StaticResource none}" Height="30" Width="30"/>
+				<Image x:Name="image10" Source="{StaticResource noIcon}" Height="30" Width="30"/>
 			</Canvas>
-			<Label VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
-			<Label VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+			<Label x:Name="name10" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
+			<Label x:Name="percent10" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
 	</Grid>
 </Window>
