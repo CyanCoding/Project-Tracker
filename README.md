@@ -21,13 +21,14 @@ language icons at the moment. Soon you'll be able to add your own icon!
 3. A notification when migrating data files to a newer version.
 4. A settings menu where you can change program settings and check
 for an update.
+5. A better graphic and overall theme.
 5. Much more coming soon!
 
 ### Upcoming features:
 1. Categorize projects by duration, language, title, progress, and more!
 2. Search functionality.
 3. Cross-platform support beyond Windows.
-4. A dark theme and a settings menu.
+4. More themes.
 5. Better support for different display resolutions.
 6. A lines of code counter for each project.
 7. A button to link your project to a specific device folder for easy access.
@@ -37,9 +38,9 @@ If those upcoming features interest you, We encourage you to try out the current
 
 ---
 ## Screenshots:
-[Insert screenshots]
+Insert screenshots
 
-Head over to the [releases]() to get this version!
+Head over to the [releases] (needs link) to get this version!
 
 #
 
