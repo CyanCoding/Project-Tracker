@@ -41,3 +41,4 @@ date will be posted allowing you to stay up to date with when new updates will b
 - [ ] Allow linking of a folder to each project to easily see files from Project Tracker.
 - [ ] GitHub integration!
 - [ ] Lines of code counting and display.
+- [ ] A way to see the release date of the next project and what new features it's bringing.
