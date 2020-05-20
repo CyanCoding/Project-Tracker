@@ -26,6 +26,6 @@
 				</Table>
 			</FlowDocument>
 		</FlowDocumentScrollViewer>
-		<Button x:Name="updateButton" Content="Update" HorizontalAlignment="Center" Margin="0,0,0,25" VerticalAlignment="Bottom" Width="91" Height="33" Click="Button_Click" />
+		<Button x:Name="updateButton" Content="Update" HorizontalAlignment="Center" Margin="0,0,0,10" VerticalAlignment="Bottom" Width="162" Height="52" Click="Button_Click" FontSize="24" />
 	</Grid>
 </Window>
