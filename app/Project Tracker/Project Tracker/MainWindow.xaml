@@ -25,7 +25,7 @@
 		<Border BorderThickness="1" HorizontalAlignment="Left" Height="28" Margin="10,98,0,0" VerticalAlignment="Top" Width="225"/>
 		<!-- Get a new rust logo (without a dark foreground) and get one more icon for a perfect 20 -->
 		<Canvas>
-			<Image Source="{StaticResource cDrawingImage}" Canvas.Left="10" Canvas.Top="107" Height="30" Width="30" />
+			<Image Source="{StaticResource rustDrawingImage}" Canvas.Left="10" Canvas.Top="107" Height="30" Width="30" />
 		</Canvas>
 
 		<FlowDocumentScrollViewer x:Name="scrollView" IsToolBarVisible="False" Margin="0,0,0,43" VerticalScrollBarVisibility="Auto" SelectionBrush="{x:Null}" Foreground="Black" Visibility="Hidden">
