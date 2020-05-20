@@ -5,12 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Project_Tracker"
         mc:Ignorable="d"
-        Title="Project Tracker" Height="800" Width="1200" Icon="logo.png" PreviewKeyDown="KeyPress" Closing="Window_Closing">
+        Title="Project Tracker"  Height="800" Width="1200" Icon="logo.png" PreviewKeyDown="KeyPress" Closing="Window_Closing">
 
 	<Window.Resources>
 		<ResourceDictionary >
 			<ResourceDictionary.MergedDictionaries >
-				<ResourceDictionary Source="icons.xaml"/>
+				<ResourceDictionary Source="style.xaml"/>
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</Window.Resources>
@@ -315,6 +315,35 @@
 			<Image x:Name="displayingImage"  Source="{StaticResource javaIcon}" Height="45" Width="45" />
 		</Canvas>
 		<Label x:Name="displayingTitle" VerticalContentAlignment="Top" Width="657" HorizontalAlignment="Right" Content="Project Tracker" FontSize="40" Margin="0,21,94,666" FontWeight="Medium"/>
+		<!-- Make sure this has equal padding on all sides -->
+		<ListView HorizontalAlignment="Left" Height="612" Margin="391,115,0,0" VerticalAlignment="Top" Width="761" BorderBrush="{x:Null}" Foreground="{x:Null}">
+			<Grid>
+				<StackPanel>
+					<StackPanel.Style>
+						<Style>
+							<Style.Triggers>
+								<Trigger Property="StackPanel.IsMouseOver" Value="True">
+									<Setter Property="StackPanel.Background" Value="White"/>
+								</Trigger>
+							</Style.Triggers>
+						</Style>
+					</StackPanel.Style>
+					<Border Margin="10" Width="725">
+						<Border.Style>
+							<Style>
+								<Setter Property="Border.Background" Value="#FF3C3C3C"/>
+								<Setter Property="FrameworkElement.Width" Value="700"/>
+								<Setter Property="FrameworkElement.Height" Value="60"/>
+								<Setter Property="Border.CornerRadius" Value="10"/>
+							</Style>
+						</Border.Style>
+						<Label Content="Hello world!" Foreground="White" Margin="80,6,20,0" FontSize="24"/>
+					</Border>
+
+				</StackPanel>
+			</Grid>
+		</ListView>
+
 
 	</Grid>
 </Window>
