@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 
 namespace Project_Tracker {
@@ -144,6 +145,29 @@ namespace Project_Tracker {
 			}
 		}
 
+		private void Update(object sender, AsyncCompletedEventArgs e) {
+			string json = File.ReadAllText(VERSION_INFO);
+
+			UpdateManifest.Rootobject update =
+				JsonConvert.DeserializeObject<UpdateManifest.Rootobject>(json);
+
+			if (float.Parse(CURRENT_VERSION) < float.Parse(update.Version)) { // Update is available
+				Thread thread = new Thread(() => {
+					Thread.Sleep(5000);
+					Dispatcher.Invoke(new Action(() => {
+						updateGrid.Visibility = Visibility.Visible;
+
+						DoubleAnimation animation = new DoubleAnimation();
+						animation.From = 0;
+						animation.To = 69;
+						animation.Duration = TimeSpan.FromSeconds(0.5);
+
+						updateGrid.BeginAnimation(HeightProperty, animation);
+					}));
+				});
+				thread.Start();
+			}
+		}
 		/// <summary>
 		/// Startup function that runs when code execution starts.
 		/// </summary>
@@ -373,7 +397,7 @@ namespace Project_Tracker {
 
 				try {
 					WebClient client = new WebClient();
-					client.DownloadFileCompleted += new AsyncCompletedEventHandler(ShowUpdate);
+					client.DownloadFileCompleted += new AsyncCompletedEventHandler(Update);
 					client.DownloadFileAsync(new Uri(VERSION_MANIFEST_URL), VERSION_INFO);
 				}
 				catch (WebException) {
@@ -385,21 +409,6 @@ namespace Project_Tracker {
 
 			tableUpdateThread = new Thread(UpdateTable); // Start the background resize thread
 			tableUpdateThread.Start();
-		}
-
-		/// <summary>
-		/// Runs UpdateWindow when an update is detected.
-		/// </summary>
-		private void ShowUpdate(object sender, AsyncCompletedEventArgs e) {
-			string json = File.ReadAllText(VERSION_INFO);
-
-			UpdateManifest.Rootobject update = 
-				JsonConvert.DeserializeObject<UpdateManifest.Rootobject>(json);
-
-			if (float.Parse(CURRENT_VERSION) < float.Parse(update.Version)) { // Update is available
-				UpdateWindow updateWindow = new UpdateWindow();
-				updateWindow.Show();
-			}
 		}
 
 		/// <summary>
@@ -437,6 +446,41 @@ namespace Project_Tracker {
 			tableUpdateThread.Abort();
 			Application.Current.Shutdown(); 
 			// If we don't do this, the AddNewProgram window doesn't close and the program keeps running in the bg
+		}
+
+		private void UpdateButtonPressed(object sender, MouseButtonEventArgs e) {
+			Thread thread = new Thread(() => {
+				Dispatcher.Invoke(new Action(() => {
+					updateGrid.Visibility = Visibility.Visible;
+
+					DoubleAnimation animation = new DoubleAnimation();
+					animation.From = 69;
+					animation.To = 0;
+					animation.Duration = TimeSpan.FromSeconds(0.5);
+
+					updateGrid.BeginAnimation(HeightProperty, animation);
+				}));
+			});
+			thread.Start();
+
+			UpdateWindow updateWindow = new UpdateWindow();
+			updateWindow.Show();
+		}
+
+		private void IgnoreUpdate(object sender, MouseButtonEventArgs e) {
+			Thread thread = new Thread(() => {		
+				Dispatcher.Invoke(new Action(() => {
+					updateGrid.Visibility = Visibility.Visible;
+
+					DoubleAnimation animation = new DoubleAnimation();
+					animation.From = 69;
+					animation.To = 0;
+					animation.Duration = TimeSpan.FromSeconds(0.5);
+
+					updateGrid.BeginAnimation(HeightProperty, animation);
+				}));
+			});
+			thread.Start();
 		}
 	}
 }

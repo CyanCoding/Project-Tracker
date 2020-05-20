@@ -181,5 +181,14 @@
 			<Label x:Name="name10" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent10" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
+
+
+		<!-- Update notifier-->
+		<Grid x:Name="updateGrid" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="792" Background="#FFE67C11" Visibility="Hidden">
+			<Label Content="An update to the Project Tracker is available!" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" FontSize="24" Margin="10,10,0,0" Height="49"/>
+			<Button x:Name="updateButton" Content="Update" HorizontalAlignment="Left" Margin="677,26,0,0" VerticalAlignment="Top" Width="97" Height="33" FontSize="16" PreviewMouseDown="UpdateButtonPressed"/>
+			<Button x:Name="ignoreButton" Content="Ignore" HorizontalAlignment="Left" Margin="565,26,0,0" VerticalAlignment="Top" Width="97" Height="33" FontSize="16" PreviewMouseDown="IgnoreUpdate"/>
+
+		</Grid>
 	</Grid>
 </Window>
