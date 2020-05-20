@@ -8,40 +8,39 @@ Head over to the [roadmap](https://github.com/CyanCoding/Project-Tracker/blob/ma
 for information on future releases.
 
 ---
-# Latest major release:
-## Version 1.0:
-The Project Tracker is a project management software application tailored to software developers allowing them to easily track each project they might be working on. Quickly add, edit, or delete existing projects and monitor each project's progress, duration, percent completion, and more!
+# Current version:
+## Version 1.5:
+We added a brand new design and layout to the whole program as well as
+icon tagging for projects! Now you can easily recognize each project
+from a glance by its icon. You can set the icon to any of 20 pre-defined
+language icons at the moment. Soon you'll be able to add your own icon!
 
 ### Features available in this release:
-1. Track your projects easily and see them all in a list view.
-2. Quickly see and edit the errors, features, and comments for each project.
-3. View your automatically updated progress report for each project.
-4. Use the stopwatch functionality to monitor the duration of each project.
+1. New layout design.
+2. Icons for each proejct.
+3. A notification when migrating data files to a newer version.
+4. A settings menu where you can change program settings and check
+for an update.
+5. A better graphic and overall theme.
 5. Much more coming soon!
 
 ### Upcoming features:
 1. Categorize projects by duration, language, title, progress, and more!
 2. Search functionality.
 3. Cross-platform support beyond Windows.
-4. A dark theme and a settings menu.
+4. More themes.
 5. Better support for different display resolutions.
 6. A lines of code counter for each project.
 7. A button to link your project to a specific device folder for easy access.
 8. GitHub integration.
 
-If those upcoming features interest you, We encourage you to try out the current Project Tracker release. When the new features are released, your software will be updated automatically and you can keep on tracking your projects like a pro!
+If those upcoming features interest you, we encourage you to try out the current Project Tracker release. When the new features are released, your software will be updated automatically and you can keep on tracking your projects like a pro!
 
 ---
 ## Screenshots:
-![main window v1 0](https://user-images.githubusercontent.com/30013496/81993492-c745b200-9613-11ea-8904-e7bb4fcf373d.png)
+Insert screenshots
 
-
-![errors window v1 0](https://user-images.githubusercontent.com/30013496/81993488-c6ad1b80-9613-11ea-9cab-325fecd5b99d.png)
-
-
-![features window v1 0](https://user-images.githubusercontent.com/30013496/81993490-c745b200-9613-11ea-8ae5-d64652825b3c.png)
-
-Head over to the [releases](https://github.com/CyanCoding/Project-Tracker/releases/tag/v1.0) to get this version!
+Head over to the [releases] (needs link) to get this version!
 
 #
 
