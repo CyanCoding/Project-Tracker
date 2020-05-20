@@ -22,22 +22,23 @@ date will be posted allowing you to stay up to date with when new updates will b
 - [x] Add updating information on main table functionality.
 - [x] Move installation files to GitHub.
 - [x] Finish view-program window.
+- [x] Allow deleting of items in the add-program tables.
 
 ### v2.0:
 **Estimated release date:** `June 10th, 2020`
 
-- [ ] Allow resizing of windows.
 - [ ] Create a better design for main window.
 - [ ] Add a settings menu.
 - [ ] Create a dark theme.
-- [ ] Allow users to install pre-releases automatically from the app.
 - [ ] Allow users to check for updates after the app is opened.
 - [ ] A more subtle way of displaying an update.
-- [ ] Allow deleting of items in the add-program tables.
-- [ ] Create a language section to see the programming language of each project.
+- [ ] A way to see the language for each project.
+- [ ] Allow resizing of windows.
+- [ ] Allow users to install pre-releases automatically from the app.
 
 ### v3.0:
 **Estimated release date:** `summer 2020`
 - [ ] Allow linking of a folder to each project to easily see files from Project Tracker.
 - [ ] GitHub integration!
 - [ ] Lines of code counting and display.
+- [ ] A way to see the release date of the next project and what new features it's bringing.
