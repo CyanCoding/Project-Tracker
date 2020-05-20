@@ -29,7 +29,7 @@ The Project Tracker is a project management software application tailored to sof
 7. A button to link your project to a specific device folder for easy access.
 8. GitHub integration.
 
-If those upcoming features interest you, We encourage you to try out the current Project Tracker release. When the new features are released, your software will be updated automatically and you can keep on tracking your projects like a pro!
+If those upcoming features interest you, we encourage you to try out the current Project Tracker release. When the new features are released, your software will be updated automatically and you can keep on tracking your projects like a pro!
 
 ---
 ## Screenshots:
