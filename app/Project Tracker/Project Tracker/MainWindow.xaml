@@ -18,7 +18,7 @@
 	<Grid>
 		<Rectangle Fill="#FF212121" HorizontalAlignment="Left" Height="769" VerticalAlignment="Top" Width="350"/>
 		<Label Content="Project Tracker" HorizontalAlignment="Left" Margin="10,30,0,0" VerticalAlignment="Top" Foreground="White" FontSize="26"/>
-		<Label Content="Version 1.5" HorizontalAlignment="Left" Margin="10,69,0,0" VerticalAlignment="Top" Foreground="#FFB8B8B8" FontSize="14"/>
+		<Label x:Name="versionLabel" Content="Version 1.5" HorizontalAlignment="Left" Margin="10,69,0,0" VerticalAlignment="Top" Foreground="#FFB8B8B8" FontSize="14"/>
 		<!-- We need this to be 10 from each side in the code -->
 		<Border HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0" CornerRadius="4,4,4,4" BorderBrush="Black" Background="#FF9B9B9B" Width="325" Height="4" Margin="10,98,0,0"/>
 

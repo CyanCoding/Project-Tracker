@@ -59,6 +59,8 @@ namespace Project_Tracker {
 				Directory.CreateDirectory(DATA_DIRECTORY);
 			}
 
+			versionLabel.Content = "Version " + CURRENT_VERSION;
+
 			if (firstRun) {
 				try {
 					string[] files = Directory.GetFiles(DATA_DIRECTORY, pathExtension, SearchOption.AllDirectories);
