@@ -11,8 +11,8 @@ under the MIT license.
 
 Project Tracker Icon
 --------------------
-This software uses an icon from dDara on www.flaticon.com.
-<https://www.flaticon.com/authors/ddara>
+This software uses an icon from Freepik on www.flaticon.com.
+<https://www.flaticon.com/authors/freepik>
 
 
 C Programming Icon

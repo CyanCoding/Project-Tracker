@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Project_Tracker"
         mc:Ignorable="d"
-        Title="Project Tracker"  Height="800" Width="1200" Icon="logo.png" PreviewKeyDown="KeyPress" Closing="Window_Closing">
+        Title="Project Tracker" Height="800" Width="1200" Icon="icon.ico" PreviewKeyDown="KeyPress" Closing="Window_Closing">
+	<!-- If you ever change the logo, it must be 16x16 -->
 
 	<Window.Resources>
 		<ResourceDictionary >
@@ -14,6 +15,8 @@
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</Window.Resources>
+
+
 
 	<Grid>
 		<Rectangle Fill="#FF212121" HorizontalAlignment="Left" Height="769" VerticalAlignment="Top" Width="350"/>
@@ -305,7 +308,7 @@
 
 		<!-- Display window content -->
 		<Canvas HorizontalAlignment="Right" VerticalAlignment="Top" Height="45" Width="45" Margin="0,31,756,0">
-			<Image x:Name="displayingImage"  Source="{StaticResource unchecked_checkboxDrawingImage}" Height="45" Width="45" />
+			<Image x:Name="displayingImage"  Source="{StaticResource javaIcon}" Height="45" Width="45" />
 		</Canvas>
 		<Label x:Name="displayingTitle" VerticalContentAlignment="Top" Width="657" HorizontalAlignment="Right" Content="Project Tracker" FontSize="40" Margin="0,21,94,666" FontWeight="Medium"/>
 		<!-- Make sure this has equal padding on all sides -->
