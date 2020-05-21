@@ -199,7 +199,7 @@ namespace Project_Tracker {
 						DoubleAnimation animation = new DoubleAnimation();
 						animation.From = 0;
 						animation.To = 69;
-						animation.Duration = TimeSpan.FromSeconds(0.5);
+						animation.Duration = TimeSpan.FromSeconds(0.2);
 
 						updateGrid.BeginAnimation(HeightProperty, animation);
 					}));
@@ -211,6 +211,9 @@ namespace Project_Tracker {
 		/// Startup function that runs when code execution starts.
 		/// </summary>
 		private void Startup() {
+			// Item positioning
+			updateGrid.Width = this.Width;
+
 			if (!Directory.Exists(APPDATA_DIRECTORY)) {
 				Directory.CreateDirectory(APPDATA_DIRECTORY);
 			}
@@ -491,7 +494,7 @@ namespace Project_Tracker {
 					DoubleAnimation animation = new DoubleAnimation();
 					animation.From = 69;
 					animation.To = 0;
-					animation.Duration = TimeSpan.FromSeconds(0.5);
+					animation.Duration = TimeSpan.FromSeconds(0.2);
 
 					updateGrid.BeginAnimation(HeightProperty, animation);
 				}));
@@ -513,7 +516,7 @@ namespace Project_Tracker {
 					DoubleAnimation animation = new DoubleAnimation();
 					animation.From = 69;
 					animation.To = 0;
-					animation.Duration = TimeSpan.FromSeconds(0.5);
+					animation.Duration = TimeSpan.FromSeconds(0.2);
 
 					updateGrid.BeginAnimation(HeightProperty, animation);
 				}));

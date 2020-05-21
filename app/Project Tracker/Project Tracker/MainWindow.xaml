@@ -303,13 +303,6 @@
 		</Border>
 
 
-		<!-- Update notifier-->
-		<Grid x:Name="updateGrid" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="792" Background="#FFE67C11" Visibility="Hidden">
-			<Label Content="An update to the Project Tracker is available!" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" FontSize="24" Margin="10,10,0,0" Height="49"/>
-			<Button x:Name="updateButton" Content="Update" HorizontalAlignment="Left" Margin="677,26,0,0" VerticalAlignment="Top" Width="97" Height="33" FontSize="16" PreviewMouseDown="UpdateButtonPressed"/>
-			<Button x:Name="ignoreButton" Content="Ignore" HorizontalAlignment="Left" Margin="565,26,0,0" VerticalAlignment="Top" Width="97" Height="33" FontSize="16" PreviewMouseDown="IgnoreUpdate"/>
-		</Grid>
-
 		<!-- Display window content -->
 		<Canvas HorizontalAlignment="Right" VerticalAlignment="Top" Height="45" Width="45" Margin="0,31,756,0">
 			<Image x:Name="displayingImage"  Source="{StaticResource javaIcon}" Height="45" Width="45" />
@@ -318,42 +311,10 @@
 		<!-- Make sure this has equal padding on all sides -->
 		<ScrollViewer Margin="350,198,0,42" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
 			<Grid x:Name="scrollviewerGrid">
-				<Border Width="726" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,0">
-					<Label Content="Hello world!" Foreground="White" Margin="80,6,20,0" FontSize="24"/>
-				</Border>
-				<Border Width="726" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,65,0,0">
-					<Label Content="Hello world!" Foreground="White" Margin="80,6,20,0" FontSize="24"/>
-				</Border>
-				<Border Width="726" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,130,0,0">
-					<Label Content="Hello world!" Foreground="White" Margin="80,6,20,0" FontSize="24"/>
-				</Border>
-				<Border Width="726" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,195,0,0">
-					<Label Content="Hello world!" Foreground="White" Margin="80,6,20,0" FontSize="24"/>
-				</Border>
-				<Border Width="726" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,260,0,0">
-					<Label Content="Hello world!" Foreground="White" Margin="80,6,20,0" FontSize="24"/>
-				</Border>
-				<Border Width="726" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,325,0,0">
-					<Label Content="Hello world!" Foreground="White" Margin="80,6,20,0" FontSize="24"/>
-				</Border>
-				<Border Width="726" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,390,0,0">
-					<Label Content="Hello world!" Foreground="White" Margin="80,6,20,0" FontSize="24"/>
-				</Border>
-				<Border Width="726" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,455,0,0">
-					<Label Content="Hello world!" Foreground="White" Margin="80,6,20,0" FontSize="24"/>
-				</Border>
-				<Border Width="726" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,520,0,0">
-					<Label Content="Hello world!" Foreground="White" Margin="80,6,20,0" FontSize="24"/>
-				</Border>
-				<Border Width="726" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,585,0,0">
-					<Label Content="Hello world!" Foreground="White" Margin="80,6,20,0" FontSize="24"/>
-				</Border>
-				<Border Width="726" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,650,0,0">
-					<Label Content="Hello world!" Foreground="White" Margin="80,6,20,0" FontSize="24"/>
-				</Border>
 			</Grid>
 		</ScrollViewer>
 
+		<!-- Incomplete vs complete grid -->
 		<Grid Margin="391,136,511,576">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="199"/>
@@ -367,6 +328,11 @@
 			</Border>
 		</Grid>
 
-
+		<!-- Update notifier-->
+		<Grid x:Name="updateGrid" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="1200" Background="#FFE67C11" Visibility="Hidden">
+			<Label Content="An update to the Project Tracker is available!" HorizontalAlignment="Left" Foreground="White" FontSize="24" Margin="10" VerticalAlignment="Center"/>
+			<Button x:Name="updateButton" Content="Update" HorizontalAlignment="Right" Margin="0,0,30,10" VerticalAlignment="Bottom" Width="97" Height="33" FontSize="16" PreviewMouseDown="UpdateButtonPressed"/>
+			<Button x:Name="ignoreButton" Content="Ignore" HorizontalAlignment="Right" Margin="0,0,140,10" VerticalAlignment="Bottom" Width="97" Height="33" FontSize="16" PreviewMouseDown="IgnoreUpdate"/>
+		</Grid>
 	</Grid>
 </Window>
