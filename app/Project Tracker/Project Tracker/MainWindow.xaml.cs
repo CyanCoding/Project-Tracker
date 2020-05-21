@@ -26,6 +26,8 @@ namespace Project_Tracker {
 		private List<string> tableValues = new List<string>();
 		public List<string> filesRead = new List<string>();
 		private int itemsAdded = 0; // The amount of items added to the scrollviewer
+		private bool isCompletedTasksShown = false;
+		private bool isSwitchingAnimationRunning = false; // Keeps the user from double clicking the animation
 		
 
 		// WARNING: READONLY VALUES. IF YOU CHANGE THESE, CHANGE IN OTHER FILES AS WELL
@@ -209,10 +211,6 @@ namespace Project_Tracker {
 		/// Startup function that runs when code execution starts.
 		/// </summary>
 		private void Startup() {
-			for (int i = 0; i < 45; i++) {
-				LoadValues();
-			}
-
 			if (!Directory.Exists(APPDATA_DIRECTORY)) {
 				Directory.CreateDirectory(APPDATA_DIRECTORY);
 			}
@@ -521,6 +519,56 @@ namespace Project_Tracker {
 				}));
 			});
 			thread.Start();
+		}
+
+		/// <summary>
+		/// A function that displays the completed vs incompleted tasks.
+		/// </summary>
+		private void SwitchCategory(object sender, MouseButtonEventArgs e) {
+			// ANIMATION
+			if (!isSwitchingAnimationRunning) {
+				isSwitchingAnimationRunning = true;
+				Dispatcher.Invoke(new Action(() => {
+					ThicknessAnimation animation = new ThicknessAnimation();
+
+					animation.From = new Thickness(0, 0, 0, 0);
+					animation.To = new Thickness(50, 0, 0, 0);
+					animation.Duration = TimeSpan.FromSeconds(0.2);
+
+					switchButtonLabel.BeginAnimation(MarginProperty, animation);
+				}));
+
+				Thread thread = new Thread(() => {
+					Thread.Sleep(200);
+					Dispatcher.Invoke(new Action(() => {
+						switchButtonLabel.Margin = new Thickness(-50, 0, 0, 0);
+						ThicknessAnimation animation = new ThicknessAnimation();
+
+						animation.From = new Thickness(-50, 0, 0, 0);
+						animation.To = new Thickness(0, 0, 0, 0);
+						animation.Duration = TimeSpan.FromSeconds(0.2);
+
+						switchButtonLabel.BeginAnimation(MarginProperty, animation);
+						isSwitchingAnimationRunning = false;
+					}));
+				});
+				thread.Start();
+			}
+
+
+
+			if (!isCompletedTasksShown) {
+				isCompletedTasksShown = true;
+
+				completedTaskSwitchLabel.Content = "Completed tasks";
+
+
+			}
+			else {
+				isCompletedTasksShown = false;
+
+				completedTaskSwitchLabel.Content = "Incomplete tasks";
+			}
 		}
 	}
 }

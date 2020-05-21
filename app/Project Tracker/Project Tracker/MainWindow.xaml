@@ -23,7 +23,7 @@
 		<Border HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0" CornerRadius="4,4,4,4" BorderBrush="Black" Background="#FF9B9B9B" Width="325" Height="4" Margin="10,98,0,0"/>
 
 		<!-- First project -->
-		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,115,0,0" Width="325">
+		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,115,0,0" Width="325">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="32"/>
 				<ColumnDefinition Width="240"/>
@@ -34,9 +34,9 @@
 				<Image x:Name="image1"  Source="{StaticResource noIcon}" Height="30" Width="30"/>
 			</Canvas>
 			<Label x:Name="name1" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
-			<Label x:Name="percent1" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+			<Label x:Name="percent1" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="50" Margin="0,0,-8,0"/>
 		</Grid>
-		<Border x:Name="border1" VerticalAlignment="Top" HorizontalAlignment="Left" Height="45" Margin="0,115,0,0" Width="350" Visibility="Hidden">
+		<Border x:Name="border1" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,115,0,0" Width="350" Visibility="Hidden">
 			<Border.Style>
 				<Style>
 					<Setter Property="Border.Background" Value="LightGray"/>
@@ -51,7 +51,7 @@
 		</Border>
 
 		<!-- Second project -->
-		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,165,0,0" Width="325">
+		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,165,0,0" Width="325">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="32"/>
 				<ColumnDefinition Width="240"/>
@@ -64,7 +64,7 @@
 			<Label x:Name="name2" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent2" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
-		<Border x:Name="border2" VerticalAlignment="Top" HorizontalAlignment="Left" Height="45" Margin="0,165,0,0" Width="350" Visibility="Hidden">
+		<Border x:Name="border2" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,165,0,0" Width="350" Visibility="Hidden">
 			<Border.Style>
 				<Style>
 					<Setter Property="Border.Background" Value="LightGray"/>
@@ -79,7 +79,7 @@
 		</Border>
 
 		<!-- Third project -->
-		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,215,0,0" Width="325">
+		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,215,0,0" Width="325">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="32"/>
 				<ColumnDefinition Width="240"/>
@@ -92,7 +92,7 @@
 			<Label x:Name="name3" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent3" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
-		<Border x:Name="border3" VerticalAlignment="Top" HorizontalAlignment="Left" Height="45" Margin="0,215,0,0" Width="350" Visibility="Hidden">
+		<Border x:Name="border3" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,215,0,0" Width="350" Visibility="Hidden">
 			<Border.Style>
 				<Style>
 					<Setter Property="Border.Background" Value="LightGray"/>
@@ -107,7 +107,7 @@
 		</Border>
 
 		<!-- Fourth project -->
-		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,265,0,0" Width="325">
+		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,265,0,0" Width="325">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="32"/>
 				<ColumnDefinition Width="240"/>
@@ -120,7 +120,7 @@
 			<Label x:Name="name4" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent4" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
-		<Border x:Name="border4" VerticalAlignment="Top" HorizontalAlignment="Left" Height="45" Margin="0,265,0,0" Width="350" Visibility="Hidden">
+		<Border x:Name="border4" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,265,0,0" Width="350" Visibility="Hidden">
 			<Border.Style>
 				<Style>
 					<Setter Property="Border.Background" Value="LightGray"/>
@@ -135,7 +135,7 @@
 		</Border>
 
 		<!-- Fifth project -->
-		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,315,0,0" Width="325">
+		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,315,0,0" Width="325">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="32"/>
 				<ColumnDefinition Width="240"/>
@@ -148,7 +148,7 @@
 			<Label x:Name="name5" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent5" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
-		<Border x:Name="border5" VerticalAlignment="Top" HorizontalAlignment="Left" Height="45" Margin="0,315,0,0" Width="350" Visibility="Hidden">
+		<Border x:Name="border5" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,315,0,0" Width="350" Visibility="Hidden">
 			<Border.Style>
 				<Style>
 					<Setter Property="Border.Background" Value="LightGray"/>
@@ -163,7 +163,7 @@
 		</Border>
 
 		<!-- Sixth project -->
-		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,365,0,0" Width="325">
+		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,365,0,0" Width="325">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="32"/>
 				<ColumnDefinition Width="240"/>
@@ -176,7 +176,7 @@
 			<Label x:Name="name6" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent6" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
-		<Border x:Name="border6" VerticalAlignment="Top" HorizontalAlignment="Left" Height="45" Margin="0,365,0,0" Width="350" Visibility="Hidden">
+		<Border x:Name="border6" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,365,0,0" Width="350" Visibility="Hidden">
 			<Border.Style>
 				<Style>
 					<Setter Property="Border.Background" Value="LightGray"/>
@@ -191,7 +191,7 @@
 		</Border>
 
 		<!-- Seventh project -->
-		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,415,0,0" Width="325">
+		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,415,0,0" Width="325">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="32"/>
 				<ColumnDefinition Width="240"/>
@@ -204,7 +204,7 @@
 			<Label x:Name="name7" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent7" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
-		<Border x:Name="border7" VerticalAlignment="Top" HorizontalAlignment="Left" Height="45" Margin="0,415,0,0" Width="350" Visibility="Hidden">
+		<Border x:Name="border7" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,415,0,0" Width="350" Visibility="Hidden">
 			<Border.Style>
 				<Style>
 					<Setter Property="Border.Background" Value="LightGray"/>
@@ -219,7 +219,7 @@
 		</Border>
 
 		<!-- Eighth project -->
-		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,465,0,0" Width="325">
+		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,465,0,0" Width="325">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="32"/>
 				<ColumnDefinition Width="240"/>
@@ -232,7 +232,7 @@
 			<Label x:Name="name8" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent8" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
-		<Border x:Name="border8" VerticalAlignment="Top" HorizontalAlignment="Left" Height="45" Margin="0,465,0,0" Width="350" Visibility="Hidden">
+		<Border x:Name="border8" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,465,0,0" Width="350" Visibility="Hidden">
 			<Border.Style>
 				<Style>
 					<Setter Property="Border.Background" Value="LightGray"/>
@@ -247,7 +247,7 @@
 		</Border>
 
 		<!-- Ninth project -->
-		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,515,0,0" Width="325">
+		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,515,0,0" Width="325">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="32"/>
 				<ColumnDefinition Width="240"/>
@@ -260,7 +260,7 @@
 			<Label x:Name="name9" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent9" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
-		<Border x:Name="border9" VerticalAlignment="Top" HorizontalAlignment="Left" Height="45" Margin="0,515,0,0" Width="350" Visibility="Hidden">
+		<Border x:Name="border9" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,515,0,0" Width="350" Visibility="Hidden">
 			<Border.Style>
 				<Style>
 					<Setter Property="Border.Background" Value="LightGray"/>
@@ -275,7 +275,7 @@
 		</Border>
 
 		<!-- Tenth project -->
-		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Margin="10,565,0,0" Width="325">
+		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,565,0,0" Width="325">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="32"/>
 				<ColumnDefinition Width="240"/>
@@ -288,7 +288,7 @@
 			<Label x:Name="name10" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent10" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
-		<Border x:Name="border10" VerticalAlignment="Top" HorizontalAlignment="Left" Height="45" Margin="0,565,0,0" Width="350" Visibility="Hidden">
+		<Border x:Name="border10" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,565,0,0" Width="350" Visibility="Hidden">
 			<Border.Style>
 				<Style>
 					<Setter Property="Border.Background" Value="LightGray"/>
@@ -316,9 +316,8 @@
 		</Canvas>
 		<Label x:Name="displayingTitle" VerticalContentAlignment="Top" Width="657" HorizontalAlignment="Right" Content="Project Tracker" FontSize="40" Margin="0,21,94,666" FontWeight="Medium"/>
 		<!-- Make sure this has equal padding on all sides -->
-		<ScrollViewer Margin="350,115,0,42" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
+		<ScrollViewer Margin="350,198,0,42" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
 			<Grid x:Name="scrollviewerGrid">
-				<!--
 				<Border Width="726" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,0">
 					<Label Content="Hello world!" Foreground="White" Margin="80,6,20,0" FontSize="24"/>
 				</Border>
@@ -352,9 +351,21 @@
 				<Border Width="726" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,650,0,0">
 					<Label Content="Hello world!" Foreground="White" Margin="80,6,20,0" FontSize="24"/>
 				</Border>
-				-->
 			</Grid>
 		</ScrollViewer>
+
+		<Grid Margin="391,136,511,576">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="199"/>
+				<ColumnDefinition Width="88"/>
+			</Grid.ColumnDefinitions>
+			<Border CornerRadius="5" Background="Black" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Column="0" Height="43" Width="200">
+				<Label x:Name="completedTaskSwitchLabel" Content="Incomplete tasks" Foreground="White" FontSize="24" Margin="5,0,5,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+			</Border>
+			<Border CornerRadius="5" Background="Black" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Column="1" Cursor="Hand" PreviewMouseDown="SwitchCategory" Height="43" Width="43">
+				<Label x:Name="switchButtonLabel" Content="&#xE8AB;" Foreground="White" FontSize="24" FontFamily="Segoe MDL2 Assets" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+			</Border>
+		</Grid>
 
 
 	</Grid>
