@@ -17,17 +17,14 @@ using System.Windows.Media.Imaging;
 namespace Project_Tracker {
 
 	public partial class MainWindow : Window {
-		private int rowsAdded = 0; // We use a global variable so the AddRow function knows what id of a row to edit
-		private int rowSelectionID = 0; // We use this to identify which row is currently selected
-		private int oldRowSelectionID = 1; // We use this to identify which row was last selected
 		private int filesUpdate = 0;
 		private bool addedProgram = false; // We do this so that we can only open a program if there is one to prevent an error
-		private static bool firstRun = true; // We use this to not call startup stuff more than once when MainWindow is called.
 		private List<string> tableValues = new List<string>();
 		public List<string> filesRead = new List<string>();
 		private int itemsAdded = 0; // The amount of items added to the scrollviewer
 		private bool isCompletedTasksShown = false;
 		private bool isSwitchingAnimationRunning = false; // Keeps the user from double clicking the animation
+		private int selectedIndex = 0;
 		
 
 		// WARNING: READONLY VALUES. IF YOU CHANGE THESE, CHANGE IN OTHER FILES AS WELL
@@ -37,8 +34,9 @@ namespace Project_Tracker {
 		private readonly Color sortColor = Color.FromRgb(228, 233, 235);
 		private readonly FontFamily textFont = new FontFamily("Microsoft Sans Serif");
 		private readonly string pathExtension = "*.json";
-		private readonly string DATA_DIRECTORY = Environment.GetFolderPath
-			(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/data";
+		private readonly string DATA_DIRECTORY = 
+			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) 
+			+ "/Project Tracker/data";
 		private readonly string VERSION_MANIFEST_URL = 
 			"https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/version.json";
 		private readonly string VERSION_INFO = Environment.GetFolderPath
@@ -47,6 +45,9 @@ namespace Project_Tracker {
 		private readonly string APPDATA_DIRECTORY =
 			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
 			+ "/Project Tracker";
+		private readonly string SETTINGS_FILE =
+			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
+			+ "/Project Tracker/settings.json";
 
 		public MainWindow() {
 			InitializeComponent();
@@ -207,6 +208,47 @@ namespace Project_Tracker {
 				thread.Start();
 			}
 		}
+
+		/// <summary>
+		/// Highlights the selected project based on selectedIndex.
+		/// </summary>
+		private void SetSelectedProject() {
+			if (selectedIndex == 1) {
+				border1.Opacity = 0.2;
+			}
+			else if (selectedIndex == 2) {
+				border2.Opacity = 0.2;
+			}
+			else if (selectedIndex == 3) {
+				border3.Opacity = 0.2;
+			}
+			else if (selectedIndex == 4) {
+				border4.Opacity = 0.2;
+			}
+			else if (selectedIndex == 5) {
+				border5.Opacity = 0.2;
+			}
+			else if (selectedIndex == 6) {
+				border6.Opacity = 0.2;
+			}
+			else if (selectedIndex == 7) {
+				border7.Opacity = 0.2;
+			}
+			else if (selectedIndex == 8) {
+				border8.Opacity = 0.2;
+			}
+			else if (selectedIndex == 9) {
+				border9.Opacity = 0.2;
+			}
+			else if (selectedIndex == 10) {
+				border10.Opacity = 0.2;
+			}
+			else { // selectedIndex isn't a valid number
+				selectedIndex = 1;
+				border1.Opacity = 0.2;
+			}
+		}
+
 		/// <summary>
 		/// Startup function that runs when code execution starts.
 		/// </summary>
@@ -214,236 +256,283 @@ namespace Project_Tracker {
 			// Item positioning
 			updateGrid.Width = this.Width;
 
-			if (!Directory.Exists(APPDATA_DIRECTORY)) {
+			if (!Directory.Exists(APPDATA_DIRECTORY)) { // Create AppData directory
 				Directory.CreateDirectory(APPDATA_DIRECTORY);
 			}
-			if (!Directory.Exists(DATA_DIRECTORY)) {
+			if (!Directory.Exists(DATA_DIRECTORY)) { // Create AppData/Data directory
 				Directory.CreateDirectory(DATA_DIRECTORY);
+			}
+
+			if (!File.Exists(SETTINGS_FILE)) { // Settings file doesn't exist. Create it
+				File.Create(SETTINGS_FILE);
+
+				StringBuilder sb = new StringBuilder();
+				StringWriter sw = new StringWriter(sb);
+
+				using (JsonWriter js = new JsonTextWriter(sw)) {
+					js.Formatting = Formatting.Indented;
+
+					js.WriteStartObject();
+
+					// LastSelectedIndex
+					js.WritePropertyName("LastSelectedIndex");
+					js.WriteValue("1");
+
+					// DisplayingCompleted
+					js.WritePropertyName("DisplayingCompleted");
+					js.WriteValue("false");
+
+					js.WriteEndObject();
+				}
+
+				File.WriteAllText(SETTINGS_FILE, sw.ToString());
+				sb.Clear();
+				sw.Close();
+			}
+			else { // Settings file exists, read from it
+				string json = File.ReadAllText(SETTINGS_FILE);
+				SettingsManifest.Rootobject settings =
+					JsonConvert.DeserializeObject<SettingsManifest.Rootobject>(json);
+
+				if (settings.LastSelectedIndex != null) {
+					try {
+						selectedIndex = Int32.Parse(settings.LastSelectedIndex);
+					}
+					catch (FormatException) { // The index isn't a number for some reason, someone probably tampered with the file
+						selectedIndex = 1;
+					}
+				}
+				if (settings.DisplayingCompleted != null) {
+					if (settings.DisplayingCompleted == "true") {
+						isCompletedTasksShown = true;
+						completedTaskSwitchLabel.Content = "Completed tasks";
+					}
+				}
 			}
 
 			versionLabel.Content = "Version " + CURRENT_VERSION;
 
-			if (firstRun) {
-				try {
-					string[] files = Directory.GetFiles(DATA_DIRECTORY, 
-						pathExtension, SearchOption.AllDirectories);
+			try {
+				string[] files = Directory.GetFiles(DATA_DIRECTORY, 
+					pathExtension, SearchOption.AllDirectories);
 
-					int index = 0;
-					foreach (string path in files) {
-						if (!filesRead.Contains(path)) {
-							// Convert each json file to a table row
-							string json = File.ReadAllText(path);
-							MainTableManifest.Rootobject mainTable = 
-								JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
+				int index = 0;
+				foreach (string path in files) {
+					if (!filesRead.Contains(path)) {
+						// Convert each json file to a table row
+						string json = File.ReadAllText(path);
+						MainTableManifest.Rootobject mainTable = 
+							JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
 
-							bool fileHasAllValues = CheckValues(
-								mainTable.Title, mainTable.Errors, mainTable.ErrorsData,
-								mainTable.Features, mainTable.FeaturesData, mainTable.Comments,
-								mainTable.CommentsData, mainTable.Duration, mainTable.Icon,
-								mainTable.Percent
-								);
+						bool fileHasAllValues = CheckValues(
+							mainTable.Title, mainTable.Errors, mainTable.ErrorsData,
+							mainTable.Features, mainTable.FeaturesData, mainTable.Comments,
+							mainTable.CommentsData, mainTable.Duration, mainTable.Icon,
+							mainTable.Percent
+							);
 
-							if (!fileHasAllValues) {
-								// This is an older file with improper values
-								// We need to migrate it to a new version.
-								string notice = "";
-								if (mainTable.Title != null) {
-									notice = "The " + mainTable.Title + " project is missing data that" +
-										" is necessary to load it. This is likely due to having upgraded" +
-										" recently to a new version of the Project Tracker. Do you want the" +
-										" Project Tracker to atempt to automatically fix the project?";
-								}
-								else {
-									notice = "The " + path + " project file is missing data that is" +
-										" necessary to load it. This is likely due to having upgraded" +
-										" recently to a new version of the Project Tracker. Do you want" +
-										" the Project Tracker to attempt to automatically fix the project" +
-										" file?";
-								}
+						if (!fileHasAllValues) {
+							// This is an older file with improper values
+							// We need to migrate it to a new version.
+							string notice = "";
+							if (mainTable.Title != null) {
+								notice = "The " + mainTable.Title + " project is missing data that" +
+									" is necessary to load it. This is likely due to having upgraded" +
+									" recently to a new version of the Project Tracker. Do you want the" +
+									" Project Tracker to atempt to automatically fix the project?";
+							}
+							else {
+								notice = "The " + path + " project file is missing data that is" +
+									" necessary to load it. This is likely due to having upgraded" +
+									" recently to a new version of the Project Tracker. Do you want" +
+									" the Project Tracker to attempt to automatically fix the project" +
+									" file?";
+							}
 
-								var migrateData = System.Windows.Forms.MessageBox.Show(
-									notice, 
-									"Missing File Information", 
-									System.Windows.Forms.MessageBoxButtons.YesNo, 
-									System.Windows.Forms.MessageBoxIcon.Question);
+							var migrateData = System.Windows.Forms.MessageBox.Show(
+								notice, 
+								"Missing File Information", 
+								System.Windows.Forms.MessageBoxButtons.YesNo, 
+								System.Windows.Forms.MessageBoxIcon.Question);
 
-								if (migrateData == System.Windows.Forms.DialogResult.Yes) {
-									StringBuilder sb = new StringBuilder();
-									StringWriter sw = new StringWriter(sb);
+							if (migrateData == System.Windows.Forms.DialogResult.Yes) {
+								StringBuilder sb = new StringBuilder();
+								StringWriter sw = new StringWriter(sb);
 
-									using (JsonWriter js = new JsonTextWriter(sw)) {
-										js.Formatting = Formatting.Indented;
+								using (JsonWriter js = new JsonTextWriter(sw)) {
+									js.Formatting = Formatting.Indented;
 
-										js.WriteStartObject();
+									js.WriteStartObject();
 
-										// Title
-										js.WritePropertyName("Title");
-										if (mainTable.Title != null) {
-											js.WriteValue(mainTable.Title);
-										}
-										else {
-											js.WriteValue("Untitled project");
-										}
-
-										// Errors
-										js.WritePropertyName("Errors");
-										js.WriteStartArray();
-										if (mainTable.Errors != null) {
-											foreach (string error in mainTable.Errors) {
-												js.WriteValue(error);
-											}
-										}
-										js.WriteEnd();
-
-										// ErrorsData
-										js.WritePropertyName("ErrorsData");
-										js.WriteStartArray();
-										if (mainTable.ErrorsData != null) {
-											foreach (string data in mainTable.ErrorsData) {
-												js.WriteValue(data);
-											}
-										}
-										js.WriteEnd();
-
-										// Features
-										js.WritePropertyName("Features");
-										js.WriteStartArray();
-										if (mainTable.Features != null) {
-											foreach (string feature in mainTable.Features) {
-												js.WriteValue(feature);
-											}
-										}
-										js.WriteEnd();
-										js.WritePropertyName("FeaturesData");
-
-										// FeaturesData
-										js.WriteStartArray();
-										if (mainTable.FeaturesData != null) {
-											foreach (string data in mainTable.FeaturesData) {
-												js.WriteValue(data);
-											}
-										}
-										js.WriteEnd();
-
-										// Comments
-										js.WritePropertyName("Comments");
-										js.WriteStartArray();
-										if (mainTable.Comments != null) {
-											foreach (string comment in mainTable.Comments) {
-												js.WriteValue(comment);
-											}
-										}
-										js.WriteEnd();
-
-										// CommentsData
-										js.WritePropertyName("CommentsData");
-										js.WriteStartArray();
-										if (mainTable.CommentsData != null) {
-											foreach (string data in mainTable.CommentsData) {
-												js.WriteValue(data);
-											}
-										}
-										js.WriteEnd();
-
-										// Duration
-										js.WritePropertyName("Duration");
-										if (mainTable.Duration != null) {
-											js.WriteValue(mainTable.Duration);
-										}
-										else {
-											js.WriteValue("00:00:00");
-										}
-
-										// Icon
-										js.WritePropertyName("Icon");
-										if (mainTable.Icon != null) {
-											js.WriteValue(mainTable.Icon);
-										}
-										else {
-											js.WriteValue("noIcon");
-										}
-
-										// Percent
-										js.WritePropertyName("Percent");
-										if (mainTable.Percent != null) {
-											js.WriteValue(mainTable.Percent);
-										}
-										else {
-											js.WriteValue("00");
-										}
-										
-
-										js.WriteEndObject();
+									// Title
+									js.WritePropertyName("Title");
+									if (mainTable.Title != null) {
+										js.WriteValue(mainTable.Title);
+									}
+									else {
+										js.WriteValue("Untitled project");
 									}
 
-									File.WriteAllText(path, sw.ToString());
-									sb.Clear();
-									sw.Close();
+									// Errors
+									js.WritePropertyName("Errors");
+									js.WriteStartArray();
+									if (mainTable.Errors != null) {
+										foreach (string error in mainTable.Errors) {
+											js.WriteValue(error);
+										}
+									}
+									js.WriteEnd();
 
-									fileHasAllValues = true;
-									// Reread all the data back again
-									json = File.ReadAllText(path);
-									mainTable =
-										JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
+									// ErrorsData
+									js.WritePropertyName("ErrorsData");
+									js.WriteStartArray();
+									if (mainTable.ErrorsData != null) {
+										foreach (string data in mainTable.ErrorsData) {
+											js.WriteValue(data);
+										}
+									}
+									js.WriteEnd();
 
-									System.Windows.Forms.MessageBox.Show(
-										"Your data has been migrated! The project has been loaded.",
-										"Project Migrated",
-										System.Windows.Forms.MessageBoxButtons.OK,
-										System.Windows.Forms.MessageBoxIcon.Information);
+									// Features
+									js.WritePropertyName("Features");
+									js.WriteStartArray();
+									if (mainTable.Features != null) {
+										foreach (string feature in mainTable.Features) {
+											js.WriteValue(feature);
+										}
+									}
+									js.WriteEnd();
+									js.WritePropertyName("FeaturesData");
 
+									// FeaturesData
+									js.WriteStartArray();
+									if (mainTable.FeaturesData != null) {
+										foreach (string data in mainTable.FeaturesData) {
+											js.WriteValue(data);
+										}
+									}
+									js.WriteEnd();
 
+									// Comments
+									js.WritePropertyName("Comments");
+									js.WriteStartArray();
+									if (mainTable.Comments != null) {
+										foreach (string comment in mainTable.Comments) {
+											js.WriteValue(comment);
+										}
+									}
+									js.WriteEnd();
+
+									// CommentsData
+									js.WritePropertyName("CommentsData");
+									js.WriteStartArray();
+									if (mainTable.CommentsData != null) {
+										foreach (string data in mainTable.CommentsData) {
+											js.WriteValue(data);
+										}
+									}
+									js.WriteEnd();
+
+									// Duration
+									js.WritePropertyName("Duration");
+									if (mainTable.Duration != null) {
+										js.WriteValue(mainTable.Duration);
+									}
+									else {
+										js.WriteValue("00:00:00");
+									}
+
+									// Icon
+									js.WritePropertyName("Icon");
+									if (mainTable.Icon != null) {
+										js.WriteValue(mainTable.Icon);
+									}
+									else {
+										js.WriteValue("noIcon");
+									}
+
+									// Percent
+									js.WritePropertyName("Percent");
+									if (mainTable.Percent != null) {
+										js.WriteValue(mainTable.Percent);
+									}
+									else {
+										js.WriteValue("00");
+									}
+										
+
+									js.WriteEndObject();
 								}
-								else { // They chose not to migrate the data
-									System.Windows.Forms.MessageBox.Show(
-										"Your data has not been migrated. You cannot load this project.",
-										"Project Skipped",
-										System.Windows.Forms.MessageBoxButtons.OK,
-										System.Windows.Forms.MessageBoxIcon.Information);
-								}
-							}
 
-							if (fileHasAllValues) {
-								// Every value in the manifest table is covered
-								// Meaning that this is an updated file
-								index++;
-								if (index > 10) {
-									System.Windows.Forms.MessageBox.Show(
-									"Some projects have been left unloaded because you have reached the" +
-									" 10 project limit. Please finish projects to view more.",
-									"Some Projects Left Unloaded",
+								File.WriteAllText(path, sw.ToString());
+								sb.Clear();
+								sw.Close();
+
+								fileHasAllValues = true;
+								// Reread all the data back again
+								json = File.ReadAllText(path);
+								mainTable =
+									JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
+
+								System.Windows.Forms.MessageBox.Show(
+									"Your data has been migrated! The project has been loaded.",
+									"Project Migrated",
 									System.Windows.Forms.MessageBoxButtons.OK,
 									System.Windows.Forms.MessageBoxIcon.Information);
-									break;
-								}
 
-								AddProjectToWindow(mainTable.Title, mainTable.Errors, mainTable.ErrorsData,
-									mainTable.Features, mainTable.FeaturesData, mainTable.Comments,
-									mainTable.CommentsData, mainTable.Duration, mainTable.Icon,
-									mainTable.Percent, index);
-								filesRead.Add(path);
+
 							}
-							
+							else { // They chose not to migrate the data
+								System.Windows.Forms.MessageBox.Show(
+									"Your data has not been migrated. You cannot load this project.",
+									"Project Skipped",
+									System.Windows.Forms.MessageBoxButtons.OK,
+									System.Windows.Forms.MessageBoxIcon.Information);
+							}
 						}
+
+						if (fileHasAllValues) {
+							// Every value in the manifest table is covered
+							// Meaning that this is an updated file
+							index++;
+							if (index > 10) {
+								System.Windows.Forms.MessageBox.Show(
+								"Some projects have been left unloaded because you have reached the" +
+								" 10 project limit. Please finish projects to view more.",
+								"Some Projects Left Unloaded",
+								System.Windows.Forms.MessageBoxButtons.OK,
+								System.Windows.Forms.MessageBoxIcon.Information);
+								break;
+							}
+
+							AddProjectToWindow(mainTable.Title, mainTable.Errors, mainTable.ErrorsData,
+								mainTable.Features, mainTable.FeaturesData, mainTable.Comments,
+								mainTable.CommentsData, mainTable.Duration, mainTable.Icon,
+								mainTable.Percent, index);
+							filesRead.Add(path);
+						}
+							
 					}
 				}
-				catch (IOException) {
-				}
+			}
+			catch (IOException) {
+			}
 
-				if (File.Exists(VERSION_INFO)) {
-					File.Delete(VERSION_INFO);
-				}
+			SetSelectedProject();
 
-				try {
-					WebClient client = new WebClient();
-					client.DownloadFileCompleted += new AsyncCompletedEventHandler(Update);
-					client.DownloadFileAsync(new Uri(VERSION_MANIFEST_URL), VERSION_INFO);
-				}
-				catch (WebException) {
-					// Couldn't download update file. Possible their wifi isn't working
-				}
 
-				firstRun = false;
+			if (File.Exists(VERSION_INFO)) {
+				File.Delete(VERSION_INFO);
+			}
+
+			// Download latest version information
+			try {
+				WebClient client = new WebClient();
+				client.DownloadFileCompleted += new AsyncCompletedEventHandler(Update);
+				client.DownloadFileAsync(new Uri(VERSION_MANIFEST_URL), VERSION_INFO);
+			}
+			catch (WebException) {
+				// Couldn't download update file. Possible their wifi isn't working
 			}
 		}
 
@@ -461,18 +550,6 @@ namespace Project_Tracker {
 		private void AddProgram(object sender, MouseButtonEventArgs e) {
 			AddNewProgram newProgram = new AddNewProgram();
 			newProgram.Show();
-		}
-
-		/// <summary>
-		/// Launches EditProgram.
-		/// </summary>
-		private void EditProgram(object sender, MouseButtonEventArgs e) {
-			if (addedProgram == true) {
-				Passthrough.EditingFile = filesRead[rowSelectionID - 1];
-
-				EditProgram editProgram = new EditProgram();
-				editProgram.Show();
-			}
 		}
 
 		/// <summary>
@@ -562,16 +639,42 @@ namespace Project_Tracker {
 
 			if (!isCompletedTasksShown) {
 				isCompletedTasksShown = true;
-
 				completedTaskSwitchLabel.Content = "Completed tasks";
-
 
 			}
 			else {
 				isCompletedTasksShown = false;
-
 				completedTaskSwitchLabel.Content = "Incomplete tasks";
 			}
+
+
+			// Save everything to the settings file
+			StringBuilder sb = new StringBuilder();
+			StringWriter sw = new StringWriter(sb);
+			using (JsonWriter js = new JsonTextWriter(sw)) {
+				js.Formatting = Formatting.Indented;
+
+				js.WriteStartObject();
+
+				// LastSelectedIndex
+				js.WritePropertyName("LastSelectedIndex");
+				js.WriteValue(selectedIndex);
+
+				// DisplayingCompleted
+				js.WritePropertyName("DisplayingCompleted");
+				if (isCompletedTasksShown) {
+					js.WriteValue("true");
+				}
+				else {
+					js.WriteValue("false");
+				}
+
+				js.WriteEndObject();
+			}
+
+			File.WriteAllText(SETTINGS_FILE, sw.ToString());
+			sb.Clear();
+			sw.Close();
 		}
 	}
 }

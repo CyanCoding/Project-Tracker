@@ -73,6 +73,7 @@
       <DependentUpon>EditProgramDetails.xaml</DependentUpon>
     </Compile>
     <Compile Include="Passthrough.cs" />
+    <Compile Include="SettingsManifest.cs" />
     <Compile Include="UpdateManifest.cs" />
     <Compile Include="UpdateWindow.xaml.cs">
       <DependentUpon>UpdateWindow.xaml</DependentUpon>
