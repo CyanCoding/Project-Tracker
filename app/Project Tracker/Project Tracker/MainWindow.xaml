@@ -305,12 +305,37 @@
 
 		<!-- Display window content -->
 		<Canvas HorizontalAlignment="Right" VerticalAlignment="Top" Height="45" Width="45" Margin="0,31,756,0">
-			<Image x:Name="displayingImage"  Source="{StaticResource javaIcon}" Height="45" Width="45" />
+			<Image x:Name="displayingImage"  Source="{StaticResource unchecked_checkboxDrawingImage}" Height="45" Width="45" />
 		</Canvas>
 		<Label x:Name="displayingTitle" VerticalContentAlignment="Top" Width="657" HorizontalAlignment="Right" Content="Project Tracker" FontSize="40" Margin="0,21,94,666" FontWeight="Medium"/>
 		<!-- Make sure this has equal padding on all sides -->
 		<ScrollViewer Margin="350,198,0,42" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
 			<Grid x:Name="scrollviewerGrid">
+				<Grid Margin="59,0,46,471">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="50"/>
+						<ColumnDefinition Width="50"/>
+						<ColumnDefinition Width="620"/>
+					</Grid.ColumnDefinitions>
+
+					<Border BorderThickness="2" Width="725" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Left" VerticalAlignment="Top" BorderBrush="Red" Grid.ColumnSpan="3" Margin="0,0,-5,0"/>
+
+					<Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Height="40" Width="40" Grid.Column="0">
+						<Image Height="40" Width="40" Canvas.Left="10" Cursor="Hand">
+							<Image.Style>
+								<Style>
+									<Setter Property="Image.Source" Value="{StaticResource unchecked_checkboxDrawingImage}"/>
+									<Style.Triggers>
+										<Trigger Property="Border.IsMouseOver" Value="True">
+											<Setter Property="Image.Source" Value="{StaticResource checked_checkedboxDrawingImage}"/>
+										</Trigger>
+									</Style.Triggers>
+								</Style>
+							</Image.Style>
+						</Image>
+					</Canvas>
+					<Label Content="Hello world!" Foreground="White" VerticalAlignment="Center" Margin="0,0,0,5"  FontSize="24" Grid.Column="3"/>
+				</Grid>
 			</Grid>
 		</ScrollViewer>
 
