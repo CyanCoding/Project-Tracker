@@ -7,6 +7,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -24,12 +25,13 @@ namespace Project_Tracker {
 		private static bool firstRun = true; // We use this to not call startup stuff more than once when MainWindow is called.
 		private List<string> tableValues = new List<string>();
 		public List<string> filesRead = new List<string>();
-		private Thread tableUpdateThread;
+		private int itemsAdded = 0; // The amount of items added to the scrollviewer
 		
 
 		// WARNING: READONLY VALUES. IF YOU CHANGE THESE, CHANGE IN OTHER FILES AS WELL
 		private readonly Color selectionColor = Color.FromRgb(84, 207, 255);
-
+		private readonly Color itemColor = Color.FromRgb(60, 60, 60);
+		private readonly Color labelTextColor = Color.FromRgb(255, 255, 255);
 		private readonly Color sortColor = Color.FromRgb(228, 233, 235);
 		private readonly FontFamily textFont = new FontFamily("Microsoft Sans Serif");
 		private readonly string pathExtension = "*.json";
@@ -50,10 +52,28 @@ namespace Project_Tracker {
 		}
 
 		/// <summary>
-		/// Updates the table by adding any new files to the table.
+		/// Loads a value into the scrollviewer.
 		/// </summary>
-		private void UpdateTable() {
+		private void LoadValues() {
+			Border border = new Border();
+			border.Width = 726;
+			border.Height = 60;
+			border.CornerRadius = new CornerRadius(10);
+			border.Background = new SolidColorBrush(itemColor);
+			border.HorizontalAlignment = HorizontalAlignment.Center;
+			border.VerticalAlignment = VerticalAlignment.Top;
+			border.Margin = new Thickness(0, itemsAdded * 65, 0, 0);
 
+			Label label = new Label();
+			label.Content = "Hello world!" + itemsAdded;
+			label.Foreground = new SolidColorBrush(labelTextColor);
+			label.Margin = new Thickness(80, 6, 20, 0);
+			label.FontSize = 24;
+
+			border.Child = label;
+			scrollviewerGrid.Children.Add(border);
+
+			itemsAdded++;
 		}
 
 
@@ -189,6 +209,10 @@ namespace Project_Tracker {
 		/// Startup function that runs when code execution starts.
 		/// </summary>
 		private void Startup() {
+			for (int i = 0; i < 45; i++) {
+				LoadValues();
+			}
+
 			if (!Directory.Exists(APPDATA_DIRECTORY)) {
 				Directory.CreateDirectory(APPDATA_DIRECTORY);
 			}
@@ -420,9 +444,6 @@ namespace Project_Tracker {
 
 				firstRun = false;
 			}
-
-			tableUpdateThread = new Thread(UpdateTable); // Start the background resize thread
-			tableUpdateThread.Start();
 		}
 
 		/// <summary>
@@ -457,7 +478,6 @@ namespace Project_Tracker {
 		/// Closes threads and shuts down the program.
 		/// </summary>
 		private void Window_Closing(object sender, CancelEventArgs e) {
-			tableUpdateThread.Abort();
 			Application.Current.Shutdown(); 
 			// If we don't do this, the AddNewProgram window doesn't close and the program keeps running in the bg
 		}

@@ -316,33 +316,45 @@
 		</Canvas>
 		<Label x:Name="displayingTitle" VerticalContentAlignment="Top" Width="657" HorizontalAlignment="Right" Content="Project Tracker" FontSize="40" Margin="0,21,94,666" FontWeight="Medium"/>
 		<!-- Make sure this has equal padding on all sides -->
-		<ListView HorizontalAlignment="Left" Height="612" Margin="391,115,0,0" VerticalAlignment="Top" Width="761" BorderBrush="{x:Null}" Foreground="{x:Null}">
-			<Grid>
-				<StackPanel>
-					<StackPanel.Style>
-						<Style>
-							<Style.Triggers>
-								<Trigger Property="StackPanel.IsMouseOver" Value="True">
-									<Setter Property="StackPanel.Background" Value="White"/>
-								</Trigger>
-							</Style.Triggers>
-						</Style>
-					</StackPanel.Style>
-					<Border Margin="10" Width="725">
-						<Border.Style>
-							<Style>
-								<Setter Property="Border.Background" Value="#FF3C3C3C"/>
-								<Setter Property="FrameworkElement.Width" Value="700"/>
-								<Setter Property="FrameworkElement.Height" Value="60"/>
-								<Setter Property="Border.CornerRadius" Value="10"/>
-							</Style>
-						</Border.Style>
-						<Label Content="Hello world!" Foreground="White" Margin="80,6,20,0" FontSize="24"/>
-					</Border>
-
-				</StackPanel>
+		<ScrollViewer Margin="350,115,0,42" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
+			<Grid x:Name="scrollviewerGrid">
+				<!--
+				<Border Width="726" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,0">
+					<Label Content="Hello world!" Foreground="White" Margin="80,6,20,0" FontSize="24"/>
+				</Border>
+				<Border Width="726" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,65,0,0">
+					<Label Content="Hello world!" Foreground="White" Margin="80,6,20,0" FontSize="24"/>
+				</Border>
+				<Border Width="726" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,130,0,0">
+					<Label Content="Hello world!" Foreground="White" Margin="80,6,20,0" FontSize="24"/>
+				</Border>
+				<Border Width="726" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,195,0,0">
+					<Label Content="Hello world!" Foreground="White" Margin="80,6,20,0" FontSize="24"/>
+				</Border>
+				<Border Width="726" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,260,0,0">
+					<Label Content="Hello world!" Foreground="White" Margin="80,6,20,0" FontSize="24"/>
+				</Border>
+				<Border Width="726" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,325,0,0">
+					<Label Content="Hello world!" Foreground="White" Margin="80,6,20,0" FontSize="24"/>
+				</Border>
+				<Border Width="726" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,390,0,0">
+					<Label Content="Hello world!" Foreground="White" Margin="80,6,20,0" FontSize="24"/>
+				</Border>
+				<Border Width="726" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,455,0,0">
+					<Label Content="Hello world!" Foreground="White" Margin="80,6,20,0" FontSize="24"/>
+				</Border>
+				<Border Width="726" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,520,0,0">
+					<Label Content="Hello world!" Foreground="White" Margin="80,6,20,0" FontSize="24"/>
+				</Border>
+				<Border Width="726" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,585,0,0">
+					<Label Content="Hello world!" Foreground="White" Margin="80,6,20,0" FontSize="24"/>
+				</Border>
+				<Border Width="726" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,650,0,0">
+					<Label Content="Hello world!" Foreground="White" Margin="80,6,20,0" FontSize="24"/>
+				</Border>
+				-->
 			</Grid>
-		</ListView>
+		</ScrollViewer>
 
 
 	</Grid>
