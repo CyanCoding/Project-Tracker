@@ -16,7 +16,7 @@ using System.Windows.Media.Imaging;
 
 namespace Project_Tracker {
 
-	public partial class MainWindow : Window {
+	public partial class MainWindow : UWPHost.Window {
 		private int filesUpdate = 0;
 		private bool addedProgram = false; // We do this so that we can only open a program if there is one to prevent an error
 		private List<string> tableValues = new List<string>();
@@ -41,7 +41,7 @@ namespace Project_Tracker {
 			"https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/version.json";
 		private readonly string VERSION_INFO = Environment.GetFolderPath
 			(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/version.json";
-		private readonly string CURRENT_VERSION = "1.5"; // IF YOU CHANGE THIS, ALSO CHANGE IT IN UpdateWindow.xaml.cs
+		private readonly string CURRENT_VERSION = "1.0"; // IF YOU CHANGE THIS, ALSO CHANGE IT IN UpdateWindow.xaml.cs
 		private readonly string APPDATA_DIRECTORY =
 			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
 			+ "/Project Tracker";
@@ -199,7 +199,7 @@ namespace Project_Tracker {
 
 						DoubleAnimation animation = new DoubleAnimation();
 						animation.From = 0;
-						animation.To = 69;
+						animation.To = 130;
 						animation.Duration = TimeSpan.FromSeconds(0.2);
 
 						updateGrid.BeginAnimation(HeightProperty, animation);
@@ -253,8 +253,8 @@ namespace Project_Tracker {
 		/// Startup function that runs when code execution starts.
 		/// </summary>
 		private void Startup() {
+			this.Height = 800;
 			// Item positioning
-			updateGrid.Width = this.Width;
 
 			if (!Directory.Exists(APPDATA_DIRECTORY)) { // Create AppData directory
 				Directory.CreateDirectory(APPDATA_DIRECTORY);
@@ -323,7 +323,7 @@ namespace Project_Tracker {
 						string json = File.ReadAllText(path);
 						MainTableManifest.Rootobject mainTable = 
 							JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
-
+						
 						bool fileHasAllValues = CheckValues(
 							mainTable.Title, mainTable.Errors, mainTable.ErrorsData,
 							mainTable.Features, mainTable.FeaturesData, mainTable.Comments,
@@ -569,7 +569,7 @@ namespace Project_Tracker {
 					updateGrid.Visibility = Visibility.Visible;
 
 					DoubleAnimation animation = new DoubleAnimation();
-					animation.From = 69;
+					animation.From = 130;
 					animation.To = 0;
 					animation.Duration = TimeSpan.FromSeconds(0.2);
 
@@ -591,7 +591,7 @@ namespace Project_Tracker {
 					updateGrid.Visibility = Visibility.Visible;
 
 					DoubleAnimation animation = new DoubleAnimation();
-					animation.From = 69;
+					animation.From = 130;
 					animation.To = 0;
 					animation.Duration = TimeSpan.FromSeconds(0.2);
 
