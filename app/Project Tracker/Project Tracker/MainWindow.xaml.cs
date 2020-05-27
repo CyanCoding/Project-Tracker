@@ -54,13 +54,18 @@ namespace Project_Tracker {
 			Startup();
 		}
 
+
 		/// <summary>
-		/// Loads a value into the scrollviewer.
+		/// Loads an item into the scrollviewer.
 		/// </summary>
-		private void LoadValues() {
+		/// <param name="text">The text value of the item.</param>
+		/// <param name="type">The type of the item (0 = error, 1 = feature, 2 = comment).</param>
+		private void LoadValues(string text, int type) {
 			// The grid holds all of the values
 			Grid grid = new Grid();
-			grid.Margin = new Thickness(59, itemsAdded * 65, 46, 471 - (itemsAdded * 65));
+			grid.Margin = new Thickness(0, itemsAdded * 65, 0, 0);
+			grid.VerticalAlignment = VerticalAlignment.Top;
+			grid.HorizontalAlignment = HorizontalAlignment.Center;
 
 			ColumnDefinition column1 = new ColumnDefinition();
 			column1.Width = new GridLength(50, GridUnitType.Pixel);
@@ -80,7 +85,6 @@ namespace Project_Tracker {
 			border.CornerRadius = new CornerRadius(10);
 			border.Background = new SolidColorBrush(itemColor);
 			border.BorderThickness = new Thickness(2);
-			border.BorderBrush = new SolidColorBrush(Colors.Red);
 			border.HorizontalAlignment = HorizontalAlignment.Left;
 			border.VerticalAlignment = VerticalAlignment.Top;
 			border.Margin = new Thickness(0, 0, -5, 0);
@@ -117,13 +121,29 @@ namespace Project_Tracker {
 			Image typeImage = new Image();
 			typeImage.Height = 30;
 			typeImage.Width = 30;
-			typeImage.Source = (ImageSource)TryFindResource("errorDrawingImage");
+
+			if (type == 0) {
+				typeImage.Source = (ImageSource)TryFindResource("errorDrawingImage");
+				border.BorderBrush = new SolidColorBrush(Colors.IndianRed);
+			}
+			else if (type == 1) {
+				typeImage.Source = (ImageSource)TryFindResource("featureDrawingImage");
+				border.BorderBrush = new SolidColorBrush(Colors.Yellow);
+			}
+			else if (type == 2) {
+				typeImage.Source = (ImageSource)TryFindResource("commentDrawingImage");
+				border.BorderBrush = new SolidColorBrush(Colors.CornflowerBlue);
+			}
+			else {
+				typeImage.Source = (ImageSource)TryFindResource("noIcon");
+				border.BorderBrush = new SolidColorBrush(Colors.White);
+			}
 
 			typeCanvas.Children.Add(typeImage);
 
 			// The label displaying the content of the item
 			Label label = new Label();
-			label.Content = "Hello world!" + itemsAdded;
+			label.Content = text;
 			label.Foreground = new SolidColorBrush(labelTextColor);
 			label.Margin = new Thickness(80, 6, 20, 0);
 			label.FontSize = 24;
@@ -134,8 +154,6 @@ namespace Project_Tracker {
 			grid.Children.Add(typeCanvas);
 			scrollviewerGrid.Children.Add(grid);
 			
-			
-
 			itemsAdded++;
 		}
 
@@ -307,17 +325,41 @@ namespace Project_Tracker {
 				selectedIndex = 1;
 				border1.Opacity = 0.2;
 			}
+
+			// Read the values from this project
+			if (selectedIndex != 0) {
+				string json = File.ReadAllText(filesRead[selectedIndex - 1]);
+				MainTableManifest.Rootobject projectInfo =
+					JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
+
+				// Set values
+				displayingTitle.Content = projectInfo.Title;
+				displayingImage.Source = (ImageSource)TryFindResource(projectInfo.Icon);
+
+				for (int i = 0; i < projectInfo.Errors.Length; i++) {
+					if (projectInfo.ErrorsData[i] == "0") { // It's not a completed task
+						LoadValues(projectInfo.Errors[i], 0);
+					}
+				}
+				for (int i = 0; i < projectInfo.Features.Length; i++) {
+					if (projectInfo.FeaturesData[i] == "0") { // It's not a completed task
+						LoadValues(projectInfo.Features[i], 1);
+					}
+				}
+				for (int i = 0; i < projectInfo.Comments.Length; i++) {
+					if (projectInfo.CommentsData[i] == "0") { // It's not a completed task
+						LoadValues(projectInfo.Comments[i], 2);
+					}
+				}
+			}
 		}
 
 		/// <summary>
 		/// Startup function that runs when code execution starts.
 		/// </summary>
 		private void Startup() {
-			for (int i = 0; i < 6; i++) {
-				LoadValues();
-			}
-
 			this.Height = 815;
+			this.Width = 1200;
 			// Item positioning
 
 			if (!Directory.Exists(APPDATA_DIRECTORY)) { // Create AppData directory
@@ -739,6 +781,10 @@ namespace Project_Tracker {
 			File.WriteAllText(SETTINGS_FILE, sw.ToString());
 			sb.Clear();
 			sw.Close();
+		}
+
+		private void Window_SizeChanged(object sender, SizeChangedEventArgs e) {
+			Console.WriteLine(this.Width);
 		}
 	}
 }

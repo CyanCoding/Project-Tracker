@@ -8,7 +8,7 @@
         mc:Ignorable="d"
 		ShowTitlebar="True"
 		Theme="Dark"
-        Title="" Height="800" Width="1200" Icon="icon.ico" PreviewKeyDown="KeyPress" Closing="Window_Closing">
+        Title="" Height="800" Width="1200" Icon="icon.ico" PreviewKeyDown="KeyPress" Closing="Window_Closing" SizeChanged="Window_SizeChanged">
 	<!-- If you ever change the logo, it must be 16x, 32x, 48x, 64x, 128x, and 256x. Pack it all into an ico file look up how to do it if you forgot -->
 
 	<uwp:Window.Resources>
@@ -326,11 +326,11 @@
 		<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="400,31,0,0">
 			<Image x:Name="displayingImage"  Source="{StaticResource javaIcon}" Height="45" Width="45" />
 		</Canvas>
-		<Label x:Name="displayingTitle" VerticalContentAlignment="Top" Width="321" HorizontalAlignment="Left" Content="Project Tracker" FontSize="40" Margin="450,28,0,0" FontWeight="Medium"/>
+		<Label x:Name="displayingTitle" VerticalContentAlignment="Top" HorizontalAlignment="Left" Content="Project Tracker" FontSize="40" Margin="450,28,0,0" FontWeight="Medium"/>
 		<!-- Make sure this has equal padding on all sides -->
 		<ScrollViewer Margin="350,198,0,42" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
 			<Grid x:Name="scrollviewerGrid">
-				<!--<Grid Margin="59,0,46,536">
+				<Grid Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Center">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="50"/>
 						<ColumnDefinition Width="620"/>
@@ -347,7 +347,7 @@
 					</Canvas>
 					<Label Content="Hello world!" Foreground="White" VerticalAlignment="Center" Margin="20,6,0,12"  FontSize="24" Grid.Column="1" Height="42"/>
 				</Grid>
-				<Grid Margin="59,65,46,471">
+				<Grid Margin="0,65,0,0" VerticalAlignment="Top" HorizontalAlignment="Center">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="50"/>
 						<ColumnDefinition Width="620"/>
@@ -363,7 +363,7 @@
 						<Image Height="30" Width="30" Source="{StaticResource errorDrawingImage}"/>
 					</Canvas>
 					<Label Content="Hello world!" Foreground="White" VerticalAlignment="Center" Margin="20,6,0,12"  FontSize="24" Grid.Column="1" Height="42"/>
-				</Grid>-->
+				</Grid>
 			</Grid>
 		</ScrollViewer>
 
