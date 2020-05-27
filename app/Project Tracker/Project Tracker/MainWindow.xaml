@@ -17,6 +17,15 @@
 				<ResourceDictionary Source="style.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/UWPHost;component/Themes/Generic.xaml" />
 			</ResourceDictionary.MergedDictionaries>
+
+			<Style TargetType="{x:Type Image}" x:Key="checkbox">
+				<Setter Property="Image.Source" Value="{StaticResource unchecked_checkboxDrawingImage}"/>
+				<Style.Triggers>
+					<Trigger Property="Border.IsMouseOver" Value="True">
+						<Setter Property="Image.Source" Value="{StaticResource checked_checkedboxDrawingImage}"/>
+					</Trigger>
+				</Style.Triggers>
+			</Style>
 		</ResourceDictionary>
 	</uwp:Window.Resources>
 
@@ -314,14 +323,31 @@
 
 
 		<!-- Display window content -->
-		<Canvas HorizontalAlignment="Right" VerticalAlignment="Top" Height="45" Width="45" Margin="0,31,756,0">
+		<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="400,31,0,0">
 			<Image x:Name="displayingImage"  Source="{StaticResource javaIcon}" Height="45" Width="45" />
 		</Canvas>
-		<Label x:Name="displayingTitle" VerticalContentAlignment="Top" Width="657" HorizontalAlignment="Right" Content="Project Tracker" FontSize="40" Margin="0,21,94,666" FontWeight="Medium"/>
+		<Label x:Name="displayingTitle" VerticalContentAlignment="Top" Width="321" HorizontalAlignment="Left" Content="Project Tracker" FontSize="40" Margin="450,28,0,0" FontWeight="Medium"/>
 		<!-- Make sure this has equal padding on all sides -->
 		<ScrollViewer Margin="350,198,0,42" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
 			<Grid x:Name="scrollviewerGrid">
-				<Grid Margin="59,0,46,471">
+				<!--<Grid Margin="59,0,46,536">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="50"/>
+						<ColumnDefinition Width="620"/>
+						<ColumnDefinition Width="50"/>
+					</Grid.ColumnDefinitions>
+
+					<Border BorderThickness="2" Width="725" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Left" VerticalAlignment="Top" BorderBrush="Red" Grid.ColumnSpan="4" Margin="0,0,-5,0"/>
+
+					<Canvas HorizontalAlignment="Center" VerticalAlignment="Top" Height="40" Width="40" Grid.Column="0" Margin="5,10">
+						<Image Height="40" Width="40" Canvas.Left="10" Cursor="Hand" Style="{StaticResource checkbox}"/>
+					</Canvas>
+					<Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Width="30" Grid.Column="2">
+						<Image Height="30" Width="30" Source="{StaticResource errorDrawingImage}"/>
+					</Canvas>
+					<Label Content="Hello world!" Foreground="White" VerticalAlignment="Center" Margin="20,6,0,12"  FontSize="24" Grid.Column="1" Height="42"/>
+				</Grid>
+				<Grid Margin="59,65,46,471">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="50"/>
 						<ColumnDefinition Width="620"/>
@@ -331,29 +357,18 @@
 					<Border BorderThickness="2" Width="725" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Left" VerticalAlignment="Top" BorderBrush="Red" Grid.ColumnSpan="4" Margin="0,0,-5,0"/>
 
 					<Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Height="40" Width="40" Grid.Column="0" Margin="5,10">
-						<Image Height="40" Width="40" Canvas.Left="10" Cursor="Hand">
-							<Image.Style>
-								<Style>
-									<Setter Property="Image.Source" Value="{StaticResource unchecked_checkboxDrawingImage}"/>
-									<Style.Triggers>
-										<Trigger Property="Border.IsMouseOver" Value="True">
-											<Setter Property="Image.Source" Value="{StaticResource checked_checkedboxDrawingImage}"/>
-										</Trigger>
-									</Style.Triggers>
-								</Style>
-							</Image.Style>
-						</Image>
+						<Image Height="40" Width="40" Canvas.Left="10" Cursor="Hand" Style="{StaticResource checkbox}"/>
 					</Canvas>
 					<Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Width="30" Grid.Column="2">
 						<Image Height="30" Width="30" Source="{StaticResource errorDrawingImage}"/>
 					</Canvas>
 					<Label Content="Hello world!" Foreground="White" VerticalAlignment="Center" Margin="20,6,0,12"  FontSize="24" Grid.Column="1" Height="42"/>
-				</Grid>
+				</Grid>-->
 			</Grid>
 		</ScrollViewer>
 
 		<!-- Incomplete vs complete grid -->
-		<Grid Margin="391,136,511,576">
+		<Grid Margin="391,136,0,0">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="199"/>
 				<ColumnDefinition Width="88"/>

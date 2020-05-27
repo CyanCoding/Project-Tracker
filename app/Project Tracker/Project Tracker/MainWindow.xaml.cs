@@ -58,6 +58,22 @@ namespace Project_Tracker {
 		/// Loads a value into the scrollviewer.
 		/// </summary>
 		private void LoadValues() {
+			// The grid holds all of the values
+			Grid grid = new Grid();
+			grid.Margin = new Thickness(59, itemsAdded * 65, 46, 471 - (itemsAdded * 65));
+
+			ColumnDefinition column1 = new ColumnDefinition();
+			column1.Width = new GridLength(50, GridUnitType.Pixel);
+			ColumnDefinition column2 = new ColumnDefinition();
+			column2.Width = new GridLength(620, GridUnitType.Pixel);
+			ColumnDefinition column3 = new ColumnDefinition();
+			column3.Width = new GridLength(50, GridUnitType.Pixel);
+
+			grid.ColumnDefinitions.Add(column1);
+			grid.ColumnDefinitions.Add(column2);
+			grid.ColumnDefinitions.Add(column3);
+
+			// The border is a curved rectangle behind all the other objects
 			Border border = new Border();
 			border.Width = 725;
 			border.Height = 60;
@@ -67,9 +83,45 @@ namespace Project_Tracker {
 			border.BorderBrush = new SolidColorBrush(Colors.Red);
 			border.HorizontalAlignment = HorizontalAlignment.Left;
 			border.VerticalAlignment = VerticalAlignment.Top;
-			border.Margin = new Thickness(0, itemsAdded * 65, -5, 0);
+			border.Margin = new Thickness(0, 0, -5, 0);
 			border.SetValue(Grid.ColumnSpanProperty, 4);
 
+			// The canvas item for the checkmark
+			Canvas checkmarkCanvas = new Canvas();
+			checkmarkCanvas.HorizontalAlignment = HorizontalAlignment.Center;
+			checkmarkCanvas.VerticalAlignment = VerticalAlignment.Center;
+			checkmarkCanvas.Height = 40;
+			checkmarkCanvas.Width = 40;
+			checkmarkCanvas.SetValue(Grid.ColumnProperty, 0);
+			checkmarkCanvas.Margin = new Thickness(5, 10, 5, 10);
+
+			// The checkmark image
+			Image checkmarkImage = new Image();
+			checkmarkImage.Height = 40;
+			checkmarkImage.Width = 40;
+			Canvas.SetLeft(checkmarkImage, 10);
+			checkmarkImage.Cursor = Cursors.Hand;
+			checkmarkImage.Style = (Style)TryFindResource("checkbox");
+
+			checkmarkCanvas.Children.Add(checkmarkImage);
+
+			// The canvas item for the item type (error/feature/comment)
+			Canvas typeCanvas = new Canvas();
+			typeCanvas.HorizontalAlignment = HorizontalAlignment.Center;
+			typeCanvas.VerticalAlignment = VerticalAlignment.Center;
+			typeCanvas.Height = 30;
+			typeCanvas.Width = 30;
+			typeCanvas.SetValue(Grid.ColumnProperty, 2);
+
+			// The type image
+			Image typeImage = new Image();
+			typeImage.Height = 30;
+			typeImage.Width = 30;
+			typeImage.Source = (ImageSource)TryFindResource("errorDrawingImage");
+
+			typeCanvas.Children.Add(typeImage);
+
+			// The label displaying the content of the item
 			Label label = new Label();
 			label.Content = "Hello world!" + itemsAdded;
 			label.Foreground = new SolidColorBrush(labelTextColor);
@@ -77,7 +129,11 @@ namespace Project_Tracker {
 			label.FontSize = 24;
 
 			border.Child = label;
-			scrollviewerGrid.Children.Add(border);
+			grid.Children.Add(border);
+			grid.Children.Add(checkmarkCanvas);
+			grid.Children.Add(typeCanvas);
+			scrollviewerGrid.Children.Add(grid);
+			
 			
 
 			itemsAdded++;
@@ -257,7 +313,11 @@ namespace Project_Tracker {
 		/// Startup function that runs when code execution starts.
 		/// </summary>
 		private void Startup() {
-			this.Height = 800;
+			for (int i = 0; i < 6; i++) {
+				LoadValues();
+			}
+
+			this.Height = 815;
 			// Item positioning
 
 			if (!Directory.Exists(APPDATA_DIRECTORY)) { // Create AppData directory
