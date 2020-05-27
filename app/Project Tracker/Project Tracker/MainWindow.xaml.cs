@@ -59,13 +59,16 @@ namespace Project_Tracker {
 		/// </summary>
 		private void LoadValues() {
 			Border border = new Border();
-			border.Width = 726;
+			border.Width = 725;
 			border.Height = 60;
 			border.CornerRadius = new CornerRadius(10);
 			border.Background = new SolidColorBrush(itemColor);
-			border.HorizontalAlignment = HorizontalAlignment.Center;
+			border.BorderThickness = new Thickness(2);
+			border.BorderBrush = new SolidColorBrush(Colors.Red);
+			border.HorizontalAlignment = HorizontalAlignment.Left;
 			border.VerticalAlignment = VerticalAlignment.Top;
-			border.Margin = new Thickness(0, itemsAdded * 65, 0, 0);
+			border.Margin = new Thickness(0, itemsAdded * 65, -5, 0);
+			border.SetValue(Grid.ColumnSpanProperty, 4);
 
 			Label label = new Label();
 			label.Content = "Hello world!" + itemsAdded;
@@ -75,6 +78,7 @@ namespace Project_Tracker {
 
 			border.Child = label;
 			scrollviewerGrid.Children.Add(border);
+			
 
 			itemsAdded++;
 		}

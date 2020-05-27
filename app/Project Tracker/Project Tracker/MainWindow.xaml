@@ -345,18 +345,7 @@
 						</Image>
 					</Canvas>
 					<Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Width="30" Grid.Column="2">
-						<Image Height="30" Width="30" Cursor="Hand">
-							<Image.Style>
-								<Style>
-									<Setter Property="Image.Source" Value="{StaticResource errorDrawingImage}"/>
-									<Style.Triggers>
-										<Trigger Property="Border.IsMouseOver" Value="True">
-											<Setter Property="Image.Source" Value="{StaticResource checked_checkedboxDrawingImage}"/>
-										</Trigger>
-									</Style.Triggers>
-								</Style>
-							</Image.Style>
-						</Image>
+						<Image Height="30" Width="30" Source="{StaticResource errorDrawingImage}"/>
 					</Canvas>
 					<Label Content="Hello world!" Foreground="White" VerticalAlignment="Center" Margin="20,6,0,12"  FontSize="24" Grid.Column="1" Height="42"/>
 				</Grid>
