@@ -24,6 +24,7 @@ namespace Project_Tracker {
 		private int selectedIndex = 0;
 		private int itemIndex = 0; // We need this to figure out the index of the item
 		private bool isIconSelecting = false;
+		private bool isTypeSelecting = false;
 
 		// Each project's data - Used for saving
 		private string title;
@@ -950,6 +951,24 @@ namespace Project_Tracker {
 					iconSelectBorder.BeginAnimation(HeightProperty, animation);
 				}));
 			}
+
+			if (isTypeSelecting) { // Hide the icon selector window if they click out
+				Dispatcher.Invoke(new Action(() => {
+					isTypeSelecting = false;
+
+					DoubleAnimation animation = new DoubleAnimation();
+					animation.From = 210;
+					animation.To = 0;
+					animation.Duration = TimeSpan.FromSeconds(0.2);
+
+					itemTypeSelectBorder.BeginAnimation(HeightProperty, animation);
+				}));
+			}
+
+			if (addItemTextBox.Text == "") { // Clear the textbox if they click out
+				addItemTextBox.Text = "Add something to the project";
+				Keyboard.ClearFocus();
+			}
 		}
 
 
@@ -1240,5 +1259,105 @@ namespace Project_Tracker {
 			SetProjectIcon("checked_checkedboxDrawingImage");
 		}
 		#endregion
+
+		private void AddNewItemTextBoxClick(object sender, MouseButtonEventArgs e) {
+			if (addItemTextBox.Text == "Add something to the project") {
+				addItemTextBox.Text = "";
+			}
+
+			if (isTypeSelecting) { // Hide the icon selector window if they click out
+				Dispatcher.Invoke(new Action(() => {
+					isTypeSelecting = false;
+
+					DoubleAnimation animation = new DoubleAnimation();
+					animation.From = 210;
+					animation.To = 0;
+					animation.Duration = TimeSpan.FromSeconds(0.2);
+
+					itemTypeSelectBorder.BeginAnimation(HeightProperty, animation);
+				}));
+			}
+			if (isIconSelecting) { // Hide the icon selector window if they click out
+				Dispatcher.Invoke(new Action(() => {
+					isIconSelecting = false;
+
+					DoubleAnimation animation = new DoubleAnimation();
+					animation.From = 250;
+					animation.To = 0;
+					animation.Duration = TimeSpan.FromSeconds(0.2);
+
+					iconSelectBorder.BeginAnimation(HeightProperty, animation);
+				}));
+			}
+		}
+
+		private void iconSelectBorder_LostFocus(object sender, RoutedEventArgs e) {
+			if (isIconSelecting) { // Hide the icon selector window if they click out
+				Dispatcher.Invoke(new Action(() => {
+					isIconSelecting = false;
+
+					DoubleAnimation animation = new DoubleAnimation();
+					animation.From = 250;
+					animation.To = 0;
+					animation.Duration = TimeSpan.FromSeconds(0.2);
+
+					iconSelectBorder.BeginAnimation(HeightProperty, animation);
+				}));
+			}
+		}
+
+		private void addItemTextBox_LostFocus(object sender, RoutedEventArgs e) {
+			if (addItemTextBox.Text == "") { // Clear the textbox if they click out
+				addItemTextBox.Text = "Add something to the project";
+				Keyboard.ClearFocus();
+			}
+		}
+
+		private void itemTypeSelectBorder_LostFocus(object sender, RoutedEventArgs e) {
+			if (isTypeSelecting) { // Hide the icon selector window if they click out
+				Dispatcher.Invoke(new Action(() => {
+					isTypeSelecting = false;
+
+					DoubleAnimation animation = new DoubleAnimation();
+					animation.From = 210;
+					animation.To = 0;
+					animation.Duration = TimeSpan.FromSeconds(0.1);
+
+					itemTypeSelectBorder.BeginAnimation(HeightProperty, animation);
+				}));
+			}
+		}
+
+		private void TypeImagePressed(object sender, MouseButtonEventArgs e) {
+			if (!isIconSelecting) { // Display icon selector window
+				Thread thread = new Thread(() => {
+					Dispatcher.Invoke(new Action(() => {
+						isTypeSelecting = true;
+
+						itemTypeSelectBorder.Visibility = Visibility.Visible;
+
+						DoubleAnimation animation = new DoubleAnimation();
+						animation.From = 0;
+						animation.To = 210;
+						animation.Duration = TimeSpan.FromSeconds(0.2);
+
+						itemTypeSelectBorder.BeginAnimation(HeightProperty, animation);
+					}));
+				});
+				thread.Start();
+			}
+			if (isTypeSelecting) { // Hide the icon selector window if they click out
+				Dispatcher.Invoke(new Action(() => {
+					isTypeSelecting = false;
+
+					DoubleAnimation animation = new DoubleAnimation();
+					animation.From = 210;
+					animation.To = 0;
+					animation.Duration = TimeSpan.FromSeconds(0.1);
+
+					itemTypeSelectBorder.BeginAnimation(HeightProperty, animation);
+				}));
+			}
+		}
 	}
 }

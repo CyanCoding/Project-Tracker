@@ -18,6 +18,22 @@
 				<ResourceDictionary Source="pack://application:,,,/UWPHost;component/Themes/Generic.xaml" />
 			</ResourceDictionary.MergedDictionaries>
 
+			<Style TargetType="{x:Type TextBox}">
+				<Setter Property="SnapsToDevicePixels" Value="True"/>
+				<Setter Property="OverridesDefaultStyle" Value="True"/>
+				<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+				<Setter Property="AllowDrop" Value="true"/>
+				<Setter Property="Template">
+					<Setter.Value>
+						<ControlTemplate TargetType="{x:Type TextBoxBase}">
+							<Border Name="Border" Padding="2" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0">
+								<ScrollViewer Margin="0" x:Name="PART_ContentHost"/>
+							</Border>
+						</ControlTemplate>
+					</Setter.Value>
+				</Setter>
+			</Style>
+
 			<Style TargetType="{x:Type Image}" x:Key="checkbox">
 				<Setter Property="Image.Source" Value="{StaticResource unchecked_checkboxDrawingImage}"/>
 				<Style.Triggers>
@@ -26,7 +42,7 @@
 					</Trigger>
 				</Style.Triggers>
 			</Style>
-			
+
 			<Style TargetType="{x:Type Image}" x:Key="completedTask">
 				<Setter Property="Image.Source" Value="{StaticResource checked_checkedboxDrawingImage}"/>
 			</Style>
@@ -93,6 +109,7 @@
 			<Label x:Name="percent2" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
 		<Border x:Name="border2" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,165,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border2_MouseLeftButtonDown" Style="{StaticResource hoverOver}"/>
+
 		<!-- Third project -->
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,215,0,0" Width="325">
 			<Grid.ColumnDefinitions>
@@ -226,13 +243,13 @@
 		<!-- The default view if there's no projects made yet -->
 		<Grid x:Name="noProjectsGrid" Margin="345,115,0,209" Visibility="Hidden">
 			<Canvas x:Name="errorCanvas" HorizontalAlignment="Center" VerticalAlignment="Center" Height="45" Width="45" Margin="0,0,120,140">
-				<Image Source="{StaticResource errorDrawingImage}" Height="44" Width="45"/>
+				<Image Source="{StaticResource errorDrawingImage}" Height="45" Width="45"/>
 			</Canvas>
 			<Canvas x:Name="featureCanvas" HorizontalAlignment="Center" VerticalAlignment="Center" Height="45" Width="45" Margin="0,0,0,140">
-				<Image Source="{StaticResource featureDrawingImage}" Height="44" Width="45"/>
+				<Image Source="{StaticResource featureDrawingImage}" Height="45" Width="45"/>
 			</Canvas>
 			<Canvas x:Name="commentCanvas" HorizontalAlignment="Center" VerticalAlignment="Center" Height="45" Width="45" Margin="0,0,-120,140">
-				<Image Source="{StaticResource commentDrawingImage}" Height="44" Width="45"/>
+				<Image Source="{StaticResource commentDrawingImage}" Height="45" Width="45"/>
 			</Canvas>
 			<Label x:Name="firstLineLabel" Content="You haven't started a project yet." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40"/>
 			<Label x:Name="secondLineLabel" Content="Create your first one!" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0, 0, -120" FontSize="40"/>
@@ -248,7 +265,21 @@
 
 		<Label x:Name="displayingTitle" VerticalContentAlignment="Top" HorizontalAlignment="Left" Content="Project Tracker" FontSize="40" Margin="450,21,0,7" FontWeight="Medium" Visibility="Visible"/>
 		<!-- Make sure this has equal padding on all sides -->
-		<ScrollViewer Margin="350,198,0,42" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
+		<Border BorderBrush="Black" CornerRadius="10" BorderThickness="3" HorizontalAlignment="Left" Height="73" Margin="391,0,0,15" VerticalAlignment="Bottom" Width="750">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition/>
+					<ColumnDefinition Width="60"/>
+				</Grid.ColumnDefinitions>
+				<TextBox x:Name="addItemTextBox" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Add something to the project" VerticalContentAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" Height="67" Width="675" FontSize="28" SelectionBrush="#FF0D759C" Grid.ColumnSpan="2" BorderBrush="{x:Null}" PreviewMouseDown="AddNewItemTextBoxClick" LostFocus="addItemTextBox_LostFocus"/>
+
+				<Canvas x:Name="newItemTypeCanvas" HorizontalAlignment="Center" VerticalAlignment="Center" Height="45" Width="45" Grid.Column="1">
+					<Image Source="{StaticResource errorDrawingImage}" Height="45" Width="45" PreviewMouseDown="TypeImagePressed" Cursor="Hand"/>
+				</Canvas>
+			</Grid>
+		</Border>
+
+		<ScrollViewer Margin="350,198,0,105" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
 			<Grid x:Name="scrollviewerGrid" Visibility="Hidden">
 			</Grid>
 		</ScrollViewer>
@@ -267,7 +298,7 @@
 			</Border>
 		</Grid>
 
-		<Border x:Name="iconSelectBorder" CornerRadius="10" HorizontalAlignment="Left" Height="0" Margin="350,65,0,0" VerticalAlignment="Top" Width="260" Background="White" Visibility="Hidden">
+		<Border x:Name="iconSelectBorder" CornerRadius="10" HorizontalAlignment="Left" Height="0" Margin="350,65,0,0" VerticalAlignment="Top" Width="260" Background="White" Visibility="Hidden" LostFocus="iconSelectBorder_LostFocus">
 			<Border.Effect>
 				<DropShadowEffect ShadowDepth="1"/>
 			</Border.Effect>
@@ -287,7 +318,7 @@
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="190,10,10,10" Cursor="Hand">
 							<Image Source="{StaticResource csharpIcon}" Height="44" Width="45" PreviewMouseDown="csharpIconMouseDown"/>
 						</Canvas>
-						
+
 						<!-- Second row -->
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,70,10,10" Cursor="Hand">
 							<Image Source="{StaticResource cplusplusIcon}" Height="44" Width="45" PreviewMouseDown="cplusplusIconMouseDown"/>
@@ -301,7 +332,7 @@
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="190,70,10,10" Cursor="Hand">
 							<Image Source="{StaticResource goIcon}" Height="44" Width="45" PreviewMouseDown="goIconMouseDown"/>
 						</Canvas>
-						
+
 						<!-- Third row -->
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,130,10,10" Cursor="Hand">
 							<Image Source="{StaticResource swiftIcon}" Height="44" Width="45" PreviewMouseDown="swiftIconMouseDown"/>
@@ -315,7 +346,7 @@
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="190,130,10,10" Cursor="Hand">
 							<Image Source="{StaticResource objective_cIcon}" Height="44" Width="45" PreviewMouseDown="objectiveCIconMouseDown"/>
 						</Canvas>
-						
+
 						<!-- Fourth row -->
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,190,10,10" Cursor="Hand">
 							<Image Source="{StaticResource cIcon}" Height="44" Width="45" PreviewMouseDown="cIconMouseDown"/>
@@ -329,7 +360,7 @@
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="190,190,10,10" Cursor="Hand">
 							<Image Source="{StaticResource phpIcon}" Height="44" Width="45" PreviewMouseDown="phpIconMouseDown"/>
 						</Canvas>
-						
+
 						<!-- Fifth row -->
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,250,10,10" Cursor="Hand">
 							<Image Source="{StaticResource sqlIcon}" Height="44" Width="45" PreviewMouseDown="sqlIconMouseDown"/>
@@ -343,7 +374,7 @@
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="190,250,10,10" Cursor="Hand">
 							<Image Source="{StaticResource dartIcon}" Height="44" Width="45" PreviewMouseDown="dartIconMouseDown"/>
 						</Canvas>
-						
+
 						<!-- Sixth row -->
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,310,10,10" Cursor="Hand">
 							<Image Source="{StaticResource githubDrawingImage}" Height="44" Width="45" PreviewMouseDown="githubIconMouseDown"/>
@@ -356,6 +387,39 @@
 			</Grid>
 		</Border>
 
+		<Border x:Name="itemTypeSelectBorder" CornerRadius="10" HorizontalAlignment="Right" Height="0"  VerticalAlignment="Bottom" Width="200" Background="White" Visibility="Hidden" LostFocus="itemTypeSelectBorder_LostFocus" Margin="0,0,0,80" Cursor="Hand">
+			<Border.Effect>
+				<DropShadowEffect ShadowDepth="1"/>
+			</Border.Effect>
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="70"/>
+					<RowDefinition Height="70"/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="50"/>
+					<ColumnDefinition/>
+				</Grid.ColumnDefinitions>
+				<!-- First row -->
+				<Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" Height="45" Width="45" Cursor="Hand" Grid.Row="0" Grid.Column="0">
+					<Image Source="{StaticResource errorDrawingImage}" Height="45" Width="45"/>
+				</Canvas>
+				<Label Content="Error" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Margin="20,-10,0,0" VerticalAlignment="Center" FontSize="24" Width="173" Height="70" VerticalContentAlignment="Center"/>
+
+				<!-- Second row -->
+				<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,10,0,0" Cursor="Hand" Grid.Column="0" Grid.Row="1">
+					<Image Source="{StaticResource featureDrawingImage}" Height="45" Width="45"/>
+				</Canvas>
+				<Label Content="Feature" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" Margin="20,-10,0,0" VerticalAlignment="Center" FontSize="24" Width="173" Height="70" VerticalContentAlignment="Center"/>
+
+				<!-- Third row -->
+				<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,10,0,0" Cursor="Hand" Grid.Column="0" Grid.Row="2">
+					<Image Source="{StaticResource commentDrawingImage}" Height="45" Width="45"/>
+				</Canvas>
+				<Label Content="Comment" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" Margin="20,-10,0,0" VerticalAlignment="Center" FontSize="24" Width="173" Height="70" VerticalContentAlignment="Center"/>
+			</Grid>
+		</Border>
 		<!-- Update notifier-->
 		<Grid x:Name="updateGrid" HorizontalAlignment="Left" Height="0" VerticalAlignment="Bottom" Margin="-5,0,0,-5" Width="350" Background="#FFE67C11" Visibility="Visible">
 			<TextBlock Text="An update to the Project Tracker is available!" TextWrapping="Wrap" HorizontalAlignment="Left" Foreground="White" FontSize="18" Margin="10,10,0,58" VerticalAlignment="Center" Width="234" Height="63"/>
