@@ -12,7 +12,7 @@
 	<!-- If you ever change the logo, it must be 16x, 32x, 48x, 64x, 128x, and 256x. Pack it all into an ico file look up how to do it if you forgot -->
 
 	<uwp:Window.Resources>
-		<ResourceDictionary >
+		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries >
 				<ResourceDictionary Source="style.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/UWPHost;component/Themes/Generic.xaml" />
@@ -25,6 +25,23 @@
 						<Setter Property="Image.Source" Value="{StaticResource checked_checkedboxDrawingImage}"/>
 					</Trigger>
 				</Style.Triggers>
+			</Style>
+
+			<Style TargetType="{x:Type Border}" x:Key="hoverOver">
+				<Setter Property="Border.Background" Value="LightGray"/>
+				<Setter Property="Border.Opacity" Value="0"/>
+				<Setter Property="Border.Cursor" Value="Hand"/>
+				<Style.Triggers>
+					<Trigger Property="Border.IsMouseOver" Value="True">
+						<Setter Property="Border.Opacity" Value="0.2"/>
+					</Trigger>
+				</Style.Triggers>
+			</Style>
+
+			<Style TargetType="{x:Type Border}" x:Key="solidOver">
+				<Setter Property="Border.Background" Value="LightGray"/>
+				<Setter Property="Border.Opacity" Value="0.2"/>
+				<Setter Property="Border.Cursor" Value="Hand"/>
 			</Style>
 		</ResourceDictionary>
 	</uwp:Window.Resources>
@@ -55,19 +72,7 @@
 			<Label x:Name="name1" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent1" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="50" Margin="0,0,-8,0"/>
 		</Grid>
-		<Border x:Name="border1" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,115,0,0" Width="350" Visibility="Hidden">
-			<Border.Style>
-				<Style>
-					<Setter Property="Border.Background" Value="LightGray"/>
-					<Setter Property="Border.Opacity" Value="0"/>
-					<Style.Triggers>
-						<Trigger Property="Border.IsMouseOver" Value="True">
-							<Setter Property="Border.Opacity" Value="0.2"/>
-						</Trigger>
-					</Style.Triggers>
-				</Style>
-			</Border.Style>
-		</Border>
+		<Border x:Name="border1" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,115,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border1_MouseLeftButtonDown" Style="{StaticResource hoverOver}"/>
 
 		<!-- Second project -->
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,165,0,0" Width="325">
@@ -83,20 +88,7 @@
 			<Label x:Name="name2" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent2" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
-		<Border x:Name="border2" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,165,0,0" Width="350" Visibility="Hidden">
-			<Border.Style>
-				<Style>
-					<Setter Property="Border.Background" Value="LightGray"/>
-					<Setter Property="Border.Opacity" Value="0"/>
-					<Style.Triggers>
-						<Trigger Property="Border.IsMouseOver" Value="True">
-							<Setter Property="Border.Opacity" Value="0.2"/>
-						</Trigger>
-					</Style.Triggers>
-				</Style>
-			</Border.Style>
-		</Border>
-
+		<Border x:Name="border2" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,165,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border2_MouseLeftButtonDown" Style="{StaticResource hoverOver}"/>
 		<!-- Third project -->
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,215,0,0" Width="325">
 			<Grid.ColumnDefinitions>
@@ -111,19 +103,7 @@
 			<Label x:Name="name3" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent3" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
-		<Border x:Name="border3" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,215,0,0" Width="350" Visibility="Hidden">
-			<Border.Style>
-				<Style>
-					<Setter Property="Border.Background" Value="LightGray"/>
-					<Setter Property="Border.Opacity" Value="0"/>
-					<Style.Triggers>
-						<Trigger Property="Border.IsMouseOver" Value="True">
-							<Setter Property="Border.Opacity" Value="0.2"/>
-						</Trigger>
-					</Style.Triggers>
-				</Style>
-			</Border.Style>
-		</Border>
+		<Border x:Name="border3" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,215,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border3_MouseLeftButtonDown" Style="{StaticResource hoverOver}"/>
 
 		<!-- Fourth project -->
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,265,0,0" Width="325">
@@ -139,19 +119,7 @@
 			<Label x:Name="name4" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent4" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
-		<Border x:Name="border4" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,265,0,0" Width="350" Visibility="Hidden">
-			<Border.Style>
-				<Style>
-					<Setter Property="Border.Background" Value="LightGray"/>
-					<Setter Property="Border.Opacity" Value="0"/>
-					<Style.Triggers>
-						<Trigger Property="Border.IsMouseOver" Value="True">
-							<Setter Property="Border.Opacity" Value="0.2"/>
-						</Trigger>
-					</Style.Triggers>
-				</Style>
-			</Border.Style>
-		</Border>
+		<Border x:Name="border4" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,265,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border4_MouseLeftButtonDown" Style="{StaticResource hoverOver}"/>
 
 		<!-- Fifth project -->
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,315,0,0" Width="325">
@@ -167,19 +135,7 @@
 			<Label x:Name="name5" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent5" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
-		<Border x:Name="border5" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,315,0,0" Width="350" Visibility="Hidden">
-			<Border.Style>
-				<Style>
-					<Setter Property="Border.Background" Value="LightGray"/>
-					<Setter Property="Border.Opacity" Value="0"/>
-					<Style.Triggers>
-						<Trigger Property="Border.IsMouseOver" Value="True">
-							<Setter Property="Border.Opacity" Value="0.2"/>
-						</Trigger>
-					</Style.Triggers>
-				</Style>
-			</Border.Style>
-		</Border>
+		<Border x:Name="border5" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,315,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border5_MouseLeftButtonDown" Style="{StaticResource hoverOver}"/>
 
 		<!-- Sixth project -->
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,365,0,0" Width="325">
@@ -195,19 +151,7 @@
 			<Label x:Name="name6" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent6" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
-		<Border x:Name="border6" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,365,0,0" Width="350" Visibility="Hidden">
-			<Border.Style>
-				<Style>
-					<Setter Property="Border.Background" Value="LightGray"/>
-					<Setter Property="Border.Opacity" Value="0"/>
-					<Style.Triggers>
-						<Trigger Property="Border.IsMouseOver" Value="True">
-							<Setter Property="Border.Opacity" Value="0.2"/>
-						</Trigger>
-					</Style.Triggers>
-				</Style>
-			</Border.Style>
-		</Border>
+		<Border x:Name="border6" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,365,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border6_MouseLeftButtonDown" Style="{StaticResource hoverOver}"/>
 
 		<!-- Seventh project -->
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,415,0,0" Width="325">
@@ -223,19 +167,7 @@
 			<Label x:Name="name7" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent7" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
-		<Border x:Name="border7" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,415,0,0" Width="350" Visibility="Hidden">
-			<Border.Style>
-				<Style>
-					<Setter Property="Border.Background" Value="LightGray"/>
-					<Setter Property="Border.Opacity" Value="0"/>
-					<Style.Triggers>
-						<Trigger Property="Border.IsMouseOver" Value="True">
-							<Setter Property="Border.Opacity" Value="0.2"/>
-						</Trigger>
-					</Style.Triggers>
-				</Style>
-			</Border.Style>
-		</Border>
+		<Border x:Name="border7" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,415,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border7_MouseLeftButtonDown" Style="{StaticResource hoverOver}"/>
 
 		<!-- Eighth project -->
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,465,0,0" Width="325">
@@ -251,19 +183,7 @@
 			<Label x:Name="name8" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent8" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
-		<Border x:Name="border8" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,465,0,0" Width="350" Visibility="Hidden">
-			<Border.Style>
-				<Style>
-					<Setter Property="Border.Background" Value="LightGray"/>
-					<Setter Property="Border.Opacity" Value="0"/>
-					<Style.Triggers>
-						<Trigger Property="Border.IsMouseOver" Value="True">
-							<Setter Property="Border.Opacity" Value="0.2"/>
-						</Trigger>
-					</Style.Triggers>
-				</Style>
-			</Border.Style>
-		</Border>
+		<Border x:Name="border8" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,465,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border8_MouseLeftButtonDown" Style="{StaticResource hoverOver}"/>
 
 		<!-- Ninth project -->
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,515,0,0" Width="325">
@@ -279,19 +199,7 @@
 			<Label x:Name="name9" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent9" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
-		<Border x:Name="border9" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,515,0,0" Width="350" Visibility="Hidden">
-			<Border.Style>
-				<Style>
-					<Setter Property="Border.Background" Value="LightGray"/>
-					<Setter Property="Border.Opacity" Value="0"/>
-					<Style.Triggers>
-						<Trigger Property="Border.IsMouseOver" Value="True">
-							<Setter Property="Border.Opacity" Value="0.2"/>
-						</Trigger>
-					</Style.Triggers>
-				</Style>
-			</Border.Style>
-		</Border>
+		<Border x:Name="border9" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,515,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border9_MouseLeftButtonDown" Style="{StaticResource hoverOver}"/>
 
 		<!-- Tenth project -->
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,565,0,0" Width="325">
@@ -307,68 +215,41 @@
 			<Label x:Name="name10" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
 			<Label x:Name="percent10" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
 		</Grid>
-		<Border x:Name="border10" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,565,0,0" Width="350" Visibility="Hidden">
-			<Border.Style>
-				<Style>
-					<Setter Property="Border.Background" Value="LightGray"/>
-					<Setter Property="Border.Opacity" Value="0"/>
-					<Style.Triggers>
-						<Trigger Property="Border.IsMouseOver" Value="True">
-							<Setter Property="Border.Opacity" Value="0.2"/>
-						</Trigger>
-					</Style.Triggers>
-				</Style>
-			</Border.Style>
-		</Border>
+		<Border x:Name="border10" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,565,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border10_MouseLeftButtonDown" Style="{StaticResource hoverOver}"/>
 
 
 		<!-- Display window content -->
+		<!-- The default view if there's no projects made yet -->
+		<Grid x:Name="noProjectsGrid" Margin="345,115,0,209">
+			<Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Height="45" Width="45" Margin="0,0,120,140">
+				<Image Source="{StaticResource errorDrawingImage}" Height="44" Width="45"/>
+			</Canvas>
+			<Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Height="45" Width="45" Margin="0,0,0,140">
+				<Image Source="{StaticResource featureDrawingImage}" Height="44" Width="45"/>
+			</Canvas>
+			<Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Height="45" Width="45" Margin="0,0,-120,140">
+				<Image Source="{StaticResource commentDrawingImage}" Height="44" Width="45"/>
+			</Canvas>
+			<Label Content="You haven't started a project yet." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40"/>
+			<Label Content="Create your first one!" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0, 0, -120" FontSize="40"/>
+			<Label Content="With the Project Tracker, easily" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0, 0, -400" FontSize="28"/>
+			<Label Content="create, manage, track, and develop" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0, 0, -480" FontSize="28"/>
+			<Label Content="all of your programming projects." HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0, 0, -560" FontSize="28"/>
+		</Grid>
+
+		<!-- The view if there is proejcts made -->
 		<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="400,31,0,0">
-			<Image x:Name="displayingImage"  Source="{StaticResource javaIcon}" Height="45" Width="45" />
+			<Image x:Name="displayingImage"  Source="{StaticResource javaIcon}" Height="45" Width="45" Visibility="Hidden"/>
 		</Canvas>
-		<Label x:Name="displayingTitle" VerticalContentAlignment="Top" HorizontalAlignment="Left" Content="Project Tracker" FontSize="40" Margin="450,28,0,0" FontWeight="Medium"/>
+		<Label x:Name="displayingTitle" VerticalContentAlignment="Top" HorizontalAlignment="Left" Content="Project Tracker" FontSize="40" Margin="450,21,0,7" FontWeight="Medium" Visibility="Hidden"/>
 		<!-- Make sure this has equal padding on all sides -->
 		<ScrollViewer Margin="350,198,0,42" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
-			<Grid x:Name="scrollviewerGrid">
-				<Grid Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Center">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="50"/>
-						<ColumnDefinition Width="620"/>
-						<ColumnDefinition Width="50"/>
-					</Grid.ColumnDefinitions>
-
-					<Border BorderThickness="2" Width="725" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Left" VerticalAlignment="Top" BorderBrush="Red" Grid.ColumnSpan="4" Margin="0,0,-5,0"/>
-
-					<Canvas HorizontalAlignment="Center" VerticalAlignment="Top" Height="40" Width="40" Grid.Column="0" Margin="5,10">
-						<Image Height="40" Width="40" Canvas.Left="10" Cursor="Hand" Style="{StaticResource checkbox}"/>
-					</Canvas>
-					<Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Width="30" Grid.Column="2">
-						<Image Height="30" Width="30" Source="{StaticResource errorDrawingImage}"/>
-					</Canvas>
-					<Label Content="Hello world!" Foreground="White" VerticalAlignment="Center" Margin="20,6,0,12"  FontSize="24" Grid.Column="1" Height="42"/>
-				</Grid>
-				<Grid Margin="0,65,0,0" VerticalAlignment="Top" HorizontalAlignment="Center">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="50"/>
-						<ColumnDefinition Width="620"/>
-						<ColumnDefinition Width="50"/>
-					</Grid.ColumnDefinitions>
-
-					<Border BorderThickness="2" Width="725" Height="60" CornerRadius="10" Background="#FF3C3C3C" HorizontalAlignment="Left" VerticalAlignment="Top" BorderBrush="Red" Grid.ColumnSpan="4" Margin="0,0,-5,0"/>
-
-					<Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Height="40" Width="40" Grid.Column="0" Margin="5,10">
-						<Image Height="40" Width="40" Canvas.Left="10" Cursor="Hand" Style="{StaticResource checkbox}"/>
-					</Canvas>
-					<Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Width="30" Grid.Column="2">
-						<Image Height="30" Width="30" Source="{StaticResource errorDrawingImage}"/>
-					</Canvas>
-					<Label Content="Hello world!" Foreground="White" VerticalAlignment="Center" Margin="20,6,0,12"  FontSize="24" Grid.Column="1" Height="42"/>
-				</Grid>
+			<Grid x:Name="scrollviewerGrid" Visibility="Hidden">
 			</Grid>
 		</ScrollViewer>
 
 		<!-- Incomplete vs complete grid -->
-		<Grid Margin="391,136,0,0">
+		<Grid x:Name="completeGrid" Margin="391,136,0,0" Visibility="Hidden">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="199"/>
 				<ColumnDefinition Width="88"/>

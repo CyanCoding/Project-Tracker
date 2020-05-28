@@ -291,43 +291,62 @@ namespace Project_Tracker {
 		/// Highlights the selected project based on selectedIndex.
 		/// </summary>
 		private void SetSelectedProject() {
+			border1.Style = (Style)TryFindResource("hoverOver");
+			border2.Style = (Style)TryFindResource("hoverOver");
+			border3.Style = (Style)TryFindResource("hoverOver");
+			border4.Style = (Style)TryFindResource("hoverOver");
+			border5.Style = (Style)TryFindResource("hoverOver");
+			border6.Style = (Style)TryFindResource("hoverOver");
+			border7.Style = (Style)TryFindResource("hoverOver");
+			border8.Style = (Style)TryFindResource("hoverOver");
+			border9.Style = (Style)TryFindResource("hoverOver");
+			border10.Style = (Style)TryFindResource("hoverOver");
+
+			scrollviewerGrid.Children.Clear();
+			itemsAdded = 0;
+
 			if (selectedIndex == 1) {
-				border1.Opacity = 0.2;
+				border1.Style = (Style)TryFindResource("solidOver");
 			}
 			else if (selectedIndex == 2) {
-				border2.Opacity = 0.2;
+				border2.Style = (Style)TryFindResource("solidOver");
 			}
 			else if (selectedIndex == 3) {
-				border3.Opacity = 0.2;
+				border3.Style = (Style)TryFindResource("solidOver");
 			}
 			else if (selectedIndex == 4) {
-				border4.Opacity = 0.2;
+				border4.Style = (Style)TryFindResource("solidOver");
 			}
 			else if (selectedIndex == 5) {
-				border5.Opacity = 0.2;
+				border5.Style = (Style)TryFindResource("solidOver");
 			}
 			else if (selectedIndex == 6) {
-				border6.Opacity = 0.2;
+				border6.Style = (Style)TryFindResource("solidOver");
 			}
 			else if (selectedIndex == 7) {
-				border7.Opacity = 0.2;
+				border7.Style = (Style)TryFindResource("solidOver");
 			}
 			else if (selectedIndex == 8) {
-				border8.Opacity = 0.2;
+				border8.Style = (Style)TryFindResource("solidOver");
 			}
 			else if (selectedIndex == 9) {
-				border9.Opacity = 0.2;
+				border9.Style = (Style)TryFindResource("solidOver");
 			}
 			else if (selectedIndex == 10) {
-				border10.Opacity = 0.2;
+				border10.Style = (Style)TryFindResource("solidOver");
 			}
 			else { // selectedIndex isn't a valid number
-				selectedIndex = 1;
-				border1.Opacity = 0.2;
+				selectedIndex = 0;
 			}
 
 			// Read the values from this project
 			if (selectedIndex != 0) {
+				noProjectsGrid.Visibility = Visibility.Hidden;
+				displayingImage.Visibility = Visibility.Visible;
+				displayingTitle.Visibility = Visibility.Visible;
+				scrollviewerGrid.Visibility = Visibility.Visible;
+				completeGrid.Visibility = Visibility.Visible;
+
 				string json = File.ReadAllText(filesRead[selectedIndex - 1]);
 				MainTableManifest.Rootobject projectInfo =
 					JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
@@ -620,6 +639,10 @@ namespace Project_Tracker {
 							
 					}
 				}
+
+				if (files.Length == 0) {
+					selectedIndex = 0;
+				}
 			}
 			catch (IOException) {
 			}
@@ -784,7 +807,57 @@ namespace Project_Tracker {
 		}
 
 		private void Window_SizeChanged(object sender, SizeChangedEventArgs e) {
-			Console.WriteLine(this.Width);
+			
+		}
+
+		private void border1_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+			selectedIndex = 1;
+			SetSelectedProject();
+		}
+
+		private void border2_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+			selectedIndex = 2;
+			SetSelectedProject();
+		}
+
+		private void border3_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+			selectedIndex = 3;
+			SetSelectedProject();
+		}
+
+		private void border4_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+			selectedIndex = 4;
+			SetSelectedProject();
+		}
+
+		private void border5_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+			selectedIndex = 5;
+			SetSelectedProject();
+		}
+
+		private void border6_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+			selectedIndex = 6;
+			SetSelectedProject();
+		}
+
+		private void border7_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+			selectedIndex = 7;
+			SetSelectedProject();
+		}
+
+		private void border8_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+			selectedIndex = 8;
+			SetSelectedProject();
+		}
+
+		private void border9_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+			selectedIndex = 9;
+			SetSelectedProject();
+		}
+
+		private void border10_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+			selectedIndex = 10;
+			SetSelectedProject();
 		}
 	}
 }
