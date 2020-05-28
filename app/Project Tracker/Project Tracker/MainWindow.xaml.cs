@@ -448,6 +448,8 @@ namespace Project_Tracker {
 				selectedIndex = 0;
 			}
 
+			SaveSettings();
+
 			// Read the values from this project
 			if (selectedIndex != 0) {
 				noProjectsGrid.Visibility = Visibility.Hidden;
@@ -796,14 +798,6 @@ namespace Project_Tracker {
 		}
 
 		/// <summary>
-		/// Launches AddProgram.
-		/// </summary>
-		private void AddProgram(object sender, MouseButtonEventArgs e) {
-			AddNewProgram newProgram = new AddNewProgram();
-			newProgram.Show();
-		}
-
-		/// <summary>
 		/// Closes threads and shuts down the program.
 		/// </summary>
 		private void Window_Closing(object sender, CancelEventArgs e) {
@@ -898,36 +892,13 @@ namespace Project_Tracker {
 				completedTaskSwitchLabel.Content = "Incomplete tasks";
 			}
 
-
-			// Save everything to the settings file
-			StringBuilder sb = new StringBuilder();
-			StringWriter sw = new StringWriter(sb);
-			using (JsonWriter js = new JsonTextWriter(sw)) {
-				js.Formatting = Formatting.Indented;
-
-				js.WriteStartObject();
-
-				// LastSelectedIndex
-				js.WritePropertyName("LastSelectedIndex");
-				js.WriteValue(selectedIndex);
-
-				// DisplayingCompleted
-				js.WritePropertyName("DisplayingCompleted");
-				if (isCompletedTasksShown) {
-					js.WriteValue("true");
-				}
-				else {
-					js.WriteValue("false");
-				}
-
-				js.WriteEndObject();
-			}
-
-			File.WriteAllText(SETTINGS_FILE, sw.ToString());
-			sb.Clear();
-			sw.Close();
+			SaveSettings();
 		}
 
+		/// <summary>
+		/// When the user clicks on the icon of the program.
+		/// We want to open the change icon dialog.
+		/// </summary>
 		private void displayingImage_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
 			if (!isIconSelecting) { // Display icon selector window
 				Thread thread = new Thread(() => {
@@ -1019,8 +990,17 @@ namespace Project_Tracker {
 		}
 		#endregion
 
+		/// <summary>
+		/// Change the icon for the project.
+		/// </summary>
+		/// <param name="selectedIcon">The icon to change to.</param>
 		private void SetProjectIcon(string selectedIcon) {
-			displayingImage.Source = (ImageSource)TryFindResource(selectedIcon);
+			if (selectedIcon == "rustIcon") {
+				displayingImage.Source = (ImageSource)TryFindResource("blackRustIcon");
+			}
+			else {
+				displayingImage.Source = (ImageSource)TryFindResource(selectedIcon);
+			}
 			icon = selectedIcon;
 
 			Save(filesRead[selectedIndex - 1]);
@@ -1143,11 +1123,105 @@ namespace Project_Tracker {
 			sw.Close();
 		}
 
+		/// <summary>
+		/// Saves the settings for the project.
+		/// </summary>
+		private void SaveSettings() {
+			StringBuilder sb = new StringBuilder();
+			StringWriter sw = new StringWriter(sb);
+			using (JsonWriter js = new JsonTextWriter(sw)) {
+				js.Formatting = Formatting.Indented;
+
+				js.WriteStartObject();
+
+				// LastSelectedIndex
+				js.WritePropertyName("LastSelectedIndex");
+				js.WriteValue(selectedIndex);
+
+				// DisplayingCompleted
+				js.WritePropertyName("DisplayingCompleted");
+				if (isCompletedTasksShown) {
+					js.WriteValue("true");
+				}
+				else {
+					js.WriteValue("false");
+				}
+
+				js.WriteEndObject();
+			}
+
+			File.WriteAllText(SETTINGS_FILE, sw.ToString());
+			sb.Clear();
+			sw.Close();
+		}
+
+		#region Icon clicks
 		private void pythonIconMouseDown(object sender, MouseButtonEventArgs e) {
 			SetProjectIcon("pythonIcon");
 		}
 		private void javascriptIconMouseDown(object sender, MouseButtonEventArgs e) {
-
+			SetProjectIcon("javascriptIcon");
 		}
+		private void javaIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("javaIcon");
+		}
+		private void csharpIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("csharpIcon");
+		}
+		private void cplusplusIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("cplusplusIcon");
+		}
+		private void htmlIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("htmlIcon");
+		}
+		private void kotlinIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("kotlinIcon");
+		}
+		private void goIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("goIcon");
+		}
+		private void swiftIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("swiftIcon");
+		}
+		private void rustIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("rustIcon");
+		}
+		private void rubyIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("rubyIcon");
+		}
+		private void objectiveCIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("objective_cIcon");
+		}
+		private void cIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("cIcon");
+		}
+		private void visualBasicMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("visual_basicIcon");
+		}
+		private void rIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("rIcon");
+		}
+		private void phpIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("phpIcon");
+		}
+		private void sqlIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("sqlIcon");
+		}
+		private void groovyIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("groovyIcon");
+		}
+		private void perlIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("perlIcon");
+		}
+		private void dartIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("dartIcon");
+		}
+		private void githubIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("githubDrawingImage");
+		}
+		private void checkboxIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("checked_checkedboxDrawingImage");
+		}
+		#endregion
 	}
 }

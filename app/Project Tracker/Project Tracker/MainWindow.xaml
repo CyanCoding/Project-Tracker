@@ -278,74 +278,74 @@
 							<Image Source="{StaticResource javascriptIcon}" Height="44" Width="45" PreviewMouseDown="javascriptIconMouseDown"/>
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="130,10,10,10" Cursor="Hand">
-							<Image Source="{StaticResource javaIcon}" Height="44" Width="45"/>
+							<Image Source="{StaticResource javaIcon}" Height="44" Width="45" PreviewMouseDown="javaIconMouseDown"/>
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="190,10,10,10" Cursor="Hand">
-							<Image Source="{StaticResource csharpIcon}" Height="44" Width="45"/>
+							<Image Source="{StaticResource csharpIcon}" Height="44" Width="45" PreviewMouseDown="csharpIconMouseDown"/>
 						</Canvas>
 						
 						<!-- Second row -->
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,70,10,10" Cursor="Hand">
-							<Image Source="{StaticResource cplusplusIcon}" Height="44" Width="45"/>
+							<Image Source="{StaticResource cplusplusIcon}" Height="44" Width="45" PreviewMouseDown="cplusplusIconMouseDown"/>
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="70,70,10,10" Cursor="Hand">
-							<Image Source="{StaticResource htmlIcon}" Height="44" Width="45"/>
+							<Image Source="{StaticResource htmlIcon}" Height="44" Width="45" PreviewMouseDown="htmlIconMouseDown"/>
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="130,70,10,10" Cursor="Hand">
-							<Image Source="{StaticResource kotlinIcon}" Height="44" Width="45"/>
+							<Image Source="{StaticResource kotlinIcon}" Height="44" Width="45" PreviewMouseDown="kotlinIconMouseDown"/>
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="190,70,10,10" Cursor="Hand">
-							<Image Source="{StaticResource goIcon}" Height="44" Width="45"/>
+							<Image Source="{StaticResource goIcon}" Height="44" Width="45" PreviewMouseDown="goIconMouseDown"/>
 						</Canvas>
 						
 						<!-- Third row -->
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,130,10,10" Cursor="Hand">
-							<Image Source="{StaticResource swiftIcon}" Height="44" Width="45"/>
+							<Image Source="{StaticResource swiftIcon}" Height="44" Width="45" PreviewMouseDown="swiftIconMouseDown"/>
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="70,130,10,10" Cursor="Hand">
-							<Image Source="{StaticResource blackRustIcon}" Height="44" Width="45"/>
+							<Image Source="{StaticResource blackRustIcon}" Height="44" Width="45" PreviewMouseDown="rustIconMouseDown"/>
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="130,130,10,10" Cursor="Hand">
-							<Image Source="{StaticResource rubyIcon}" Height="44" Width="45"/>
+							<Image Source="{StaticResource rubyIcon}" Height="44" Width="45" PreviewMouseDown="rubyIconMouseDown"/>
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="190,130,10,10" Cursor="Hand">
-							<Image Source="{StaticResource objective_cIcon}" Height="44" Width="45"/>
+							<Image Source="{StaticResource objective_cIcon}" Height="44" Width="45" PreviewMouseDown="objectiveCIconMouseDown"/>
 						</Canvas>
 						
 						<!-- Fourth row -->
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,190,10,10" Cursor="Hand">
-							<Image Source="{StaticResource cIcon}" Height="44" Width="45"/>
+							<Image Source="{StaticResource cIcon}" Height="44" Width="45" PreviewMouseDown="cIconMouseDown"/>
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="70,190,10,10" Cursor="Hand">
-							<Image Source="{StaticResource visual_basicIcon}" Height="44" Width="45"/>
+							<Image Source="{StaticResource visual_basicIcon}" Height="44" Width="45" PreviewMouseDown="visualBasicMouseDown"/>
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="130,190,10,10" Cursor="Hand">
-							<Image Source="{StaticResource rIcon}" Height="44" Width="45"/>
+							<Image Source="{StaticResource rIcon}" Height="44" Width="45" PreviewMouseDown="rIconMouseDown"/>
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="190,190,10,10" Cursor="Hand">
-							<Image Source="{StaticResource phpIcon}" Height="44" Width="45"/>
+							<Image Source="{StaticResource phpIcon}" Height="44" Width="45" PreviewMouseDown="phpIconMouseDown"/>
 						</Canvas>
 						
 						<!-- Fifth row -->
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,250,10,10" Cursor="Hand">
-							<Image Source="{StaticResource sqlIcon}" Height="44" Width="45"/>
+							<Image Source="{StaticResource sqlIcon}" Height="44" Width="45" PreviewMouseDown="sqlIconMouseDown"/>
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="70,250,10,10" Cursor="Hand">
-							<Image Source="{StaticResource groovyIcon}" Height="44" Width="45"/>
+							<Image Source="{StaticResource groovyIcon}" Height="44" Width="45" PreviewMouseDown="groovyIconMouseDown"/>
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="130,250,10,10" Cursor="Hand">
-							<Image Source="{StaticResource perlIcon}" Height="44" Width="45"/>
+							<Image Source="{StaticResource perlIcon}" Height="44" Width="45" PreviewMouseDown="perlIconMouseDown"/>
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="190,250,10,10" Cursor="Hand">
-							<Image Source="{StaticResource dartIcon}" Height="44" Width="45"/>
+							<Image Source="{StaticResource dartIcon}" Height="44" Width="45" PreviewMouseDown="dartIconMouseDown"/>
 						</Canvas>
 						
 						<!-- Sixth row -->
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,310,10,10" Cursor="Hand">
-							<Image Source="{StaticResource githubDrawingImage}" Height="44" Width="45"/>
+							<Image Source="{StaticResource githubDrawingImage}" Height="44" Width="45" PreviewMouseDown="githubIconMouseDown"/>
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="70,310,10,10" Cursor="Hand">
-							<Image Source="{StaticResource checked_checkedboxDrawingImage}" Height="44" Width="45"/>
+							<Image Source="{StaticResource checked_checkedboxDrawingImage}" Height="44" Width="45" PreviewMouseDown="checkboxIconMouseDown"/>
 						</Canvas>
 					</Grid>
 				</ScrollViewer>
