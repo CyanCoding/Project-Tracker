@@ -342,9 +342,6 @@ ASALocalRun/
 healthchecksdb
 
 *.sln
-*.ico
-*.png
-*.dll
 *.settings
 *.resx
 Properties/
