@@ -25,7 +25,7 @@ date will be posted allowing you to stay up to date with when new updates will b
 - [x] Allow deleting of items in the add-program tables.
 
 ### v2.0:
-**Estimated release date:** `June 10th, 2020`
+**Estimated release date:** `June 25th, 2020`
 
 - [ ] Create a better design for main window.
 - [ ] Add a settings menu.
