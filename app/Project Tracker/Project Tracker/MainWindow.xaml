@@ -239,7 +239,7 @@
 
 		<!-- The view if there is proejcts made -->
 		<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="400,31,0,0">
-			<Image x:Name="displayingImage"  Source="{StaticResource javaIcon}" Height="45" Width="45" Visibility="Visible" PreviewMouseDown="displayingImage_PreviewMouseDown"/>
+			<Image x:Name="displayingImage"  Source="{StaticResource javaIcon}" Height="45" Width="45" Visibility="Visible" PreviewMouseDown="displayingImage_PreviewMouseDown" Cursor="Hand"/>
 		</Canvas>
 
 		<Label x:Name="displayingTitle" VerticalContentAlignment="Top" HorizontalAlignment="Left" Content="Project Tracker" FontSize="40" Margin="450,21,0,7" FontWeight="Medium" Visibility="Visible"/>
@@ -272,10 +272,10 @@
 					<Grid>
 						<!-- First row -->
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,10,10,10" Cursor="Hand">
-							<Image Source="{StaticResource pythonIcon}" Height="44" Width="45"/>
+							<Image Source="{StaticResource pythonIcon}" Height="44" Width="45" PreviewMouseDown="pythonIconMouseDown"/>
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="70,10,10,10" Cursor="Hand">
-							<Image Source="{StaticResource javascriptIcon}" Height="44" Width="45"/>
+							<Image Source="{StaticResource javascriptIcon}" Height="44" Width="45" PreviewMouseDown="javascriptIconMouseDown"/>
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="130,10,10,10" Cursor="Hand">
 							<Image Source="{StaticResource javaIcon}" Height="44" Width="45"/>

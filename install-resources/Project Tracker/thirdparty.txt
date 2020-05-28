@@ -112,3 +112,9 @@ Kotlin Programming Icon
 -----------------------
 This software uses the Kotlin icon icon by Icons8.
 <https://icons8.com/icons/set/kotlin>
+
+
+GitHub Icon
+-----------
+This software uses the Github icon icon by Icons8.
+<https://icons8.com/icons/set/github>

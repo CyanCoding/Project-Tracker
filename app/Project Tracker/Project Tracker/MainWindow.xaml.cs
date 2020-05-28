@@ -17,23 +17,29 @@ using System.Windows.Media.Imaging;
 namespace Project_Tracker {
 
 	public partial class MainWindow : UWPHost.Window {
-		private int filesUpdate = 0;
-		private bool addedProgram = false; // We do this so that we can only open a program if there is one to prevent an error
-		private List<string> tableValues = new List<string>();
 		public List<string> filesRead = new List<string>();
 		private int itemsAdded = 0; // The amount of items added to the scrollviewer
 		private bool isCompletedTasksShown = false;
 		private bool isSwitchingAnimationRunning = false; // Keeps the user from double clicking the animation
 		private int selectedIndex = 0;
 		private bool isIconSelecting = false;
-		
+
+		// Each project's data - Used for saving
+		private string title;
+		private List<string> errors = new List<string>();
+		private List<string> errorsData = new List<string>();
+		private List<string> features = new List<string>();
+		private List<string> featuresData = new List<string>();
+		private List<string> comments = new List<string>();
+		private List<string> commentsData = new List<string>();
+		private string duration;
+		private string icon;
+		private string percent;
+
 
 		// WARNING: READONLY VALUES. IF YOU CHANGE THESE, CHANGE IN OTHER FILES AS WELL
-		private readonly Color selectionColor = Color.FromRgb(84, 207, 255);
 		private readonly Color itemColor = Color.FromRgb(60, 60, 60);
 		private readonly Color labelTextColor = Color.FromRgb(255, 255, 255);
-		private readonly Color sortColor = Color.FromRgb(228, 233, 235);
-		private readonly FontFamily textFont = new FontFamily("Microsoft Sans Serif");
 		private readonly string pathExtension = "*.json";
 		private readonly string DATA_DIRECTORY = 
 			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) 
@@ -179,7 +185,141 @@ namespace Project_Tracker {
 		}
 
 		/// <summary>
-		/// Loads a project to the window.
+		/// Loads a project into the border window.
+		/// </summary>
+		/// <param name="projectTitle">The title of the adding project.</param>
+		/// <param name="projectIcon">The icon for the adding project.</param>
+		/// <param name="projectPercent">The percent of the adding project.</param>
+		/// <param name="index">The index of the adding project.</param>
+		private void AddProjectToWindow(string projectTitle, string projectIcon,
+			string projectPercent, int index) {
+
+			switch (index) {
+				case 1:
+					if (projectIcon == "noIcon") {
+						image1.Source = (ImageSource)TryFindResource("checked_checkedboxDrawingImage");
+					}
+					else {
+						image1.Source = (ImageSource)TryFindResource(projectIcon);
+					}
+
+					name1.Content = projectTitle;
+					percent1.Content = projectPercent + "%";
+					border1.Visibility = Visibility.Visible;
+					break;
+				case 2:
+					if (projectIcon == "noIcon") {
+						image2.Source = (ImageSource)TryFindResource("checked_checkedboxDrawingImage");
+					}
+					else {
+						image2.Source = (ImageSource)TryFindResource(projectIcon);
+					}
+
+					name2.Content = projectTitle;
+					percent2.Content = projectPercent + "%";
+					border2.Visibility = Visibility.Visible;
+					break;
+				case 3:
+					if (projectIcon == "noIcon") {
+						image3.Source = (ImageSource)TryFindResource("checked_checkedboxDrawingImage");
+					}
+					else {
+						image3.Source = (ImageSource)TryFindResource(projectIcon);
+					}
+
+					name3.Content = projectTitle;
+					percent3.Content = projectPercent + "%";
+					border3.Visibility = Visibility.Visible;
+					break;
+				case 4:
+					if (projectIcon == "noIcon") {
+						image4.Source = (ImageSource)TryFindResource("checked_checkedboxDrawingImage");
+					}
+					else {
+						image4.Source = (ImageSource)TryFindResource(projectIcon);
+					}
+
+					name4.Content = projectTitle;
+					percent4.Content = projectPercent + "%";
+					border4.Visibility = Visibility.Visible;
+					break;
+				case 5:
+					if (projectIcon == "noIcon") {
+						image5.Source = (ImageSource)TryFindResource("checked_checkedboxDrawingImage");
+					}
+					else {
+						image5.Source = (ImageSource)TryFindResource(projectIcon);
+					}
+
+					name5.Content = projectTitle;
+					percent5.Content = projectPercent + "%";
+					border5.Visibility = Visibility.Visible;
+					break;
+				case 6:
+					if (projectIcon == "noIcon") {
+						image6.Source = (ImageSource)TryFindResource("checked_checkedboxDrawingImage");
+					}
+					else {
+						image6.Source = (ImageSource)TryFindResource(projectIcon);
+					}
+
+					name6.Content = projectTitle;
+					percent6.Content = projectPercent + "%";
+					border6.Visibility = Visibility.Visible;
+					break;
+				case 7:
+					if (projectIcon == "noIcon") {
+						image7.Source = (ImageSource)TryFindResource("checked_checkedboxDrawingImage");
+					}
+					else {
+						image7.Source = (ImageSource)TryFindResource(projectIcon);
+					}
+
+					name7.Content = projectTitle;
+					percent7.Content = projectPercent + "%";
+					border7.Visibility = Visibility.Visible;
+					break;
+				case 8:
+					if (projectIcon == "noIcon") {
+						image8.Source = (ImageSource)TryFindResource("checked_checkedboxDrawingImage");
+					}
+					else {
+						image8.Source = (ImageSource)TryFindResource(projectIcon);
+					}
+
+					name8.Content = projectTitle;
+					percent8.Content = projectPercent + "%";
+					border8.Visibility = Visibility.Visible;
+					break;
+				case 9:
+					if (projectIcon == "noIcon") {
+						image9.Source = (ImageSource)TryFindResource("checked_checkedboxDrawingImage");
+					}
+					else {
+						image9.Source = (ImageSource)TryFindResource(projectIcon);
+					}
+
+					name9.Content = projectTitle;
+					percent9.Content = projectPercent + "%";
+					border9.Visibility = Visibility.Visible;
+					break;
+				case 10:
+					if (projectIcon == "noIcon") {
+						image10.Source = (ImageSource)TryFindResource("checked_checkedboxDrawingImage");
+					}
+					else {
+						image10.Source = (ImageSource)TryFindResource(projectIcon);
+					}
+
+					name10.Content = projectTitle;
+					percent10.Content = projectPercent + "%";
+					border10.Visibility = Visibility.Visible;
+					break;
+			}
+		}
+
+		/// <summary>
+		/// Sets the variables for the project to allow easy saving.
 		/// </summary>
 		/// <param name="title">The project title.</param>
 		/// <param name="errors">The project errors.</param>
@@ -191,73 +331,41 @@ namespace Project_Tracker {
 		/// <param name="duration">The project duration.</param>
 		/// <param name="icon">The project icon.</param>
 		/// <param name="percent">The project percent complete.</param>
-		/// <param name="index">The project index number.</param>
-		private void AddProjectToWindow(string title, string[] errors, string[] errorsData,
-			string[] features, string[] featuresData, string[] comments,
-			string[] commentsData, string duration, string icon, string percent, int index) {
+		private void SetProjectValues(string projectTitle, string[] projectErrors, 
+			string[] projectErrorsData, string[] projectFeatures, 
+			string[] projectFeaturesData, string[] projectComments, 
+			string[] projectCommentsData, string projectDuration, string projectIcon, 
+			string projectPercent) {
+			title = projectTitle;
 
-			switch (index) {
-				case 1:
-					image1.Source = (ImageSource)TryFindResource(icon);
-					name1.Content = title;
-					percent1.Content = percent + "%";
-					border1.Visibility = Visibility.Visible;
-					break;
-				case 2:
-					image2.Source = (ImageSource)TryFindResource(icon);
-					name2.Content = title;
-					percent2.Content = percent + "%";
-					border2.Visibility = Visibility.Visible;
-					break;
-				case 3:
-					image3.Source = (ImageSource)TryFindResource(icon);
-					name3.Content = title;
-					percent3.Content = percent + "%";
-					border3.Visibility = Visibility.Visible;
-					break;
-				case 4:
-					image4.Source = (ImageSource)TryFindResource(icon);
-					name4.Content = title;
-					percent4.Content = percent + "%";
-					border4.Visibility = Visibility.Visible;
-					break;
-				case 5:
-					image5.Source = (ImageSource)TryFindResource(icon);
-					name5.Content = title;
-					percent5.Content = percent + "%";
-					border5.Visibility = Visibility.Visible;
-					break;
-				case 6:
-					image6.Source = (ImageSource)TryFindResource(icon);
-					name6.Content = title;
-					percent6.Content = percent + "%";
-					border6.Visibility = Visibility.Visible;
-					break;
-				case 7:
-					image7.Source = (ImageSource)TryFindResource(icon);
-					name7.Content = title;
-					percent7.Content = percent + "%";
-					border7.Visibility = Visibility.Visible;
-					break;
-				case 8:
-					image8.Source = (ImageSource)TryFindResource(icon);
-					name8.Content = title;
-					percent8.Content = percent + "%";
-					border8.Visibility = Visibility.Visible;
-					break;
-				case 9:
-					image9.Source = (ImageSource)TryFindResource(icon);
-					name9.Content = title;
-					percent9.Content = percent + "%";
-					border9.Visibility = Visibility.Visible;
-					break;
-				case 10:
-					image10.Source = (ImageSource)TryFindResource(icon);
-					name10.Content = title;
-					percent10.Content = percent + "%";
-					border10.Visibility = Visibility.Visible;
-					break;
+			errors.Clear();
+			foreach (string error in projectErrors) {
+				errors.Add(error);
 			}
+			errorsData.Clear();
+			foreach (string errorData in projectErrorsData) {
+				errorsData.Add(errorData);
+			}
+			features.Clear();
+			foreach (string feature in projectFeatures) {
+				features.Add(feature);
+			}
+			featuresData.Clear();
+			foreach (string featureData in projectFeaturesData) {
+				featuresData.Add(featureData);
+			}
+			comments.Clear();
+			foreach (string comment in projectComments) {
+				comments.Add(comment);
+			}
+			commentsData.Clear();
+			foreach (string commentData in projectCommentsData) {
+				commentsData.Add(commentData);
+			}
+
+			duration = projectDuration;
+			icon = projectIcon;
+			percent = projectPercent;
 		}
 
 		/// <summary>
@@ -352,12 +460,20 @@ namespace Project_Tracker {
 				MainTableManifest.Rootobject projectInfo =
 					JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
 
+				SetProjectValues(projectInfo.Title, projectInfo.Errors, projectInfo.ErrorsData,
+					projectInfo.Features, projectInfo.FeaturesData, projectInfo.Comments,
+					projectInfo.CommentsData, projectInfo.Duration, projectInfo.Icon,
+					projectInfo.Percent);
+
 				// Set values
 				displayingTitle.Content = projectInfo.Title;
 				if (projectInfo.Icon == "rustIcon") { 
 					// Our default rust icon is white so we need to use the
 					// black one for the display image
 					displayingImage.Source = (ImageSource)TryFindResource("blackRustIcon");
+				}
+				else if (projectInfo.Icon == "noIcon") {
+					displayingImage.Source = (ImageSource)TryFindResource("checked_checkedboxDrawingImage");
 				}
 				else {
 					displayingImage.Source = (ImageSource)TryFindResource(projectInfo.Icon);
@@ -639,10 +755,7 @@ namespace Project_Tracker {
 								break;
 							}
 
-							AddProjectToWindow(mainTable.Title, mainTable.Errors, mainTable.ErrorsData,
-								mainTable.Features, mainTable.FeaturesData, mainTable.Comments,
-								mainTable.CommentsData, mainTable.Duration, mainTable.Icon,
-								mainTable.Percent, index);
+							AddProjectToWindow(mainTable.Title, mainTable.Icon, mainTable.Percent, index);
 							filesRead.Add(path);
 						}
 							
@@ -816,11 +929,9 @@ namespace Project_Tracker {
 		}
 
 		private void displayingImage_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
-			if (!isIconSelecting) {
-				Thread thread = new Thread(() =>
-				{
-					Dispatcher.Invoke(new Action(() =>
-					{
+			if (!isIconSelecting) { // Display icon selector window
+				Thread thread = new Thread(() => {
+					Dispatcher.Invoke(new Action(() => {
 						isIconSelecting = true;
 
 						iconSelectBorder.Visibility = Visibility.Visible;
@@ -837,7 +948,7 @@ namespace Project_Tracker {
 			}
 		}
 		private void Window_MouseDown(object sender, MouseButtonEventArgs e) {
-			if (isIconSelecting) {
+			if (isIconSelecting) { // Hide the icon selector window if they click out
 				Dispatcher.Invoke(new Action(() => {
 					isIconSelecting = false;
 
@@ -856,6 +967,7 @@ namespace Project_Tracker {
 			
 		}
 
+		#region Border onclicks
 		private void border1_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
 			selectedIndex = 1;
 			SetSelectedProject();
@@ -904,6 +1016,138 @@ namespace Project_Tracker {
 		private void border10_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
 			selectedIndex = 10;
 			SetSelectedProject();
+		}
+		#endregion
+
+		private void SetProjectIcon(string selectedIcon) {
+			displayingImage.Source = (ImageSource)TryFindResource(selectedIcon);
+			icon = selectedIcon;
+
+			Save(filesRead[selectedIndex - 1]);
+
+			// Set the icon in the project borders
+			if (selectedIndex == 1) {
+				image1.Source = (ImageSource)TryFindResource(selectedIcon);
+			}
+			else if (selectedIndex == 2) {
+				image2.Source = (ImageSource)TryFindResource(selectedIcon);
+			}
+			else if (selectedIndex == 3) {
+				image3.Source = (ImageSource)TryFindResource(selectedIcon);
+			}
+			else if (selectedIndex == 4) {
+				image4.Source = (ImageSource)TryFindResource(selectedIcon);
+			}
+			else if (selectedIndex == 5) {
+				image5.Source = (ImageSource)TryFindResource(selectedIcon);
+			}
+			else if (selectedIndex == 6) {
+				image6.Source = (ImageSource)TryFindResource(selectedIcon);
+			}
+			else if (selectedIndex == 7) {
+				image7.Source = (ImageSource)TryFindResource(selectedIcon);
+			}
+			else if (selectedIndex == 8) {
+				image8.Source = (ImageSource)TryFindResource(selectedIcon);
+			}
+			else if (selectedIndex == 9) {
+				image9.Source = (ImageSource)TryFindResource(selectedIcon);
+			}
+			else if (selectedIndex == 10) {
+				image10.Source = (ImageSource)TryFindResource(selectedIcon);
+			}
+
+			// Hide icon window
+			Dispatcher.Invoke(new Action(() => {
+				isIconSelecting = false;
+
+				DoubleAnimation animation = new DoubleAnimation();
+				animation.From = 250;
+				animation.To = 0;
+				animation.Duration = TimeSpan.FromSeconds(0.2);
+
+				iconSelectBorder.BeginAnimation(HeightProperty, animation);
+			}));
+		}
+
+		/// <summary>
+		/// Saves the project at the provided path.
+		/// </summary>
+		/// <param name="filePath">The path to save to.</param>
+		private void Save(string filePath) {
+			StringBuilder sb = new StringBuilder();
+			StringWriter sw = new StringWriter(sb);
+
+			using (JsonWriter js = new JsonTextWriter(sw)) {
+				js.Formatting = Formatting.Indented;
+
+				js.WriteStartObject();
+
+				js.WritePropertyName("Title");
+				js.WriteValue(title);
+
+				js.WritePropertyName("Errors");
+				js.WriteStartArray();
+				foreach (string error in errors) {
+					js.WriteValue(error);
+				}
+				js.WriteEnd();
+
+				js.WritePropertyName("ErrorsData");
+				js.WriteStartArray();
+				foreach (string errorData in errorsData) {
+					js.WriteValue(errorData);
+				}
+				js.WriteEnd();
+
+				js.WritePropertyName("Features");
+				js.WriteStartArray();
+				foreach (string feature in features) {
+					js.WriteValue(feature);
+				}
+				js.WriteEnd();
+
+				js.WritePropertyName("FeaturesData");
+				js.WriteStartArray();
+				foreach (string featureData in featuresData) {
+					js.WriteValue(featureData);
+				}
+				js.WriteEnd();
+
+				js.WritePropertyName("Comments");
+				js.WriteStartArray();
+				foreach (string comment in comments) {
+					js.WriteValue(comment);
+				}
+				js.WriteEnd();
+
+				js.WritePropertyName("CommentsData");
+				js.WriteStartArray();
+				foreach (string commentData in commentsData) {
+					js.WriteValue(commentData);
+				}
+				js.WriteEnd();
+
+				js.WritePropertyName("Duration");
+				js.WriteValue(duration);
+				js.WritePropertyName("Icon");
+				js.WriteValue(icon);
+				js.WritePropertyName("Percent");
+				js.WriteValue("00");
+
+				js.WriteEndObject();
+			}
+
+			File.WriteAllText(filePath, sw.ToString());
+			sb.Clear();
+			sw.Close();
+		}
+
+		private void pythonIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("pythonIcon");
+		}
+		private void javascriptIconMouseDown(object sender, MouseButtonEventArgs e) {
+
 		}
 	}
 }
