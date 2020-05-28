@@ -25,14 +25,14 @@ date will be posted allowing you to stay up to date with when new updates will b
 - [x] Allow deleting of items in the add-program tables.
 
 ### v2.0:
-**Estimated release date:** `June 10th, 2020`
+**Estimated release date:** `June 25th, 2020`
 
-- [x] Create a better design for main window.
-- [x] Add a settings menu.
-- [x] Create a dark theme.
-- [x] Allow users to check for updates after the app is opened.
-- [x] A more subtle way of displaying an update.
-- [x] A way to see the language for each project.
+- [ ] Create a better design for main window.
+- [ ] Add a settings menu.
+- [ ] Create a dark theme.
+- [ ] Allow users to check for updates after the app is opened.
+- [ ] A more subtle way of displaying an update.
+- [ ] A way to see the language for each project.
 - [ ] Allow resizing of windows.
 - [ ] Allow users to install pre-releases automatically from the app.
 
