@@ -48,7 +48,8 @@ namespace Project_Tracker {
 			"https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/version.json";
 		private readonly string VERSION_INFO = Environment.GetFolderPath
 			(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/version.json";
-		private readonly string CURRENT_VERSION = "1.5"; // IF YOU CHANGE THIS, ALSO CHANGE IT IN UpdateWindow.xaml.cs
+		private readonly string CURRENT_VERSION = "1.4"; // IF YOU CHANGE THIS, ALSO CHANGE IT IN UpdateWindow.xaml.cs
+		private readonly bool IS_BETA = true; // IF YOU CHANGE THE VERSION, CHANGE WHETHER IT'S BETA OR NOT
 		private readonly string APPDATA_DIRECTORY =
 			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
 			+ "/Project Tracker";
@@ -562,7 +563,13 @@ namespace Project_Tracker {
 				}
 			}
 
-			versionLabel.Content = "Version " + CURRENT_VERSION;
+			if (IS_BETA) {
+				versionLabel.Content = "Version " + CURRENT_VERSION + " (beta)";
+			}
+			else {
+				versionLabel.Content = "Version " + CURRENT_VERSION;
+			}
+			
 
 			try {
 				string[] files = Directory.GetFiles(DATA_DIRECTORY, 
