@@ -25,6 +25,7 @@ namespace Project_Tracker {
 		private bool isCompletedTasksShown = false;
 		private bool isSwitchingAnimationRunning = false; // Keeps the user from double clicking the animation
 		private int selectedIndex = 0;
+		private bool isIconSelecting = false;
 		
 
 		// WARNING: READONLY VALUES. IF YOU CHANGE THESE, CHANGE IN OTHER FILES AS WELL
@@ -353,7 +354,15 @@ namespace Project_Tracker {
 
 				// Set values
 				displayingTitle.Content = projectInfo.Title;
-				displayingImage.Source = (ImageSource)TryFindResource(projectInfo.Icon);
+				if (projectInfo.Icon == "rustIcon") { 
+					// Our default rust icon is white so we need to use the
+					// black one for the display image
+					displayingImage.Source = (ImageSource)TryFindResource("blackRustIcon");
+				}
+				else {
+					displayingImage.Source = (ImageSource)TryFindResource(projectInfo.Icon);
+				}
+				
 
 				for (int i = 0; i < projectInfo.Errors.Length; i++) {
 					if (projectInfo.ErrorsData[i] == "0") { // It's not a completed task
@@ -805,6 +814,43 @@ namespace Project_Tracker {
 			sb.Clear();
 			sw.Close();
 		}
+
+		private void displayingImage_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
+			if (!isIconSelecting) {
+				Thread thread = new Thread(() =>
+				{
+					Dispatcher.Invoke(new Action(() =>
+					{
+						isIconSelecting = true;
+
+						iconSelectBorder.Visibility = Visibility.Visible;
+
+						DoubleAnimation animation = new DoubleAnimation();
+						animation.From = 0;
+						animation.To = 250;
+						animation.Duration = TimeSpan.FromSeconds(0.2);
+
+						iconSelectBorder.BeginAnimation(HeightProperty, animation);
+					}));
+				});
+				thread.Start();
+			}
+		}
+		private void Window_MouseDown(object sender, MouseButtonEventArgs e) {
+			if (isIconSelecting) {
+				Dispatcher.Invoke(new Action(() => {
+					isIconSelecting = false;
+
+					DoubleAnimation animation = new DoubleAnimation();
+					animation.From = 250;
+					animation.To = 0;
+					animation.Duration = TimeSpan.FromSeconds(0.2);
+
+					iconSelectBorder.BeginAnimation(HeightProperty, animation);
+				}));
+			}
+		}
+
 
 		private void Window_SizeChanged(object sender, SizeChangedEventArgs e) {
 			

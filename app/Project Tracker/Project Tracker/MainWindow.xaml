@@ -8,7 +8,7 @@
         mc:Ignorable="d"
 		ShowTitlebar="True"
 		Theme="Dark"
-        Title="" Height="800" Width="1200" Icon="icon.ico" PreviewKeyDown="KeyPress" Closing="Window_Closing" SizeChanged="Window_SizeChanged">
+        Title="" Height="800" Width="1200" Icon="icon.ico" PreviewKeyDown="KeyPress" Closing="Window_Closing" SizeChanged="Window_SizeChanged" MouseDown="Window_MouseDown">
 	<!-- If you ever change the logo, it must be 16x, 32x, 48x, 64x, 128x, and 256x. Pack it all into an ico file look up how to do it if you forgot -->
 
 	<uwp:Window.Resources>
@@ -220,7 +220,7 @@
 
 		<!-- Display window content -->
 		<!-- The default view if there's no projects made yet -->
-		<Grid x:Name="noProjectsGrid" Margin="345,115,0,209">
+		<Grid x:Name="noProjectsGrid" Margin="345,115,0,209" Visibility="Hidden">
 			<Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Height="45" Width="45" Margin="0,0,120,140">
 				<Image Source="{StaticResource errorDrawingImage}" Height="44" Width="45"/>
 			</Canvas>
@@ -239,11 +239,12 @@
 
 		<!-- The view if there is proejcts made -->
 		<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="400,31,0,0">
-			<Image x:Name="displayingImage"  Source="{StaticResource javaIcon}" Height="45" Width="45" Visibility="Hidden"/>
+			<Image x:Name="displayingImage"  Source="{StaticResource javaIcon}" Height="45" Width="45" Visibility="Visible" PreviewMouseDown="displayingImage_PreviewMouseDown"/>
 		</Canvas>
-		<Label x:Name="displayingTitle" VerticalContentAlignment="Top" HorizontalAlignment="Left" Content="Project Tracker" FontSize="40" Margin="450,21,0,7" FontWeight="Medium" Visibility="Hidden"/>
+
+		<Label x:Name="displayingTitle" VerticalContentAlignment="Top" HorizontalAlignment="Left" Content="Project Tracker" FontSize="40" Margin="450,21,0,7" FontWeight="Medium" Visibility="Visible"/>
 		<!-- Make sure this has equal padding on all sides -->
-		<ScrollViewer Margin="350,198,0,42" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
+		<ScrollViewer Margin="350,198,0,42" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Visible">
 			<Grid x:Name="scrollviewerGrid" Visibility="Hidden">
 			</Grid>
 		</ScrollViewer>
@@ -261,6 +262,95 @@
 				<Label x:Name="switchButtonLabel" Content="&#xE8AB;" Foreground="White" Margin="0,0,0,0" FontSize="24" FontFamily="Segoe MDL2 Assets" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
 			</Border>
 		</Grid>
+
+		<Border x:Name="iconSelectBorder" CornerRadius="10" HorizontalAlignment="Left" Height="0" Margin="350,65,0,0" VerticalAlignment="Top" Width="260" Background="White" Visibility="Hidden">
+			<Border.Effect>
+				<DropShadowEffect ShadowDepth="1"/>
+			</Border.Effect>
+			<Grid>
+				<ScrollViewer HorizontalAlignment="Left" Height="250" VerticalAlignment="Top" Width="260" VerticalScrollBarVisibility="Visible">
+					<Grid>
+						<!-- First row -->
+						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,10,10,10" Cursor="Hand">
+							<Image Source="{StaticResource pythonIcon}" Height="44" Width="45"/>
+						</Canvas>
+						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="70,10,10,10" Cursor="Hand">
+							<Image Source="{StaticResource javascriptIcon}" Height="44" Width="45"/>
+						</Canvas>
+						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="130,10,10,10" Cursor="Hand">
+							<Image Source="{StaticResource javaIcon}" Height="44" Width="45"/>
+						</Canvas>
+						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="190,10,10,10" Cursor="Hand">
+							<Image Source="{StaticResource csharpIcon}" Height="44" Width="45"/>
+						</Canvas>
+						
+						<!-- Second row -->
+						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,70,10,10" Cursor="Hand">
+							<Image Source="{StaticResource cplusplusIcon}" Height="44" Width="45"/>
+						</Canvas>
+						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="70,70,10,10" Cursor="Hand">
+							<Image Source="{StaticResource htmlIcon}" Height="44" Width="45"/>
+						</Canvas>
+						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="130,70,10,10" Cursor="Hand">
+							<Image Source="{StaticResource kotlinIcon}" Height="44" Width="45"/>
+						</Canvas>
+						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="190,70,10,10" Cursor="Hand">
+							<Image Source="{StaticResource goIcon}" Height="44" Width="45"/>
+						</Canvas>
+						
+						<!-- Third row -->
+						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,130,10,10" Cursor="Hand">
+							<Image Source="{StaticResource swiftIcon}" Height="44" Width="45"/>
+						</Canvas>
+						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="70,130,10,10" Cursor="Hand">
+							<Image Source="{StaticResource blackRustIcon}" Height="44" Width="45"/>
+						</Canvas>
+						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="130,130,10,10" Cursor="Hand">
+							<Image Source="{StaticResource rubyIcon}" Height="44" Width="45"/>
+						</Canvas>
+						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="190,130,10,10" Cursor="Hand">
+							<Image Source="{StaticResource objective_cIcon}" Height="44" Width="45"/>
+						</Canvas>
+						
+						<!-- Fourth row -->
+						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,190,10,10" Cursor="Hand">
+							<Image Source="{StaticResource cIcon}" Height="44" Width="45"/>
+						</Canvas>
+						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="70,190,10,10" Cursor="Hand">
+							<Image Source="{StaticResource visual_basicIcon}" Height="44" Width="45"/>
+						</Canvas>
+						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="130,190,10,10" Cursor="Hand">
+							<Image Source="{StaticResource rIcon}" Height="44" Width="45"/>
+						</Canvas>
+						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="190,190,10,10" Cursor="Hand">
+							<Image Source="{StaticResource phpIcon}" Height="44" Width="45"/>
+						</Canvas>
+						
+						<!-- Fifth row -->
+						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,250,10,10" Cursor="Hand">
+							<Image Source="{StaticResource sqlIcon}" Height="44" Width="45"/>
+						</Canvas>
+						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="70,250,10,10" Cursor="Hand">
+							<Image Source="{StaticResource groovyIcon}" Height="44" Width="45"/>
+						</Canvas>
+						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="130,250,10,10" Cursor="Hand">
+							<Image Source="{StaticResource perlIcon}" Height="44" Width="45"/>
+						</Canvas>
+						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="190,250,10,10" Cursor="Hand">
+							<Image Source="{StaticResource dartIcon}" Height="44" Width="45"/>
+						</Canvas>
+						
+						<!-- Sixth row -->
+						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,310,10,10" Cursor="Hand">
+							<Image Source="{StaticResource githubDrawingImage}" Height="44" Width="45"/>
+						</Canvas>
+						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="70,310,10,10" Cursor="Hand">
+							<Image Source="{StaticResource checked_checkedboxDrawingImage}" Height="44" Width="45"/>
+						</Canvas>
+					</Grid>
+				</ScrollViewer>
+			</Grid>
+		</Border>
 
 		<!-- Update notifier-->
 		<Grid x:Name="updateGrid" HorizontalAlignment="Left" Height="0" VerticalAlignment="Bottom" Margin="-5,0,0,-5" Width="350" Background="#FFE67C11" Visibility="Visible">
