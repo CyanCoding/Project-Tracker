@@ -22,16 +22,14 @@ namespace Project_Tracker {
 		private bool isCompletedTasksShown = false;
 		private bool isSwitchingAnimationRunning = false; // Keeps the user from double clicking the animation
 		private int selectedIndex = 0;
+		private int itemIndex = 0; // We need this to figure out the index of the item
 		private bool isIconSelecting = false;
 
 		// Each project's data - Used for saving
 		private string title;
-		private List<string> errors = new List<string>();
-		private List<string> errorsData = new List<string>();
-		private List<string> features = new List<string>();
-		private List<string> featuresData = new List<string>();
-		private List<string> comments = new List<string>();
-		private List<string> commentsData = new List<string>();
+		private List<string> tasks = new List<string>();
+		private List<string> taskData = new List<string>();
+		private List<string> taskIdentifier = new List<string>();
 		private string duration;
 		private string icon;
 		private string percent;
@@ -109,11 +107,19 @@ namespace Project_Tracker {
 
 			// The checkmark image
 			Image checkmarkImage = new Image();
+			checkmarkImage.Name = "t" + itemIndex.ToString();
 			checkmarkImage.Height = 40;
 			checkmarkImage.Width = 40;
 			Canvas.SetLeft(checkmarkImage, 10);
 			checkmarkImage.Cursor = Cursors.Hand;
-			checkmarkImage.Style = (Style)TryFindResource("checkbox");
+			checkmarkImage.MouseLeftButtonDown += CheckmarkPressed;
+
+			if (!isCompletedTasksShown) {
+				checkmarkImage.Style = (Style)TryFindResource("checkbox");
+			}
+			else {
+				checkmarkImage.Style = (Style)TryFindResource("completedTask");
+			}
 
 			checkmarkCanvas.Children.Add(checkmarkImage);
 
@@ -170,14 +176,14 @@ namespace Project_Tracker {
 		/// Checks each file value for null values.
 		/// </summary>
 		/// <returns>True if no null values, otherwise false.</returns>
-		private bool CheckValues(string title, string[] errors, string[] errorsData,
-			string[] features, string[] featuresData, string[] comments, 
-			string[] commentsData, string duration, string icon, string percent) {
+		private bool CheckValues(string projectTitle, string[] projectTasks,
+			string[] projectData, string[] projectIdentifier, string projectDuration,
+			string projectIcon, string projectPercent) {
 
 
-			if (title == null || errors == null || errorsData == null || features == null
-				|| featuresData == null || comments == null || commentsData == null
-				|| duration == null || icon == null || percent == null) { 
+			if (projectTitle == null || projectTasks == null || projectData == null || 
+				projectIdentifier == null || projectDuration == null || projectIcon == null ||
+				projectPercent == null) { 
 				// Check all strings for null values
 				return false;
 			}
@@ -322,46 +328,29 @@ namespace Project_Tracker {
 		/// <summary>
 		/// Sets the variables for the project to allow easy saving.
 		/// </summary>
-		/// <param name="title">The project title.</param>
-		/// <param name="errors">The project errors.</param>
-		/// <param name="errorsData">The project error data.</param>
-		/// <param name="features">The project features.</param>
-		/// <param name="featuresData">The project feature data.</param>
-		/// <param name="comments">The project comments.</param>
-		/// <param name="commentsData">The project comments data.</param>
-		/// <param name="duration">The project duration.</param>
-		/// <param name="icon">The project icon.</param>
-		/// <param name="percent">The project percent complete.</param>
-		private void SetProjectValues(string projectTitle, string[] projectErrors, 
-			string[] projectErrorsData, string[] projectFeatures, 
-			string[] projectFeaturesData, string[] projectComments, 
-			string[] projectCommentsData, string projectDuration, string projectIcon, 
-			string projectPercent) {
+		/// <param name="projectTitle">The project title.</param>
+		/// <param name="projectTasks">The project's tasks array.</param>
+		/// <param name="projectTasksData">The project's task data array.</param>
+		/// <param name="projectTasksIdentifier">The project's task identifier array.</param>
+		/// <param name="projectDuration">The project's duration.</param>
+		/// <param name="projectIcon">The project's icon.</param>
+		/// <param name="projectPercent">The project's percent.</param>
+		private void SetProjectValues(string projectTitle, string[] projectTasks, 
+			string[] projectTasksData, string[] projectTasksIdentifier, 
+			string projectDuration, string projectIcon, string projectPercent) {
 			title = projectTitle;
 
-			errors.Clear();
-			foreach (string error in projectErrors) {
-				errors.Add(error);
+			tasks.Clear();
+			foreach (string task in projectTasks) {
+				tasks.Add(task);
 			}
-			errorsData.Clear();
-			foreach (string errorData in projectErrorsData) {
-				errorsData.Add(errorData);
+			taskData.Clear();
+			foreach (string data in projectTasksData) {
+				taskData.Add(data);
 			}
-			features.Clear();
-			foreach (string feature in projectFeatures) {
-				features.Add(feature);
-			}
-			featuresData.Clear();
-			foreach (string featureData in projectFeaturesData) {
-				featuresData.Add(featureData);
-			}
-			comments.Clear();
-			foreach (string comment in projectComments) {
-				comments.Add(comment);
-			}
-			commentsData.Clear();
-			foreach (string commentData in projectCommentsData) {
-				commentsData.Add(commentData);
+			taskIdentifier.Clear();
+			foreach (string identifier in projectTasksIdentifier) {
+				taskIdentifier.Add(identifier);
 			}
 
 			duration = projectDuration;
@@ -463,9 +452,8 @@ namespace Project_Tracker {
 				MainTableManifest.Rootobject projectInfo =
 					JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
 
-				SetProjectValues(projectInfo.Title, projectInfo.Errors, projectInfo.ErrorsData,
-					projectInfo.Features, projectInfo.FeaturesData, projectInfo.Comments,
-					projectInfo.CommentsData, projectInfo.Duration, projectInfo.Icon,
+				SetProjectValues(projectInfo.Title, projectInfo.Tasks, projectInfo.TaskData,
+					projectInfo.TaskIdentifier, projectInfo.Duration, projectInfo.Icon,
 					projectInfo.Percent);
 
 				// Set values
@@ -481,22 +469,49 @@ namespace Project_Tracker {
 				else {
 					displayingImage.Source = (ImageSource)TryFindResource(projectInfo.Icon);
 				}
-				
 
-				for (int i = 0; i < projectInfo.Errors.Length; i++) {
-					if (projectInfo.ErrorsData[i] == "0") { // It's not a completed task
-						LoadValues(projectInfo.Errors[i], 0);
+				itemIndex = 0;
+				for (int i = 0; i < projectInfo.Tasks.Length; i++) {
+					itemIndex++;
+					if (projectInfo.TaskData[i] == "0" && !isCompletedTasksShown) { // It's not a completed task
+						LoadValues(projectInfo.Tasks[i], Int32.Parse(taskIdentifier[i]));
+					}
+					else if (projectInfo.TaskData[i] == "1" && isCompletedTasksShown) {
+						LoadValues(projectInfo.Tasks[i], Int32.Parse(taskIdentifier[i]));
 					}
 				}
-				for (int i = 0; i < projectInfo.Features.Length; i++) {
-					if (projectInfo.FeaturesData[i] == "0") { // It's not a completed task
-						LoadValues(projectInfo.Features[i], 1);
-					}
+
+				if (itemsAdded == 0 && !isCompletedTasksShown) {
+					errorCanvas.Margin = new Thickness(0, 0, 120, 20);
+					featureCanvas.Margin = new Thickness(0, 0, 0, 20);
+					commentCanvas.Margin = new Thickness(0, 0, -120, 20);
+
+					noProjectsGrid.Visibility = Visibility.Visible;
+					secondLineLabel.Visibility = Visibility.Visible;
+					thirdLineLabel.Visibility = Visibility.Visible;
+					fourthLineLabel.Visibility = Visibility.Visible;
+
+					firstLineLabel.Visibility = Visibility.Hidden;
+					secondLineLabel.Content = "Everything is finished!";
+					thirdLineLabel.Content = "You don't have any";
+					fourthLineLabel.Content = "tasks for this project.";
+					fifthLineLabel.Visibility = Visibility.Hidden;
 				}
-				for (int i = 0; i < projectInfo.Comments.Length; i++) {
-					if (projectInfo.CommentsData[i] == "0") { // It's not a completed task
-						LoadValues(projectInfo.Comments[i], 2);
-					}
+				else if (itemsAdded == 0 && isCompletedTasksShown) {
+					errorCanvas.Margin = new Thickness(0, 0, 120, 20);
+					featureCanvas.Margin = new Thickness(0, 0, 0, 20);
+					commentCanvas.Margin = new Thickness(0, 0, -120, 20);
+
+					noProjectsGrid.Visibility = Visibility.Visible;
+					secondLineLabel.Visibility = Visibility.Visible;
+					thirdLineLabel.Visibility = Visibility.Visible;
+					fourthLineLabel.Visibility = Visibility.Visible;
+
+					firstLineLabel.Visibility = Visibility.Hidden;
+					secondLineLabel.Content = "There's nothing to see here!";
+					thirdLineLabel.Content = "You haven't completed";
+					fourthLineLabel.Content = "any tasks yet.";
+					fifthLineLabel.Visibility = Visibility.Hidden;
 				}
 			}
 		}
@@ -584,11 +599,9 @@ namespace Project_Tracker {
 							JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
 						
 						bool fileHasAllValues = CheckValues(
-							mainTable.Title, mainTable.Errors, mainTable.ErrorsData,
-							mainTable.Features, mainTable.FeaturesData, mainTable.Comments,
-							mainTable.CommentsData, mainTable.Duration, mainTable.Icon,
-							mainTable.Percent
-							);
+							mainTable.Title, mainTable.Tasks, mainTable.TaskData,
+							mainTable.TaskIdentifier, mainTable.Duration, 
+							mainTable.Icon,	mainTable.Percent);
 
 						if (!fileHasAllValues) {
 							// This is an older file with improper values
@@ -632,49 +645,19 @@ namespace Project_Tracker {
 										js.WriteValue("Untitled project");
 									}
 
-									// Errors
-									js.WritePropertyName("Errors");
+									// The name of each task
+									js.WritePropertyName("Tasks");
 									js.WriteStartArray();
 									if (mainTable.Errors != null) {
 										foreach (string error in mainTable.Errors) {
 											js.WriteValue(error);
 										}
 									}
-									js.WriteEnd();
-
-									// ErrorsData
-									js.WritePropertyName("ErrorsData");
-									js.WriteStartArray();
-									if (mainTable.ErrorsData != null) {
-										foreach (string data in mainTable.ErrorsData) {
-											js.WriteValue(data);
-										}
-									}
-									js.WriteEnd();
-
-									// Features
-									js.WritePropertyName("Features");
-									js.WriteStartArray();
 									if (mainTable.Features != null) {
 										foreach (string feature in mainTable.Features) {
 											js.WriteValue(feature);
 										}
 									}
-									js.WriteEnd();
-									js.WritePropertyName("FeaturesData");
-
-									// FeaturesData
-									js.WriteStartArray();
-									if (mainTable.FeaturesData != null) {
-										foreach (string data in mainTable.FeaturesData) {
-											js.WriteValue(data);
-										}
-									}
-									js.WriteEnd();
-
-									// Comments
-									js.WritePropertyName("Comments");
-									js.WriteStartArray();
 									if (mainTable.Comments != null) {
 										foreach (string comment in mainTable.Comments) {
 											js.WriteValue(comment);
@@ -682,12 +665,42 @@ namespace Project_Tracker {
 									}
 									js.WriteEnd();
 
-									// CommentsData
-									js.WritePropertyName("CommentsData");
+									// The data for each task (0 = incomplete, 1 = complete)
+									js.WritePropertyName("TaskData");
 									js.WriteStartArray();
+									if (mainTable.ErrorsData != null) {
+										foreach (string data in mainTable.ErrorsData) {
+											js.WriteValue(data);
+										}
+									}
+									if (mainTable.FeaturesData != null) {
+										foreach (string data in mainTable.FeaturesData) {
+											js.WriteValue(data);
+										}
+									}
 									if (mainTable.CommentsData != null) {
 										foreach (string data in mainTable.CommentsData) {
 											js.WriteValue(data);
+										}
+									}
+									js.WriteEnd();
+
+									// The identifer for each task (0 = error, 1 = feature, 2 = comment)
+									js.WritePropertyName("TaskIdentifier");
+									js.WriteStartArray();
+									if (mainTable.Errors != null) {
+										for (int i = 0; i < mainTable.Errors.Length; i++) {
+											js.WriteValue("0");
+										}
+									}
+									if (mainTable.Features != null) {
+										for (int i = 0; i < mainTable.Features.Length; i++) {
+											js.WriteValue("1");
+										}
+									}
+									if (mainTable.Comments != null) {
+										for (int i = 0; i < mainTable.Comments.Length; i++) {
+											js.WriteValue("2");
 										}
 									}
 									js.WriteEnd();
@@ -887,8 +900,6 @@ namespace Project_Tracker {
 				thread.Start();
 			}
 
-
-
 			if (!isCompletedTasksShown) {
 				isCompletedTasksShown = true;
 				completedTaskSwitchLabel.Content = "Completed tasks";
@@ -899,6 +910,7 @@ namespace Project_Tracker {
 				completedTaskSwitchLabel.Content = "Incomplete tasks";
 			}
 
+			SetSelectedProject(); // We use this to reset the scrollviewer grid
 			SaveSettings();
 		}
 
@@ -1073,45 +1085,24 @@ namespace Project_Tracker {
 				js.WritePropertyName("Title");
 				js.WriteValue(title);
 
-				js.WritePropertyName("Errors");
+				js.WritePropertyName("Tasks");
 				js.WriteStartArray();
-				foreach (string error in errors) {
-					js.WriteValue(error);
+				foreach (string task in tasks) {
+					js.WriteValue(task);
 				}
 				js.WriteEnd();
 
-				js.WritePropertyName("ErrorsData");
+				js.WritePropertyName("TaskData");
 				js.WriteStartArray();
-				foreach (string errorData in errorsData) {
-					js.WriteValue(errorData);
+				foreach (string data in taskData) {
+					js.WriteValue(data);
 				}
 				js.WriteEnd();
 
-				js.WritePropertyName("Features");
+				js.WritePropertyName("TaskIdentifier");
 				js.WriteStartArray();
-				foreach (string feature in features) {
-					js.WriteValue(feature);
-				}
-				js.WriteEnd();
-
-				js.WritePropertyName("FeaturesData");
-				js.WriteStartArray();
-				foreach (string featureData in featuresData) {
-					js.WriteValue(featureData);
-				}
-				js.WriteEnd();
-
-				js.WritePropertyName("Comments");
-				js.WriteStartArray();
-				foreach (string comment in comments) {
-					js.WriteValue(comment);
-				}
-				js.WriteEnd();
-
-				js.WritePropertyName("CommentsData");
-				js.WriteStartArray();
-				foreach (string commentData in commentsData) {
-					js.WriteValue(commentData);
+				foreach (string identifier in taskIdentifier) {
+					js.WriteValue(identifier);
 				}
 				js.WriteEnd();
 
@@ -1120,7 +1111,7 @@ namespace Project_Tracker {
 				js.WritePropertyName("Icon");
 				js.WriteValue(icon);
 				js.WritePropertyName("Percent");
-				js.WriteValue("00");
+				js.WriteValue(percent);
 
 				js.WriteEndObject();
 			}
@@ -1160,6 +1151,25 @@ namespace Project_Tracker {
 			File.WriteAllText(SETTINGS_FILE, sw.ToString());
 			sb.Clear();
 			sw.Close();
+		}
+
+		private void CheckmarkPressed(object sender, MouseButtonEventArgs e) {
+			Image callingImage = (Image)sender;
+
+			string name = callingImage.Name;
+			name = name.Remove(0, 1); // Removes the t from the name (e.g. t5 -> 5)
+
+			Console.WriteLine(name);
+
+			if (taskData[Int32.Parse(name) - 1] == "1") {
+				taskData[Int32.Parse(name) - 1] = "0";
+			}
+			else {
+				taskData[Int32.Parse(name) - 1] = "1";
+			}
+
+			Save(filesRead[selectedIndex - 1]);
+			SetSelectedProject();
 		}
 
 		#region Icon clicks

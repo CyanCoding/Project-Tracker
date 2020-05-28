@@ -26,6 +26,10 @@
 					</Trigger>
 				</Style.Triggers>
 			</Style>
+			
+			<Style TargetType="{x:Type Image}" x:Key="completedTask">
+				<Setter Property="Image.Source" Value="{StaticResource checked_checkedboxDrawingImage}"/>
+			</Style>
 
 			<Style TargetType="{x:Type Border}" x:Key="hoverOver">
 				<Setter Property="Border.Background" Value="LightGray"/>
@@ -221,30 +225,30 @@
 		<!-- Display window content -->
 		<!-- The default view if there's no projects made yet -->
 		<Grid x:Name="noProjectsGrid" Margin="345,115,0,209" Visibility="Hidden">
-			<Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Height="45" Width="45" Margin="0,0,120,140">
+			<Canvas x:Name="errorCanvas" HorizontalAlignment="Center" VerticalAlignment="Center" Height="45" Width="45" Margin="0,0,120,140">
 				<Image Source="{StaticResource errorDrawingImage}" Height="44" Width="45"/>
 			</Canvas>
-			<Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Height="45" Width="45" Margin="0,0,0,140">
+			<Canvas x:Name="featureCanvas" HorizontalAlignment="Center" VerticalAlignment="Center" Height="45" Width="45" Margin="0,0,0,140">
 				<Image Source="{StaticResource featureDrawingImage}" Height="44" Width="45"/>
 			</Canvas>
-			<Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Height="45" Width="45" Margin="0,0,-120,140">
+			<Canvas x:Name="commentCanvas" HorizontalAlignment="Center" VerticalAlignment="Center" Height="45" Width="45" Margin="0,0,-120,140">
 				<Image Source="{StaticResource commentDrawingImage}" Height="44" Width="45"/>
 			</Canvas>
-			<Label Content="You haven't started a project yet." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40"/>
-			<Label Content="Create your first one!" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0, 0, -120" FontSize="40"/>
-			<Label Content="With the Project Tracker, easily" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0, 0, -400" FontSize="28"/>
-			<Label Content="create, manage, track, and develop" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0, 0, -480" FontSize="28"/>
-			<Label Content="all of your programming projects." HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0, 0, -560" FontSize="28"/>
+			<Label x:Name="firstLineLabel" Content="You haven't started a project yet." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40"/>
+			<Label x:Name="secondLineLabel" Content="Create your first one!" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0, 0, -120" FontSize="40"/>
+			<Label x:Name="thirdLineLabel" Content="With the Project Tracker, easily" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0, 0, -400" FontSize="28"/>
+			<Label x:Name="fourthLineLabel" Content="create, manage, track, and develop" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0, 0, -480" FontSize="28"/>
+			<Label x:Name="fifthLineLabel" Content="all of your programming projects." HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0, 0, -560" FontSize="28"/>
 		</Grid>
 
-		<!-- The view if there is proejcts made -->
+		<!-- The view if there is projects made -->
 		<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="400,31,0,0">
 			<Image x:Name="displayingImage"  Source="{StaticResource javaIcon}" Height="45" Width="45" Visibility="Visible" PreviewMouseDown="displayingImage_PreviewMouseDown" Cursor="Hand"/>
 		</Canvas>
 
 		<Label x:Name="displayingTitle" VerticalContentAlignment="Top" HorizontalAlignment="Left" Content="Project Tracker" FontSize="40" Margin="450,21,0,7" FontWeight="Medium" Visibility="Visible"/>
 		<!-- Make sure this has equal padding on all sides -->
-		<ScrollViewer Margin="350,198,0,42" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Visible">
+		<ScrollViewer Margin="350,198,0,42" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
 			<Grid x:Name="scrollviewerGrid" Visibility="Hidden">
 			</Grid>
 		</ScrollViewer>

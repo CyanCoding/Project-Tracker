@@ -20,8 +20,12 @@
 		 */
 
 
+
 		public class Rootobject {
 			public string Title { get; set; }
+			public string[] Tasks { get; set; }
+			public string[] TaskData { get; set; }
+			public string[] TaskIdentifier { get; set; }
 			public string[] Errors { get; set; }
 			public string[] ErrorsData { get; set; }
 			public string[] Features { get; set; }
@@ -32,5 +36,6 @@
 			public string Icon { get; set; }
 			public string Percent { get; set; }
 		}
+
 	}
 }
