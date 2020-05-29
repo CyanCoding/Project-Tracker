@@ -955,6 +955,11 @@ namespace Project_Tracker {
 				thread.Start();
 			}
 		}
+
+		/// <summary>
+		/// When the user clicks their mouse in the window.
+		/// Generally used to hide borders.
+		/// </summary>
 		private void Window_MouseDown(object sender, MouseButtonEventArgs e) {
 			if (isIconSelecting) { // Hide the icon selector window if they click out
 				Dispatcher.Invoke(new Action(() => {
@@ -988,7 +993,9 @@ namespace Project_Tracker {
 			}
 		}
 
-
+		/// <summary>
+		/// When the user resizes the window.
+		/// </summary>
 		private void Window_SizeChanged(object sender, SizeChangedEventArgs e) {
 			
 		}
@@ -1189,6 +1196,9 @@ namespace Project_Tracker {
 			sw.Close();
 		}
 
+		/// <summary>
+		/// When we check off a task.
+		/// </summary>
 		private void CheckmarkPressed(object sender, MouseButtonEventArgs e) {
 			Image callingImage = (Image)sender;
 
@@ -1277,6 +1287,9 @@ namespace Project_Tracker {
 		}
 		#endregion
 
+		/// <summary>
+		/// When we click on the add new item TextBox.
+		/// </summary>
 		private void AddNewItemTextBoxClick(object sender, MouseButtonEventArgs e) {
 			if (addItemTextBox.Text == "Add something to the project") {
 				addItemTextBox.Text = "";
@@ -1308,6 +1321,9 @@ namespace Project_Tracker {
 			}
 		}
 
+		/// <summary>
+		/// When we click away from the icon selection border.
+		/// </summary>
 		private void iconSelectBorder_LostFocus(object sender, RoutedEventArgs e) {
 			if (isIconSelecting) { // Hide the icon selector window if they click out
 				Dispatcher.Invoke(new Action(() => {
@@ -1323,6 +1339,9 @@ namespace Project_Tracker {
 			}
 		}
 
+		/// <summary>
+		/// When we click away from the add item TextBox.
+		/// </summary>
 		private void addItemTextBox_LostFocus(object sender, RoutedEventArgs e) {
 			if (addItemTextBox.Text == "") { // Clear the textbox if they click out
 				addItemTextBox.Text = "Add something to the project";
@@ -1330,6 +1349,9 @@ namespace Project_Tracker {
 			}
 		}
 
+		/// <summary>
+		/// When we click away from the item selection border.
+		/// </summary>
 		private void itemTypeSelectBorder_LostFocus(object sender, RoutedEventArgs e) {
 			if (isTypeSelecting) { // Hide the icon selector window if they click out
 				Dispatcher.Invoke(new Action(() => {
@@ -1345,6 +1367,9 @@ namespace Project_Tracker {
 			}
 		}
 
+		/// <summary>
+		/// When the user clicks on the type image to change the type.
+		/// </summary>
 		private void TypeImagePressed(object sender, MouseButtonEventArgs e) {
 			if (!isTypeSelecting) { // Display icon selector window
 				Thread thread = new Thread(() => {
@@ -1377,19 +1402,30 @@ namespace Project_Tracker {
 			}
 		}
 
+		#region Item selection presses
+		/// <summary>
+		/// When the user selects the error type.
+		/// </summary>
 		private void ErrorItemPressed(object sender, MouseButtonEventArgs e) {
 			addingTypeImage.Source = (ImageSource)TryFindResource("errorDrawingImage");
 			addingType = 0;
 		}
 
+		/// <summary>
+		/// When the user selects the feature type.
+		/// </summary>
 		private void FeatureItemPressed(object sender, MouseButtonEventArgs e) {
 			addingTypeImage.Source = (ImageSource)TryFindResource("featureDrawingImage");
 			addingType = 1;
 		}
 
+		/// <summary>
+		/// When the user selects the comment type.
+		/// </summary>
 		private void CommentItemPressed(object sender, MouseButtonEventArgs e) {
 			addingTypeImage.Source = (ImageSource)TryFindResource("commentDrawingImage");
 			addingType = 2;
 		}
+		#endregion
 	}
 }

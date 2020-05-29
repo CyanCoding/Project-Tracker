@@ -118,3 +118,9 @@ GitHub Icon
 -----------
 This software uses the Github icon icon by Icons8.
 <https://icons8.com/icons/set/github>
+
+
+Settings Icon
+-------------
+This software uses an icon from Freepik on www.flaticon.com.
+<https://www.flaticon.com/authors/freepik>
