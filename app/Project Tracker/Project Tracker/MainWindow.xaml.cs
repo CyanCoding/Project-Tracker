@@ -465,6 +465,7 @@ namespace Project_Tracker {
 
 				// Set values
 				displayingTitle.Content = projectInfo.Title;
+
 				if (projectInfo.Icon == "rustIcon") { 
 					// Our default rust icon is white so we need to use the
 					// black one for the display image
@@ -642,6 +643,7 @@ namespace Project_Tracker {
 		/// Controls selection of main table.
 		/// </summary>
 		private void KeyPress(object sender, KeyEventArgs e) {
+			// Add a new item
 			if (e.Key == Key.Return && addItemTextBox.Text != "" && 
 				addItemTextBox.Text != "Add something to the project" && 
 				addItemTextBox.IsFocused) {
@@ -649,7 +651,6 @@ namespace Project_Tracker {
 				taskData.Add("0");
 				taskIdentifier.Add(addingType.ToString());
 
-				Save(filesRead[selectedIndex - 1]);
 
 				// We need to switch the category from complete to incomplete
 				if (isCompletedTasksShown) {
@@ -657,6 +658,97 @@ namespace Project_Tracker {
 				}
 
 				addItemTextBox.Text = "";
+				CalculatePercentage();
+			}
+			// Add a new project
+			else if (e.Key == Key.Return && addProjectTextBox.Text != "" &&
+				addProjectTextBox.Text != "Create a new project" &&
+				addProjectTextBox.IsFocused) {
+				StringBuilder sb = new StringBuilder();
+				StringWriter sw = new StringWriter(sb);
+
+				using (JsonWriter js = new JsonTextWriter(sw)) {
+					js.Formatting = Formatting.Indented;
+
+					js.WriteStartObject();
+
+					// Title
+					js.WritePropertyName("Title");
+					js.WriteValue(addProjectTextBox.Text);
+
+					// The name of each task
+					js.WritePropertyName("Tasks");
+					js.WriteStartArray();
+					js.WriteEnd();
+
+					// The data for each task (0 = incomplete, 1 = complete)
+					js.WritePropertyName("TaskData");
+					js.WriteStartArray();
+					js.WriteEnd();
+
+					// The identifer for each task (0 = error, 1 = feature, 2 = comment)
+					js.WritePropertyName("TaskIdentifier");
+					js.WriteStartArray();
+					js.WriteEnd();
+
+					// Duration
+					js.WritePropertyName("Duration");
+					js.WriteValue("00:00:00");
+
+					// Icon
+					js.WritePropertyName("Icon");
+					js.WriteValue("noIcon");
+
+					// Percent
+					js.WritePropertyName("Percent");
+					js.WriteValue("00");
+
+
+					js.WriteEndObject();
+				}
+
+				
+				try {
+					if (!File.Exists(DATA_DIRECTORY + "/" + addProjectTextBox.Text + ".json")) {
+						File.WriteAllText(DATA_DIRECTORY + "/" + addProjectTextBox.Text + ".json", 
+							sw.ToString());
+					}
+					else {
+						int index = 0;
+						while (true) {
+							if (!File.Exists(DATA_DIRECTORY + "/" + addProjectTextBox.Text + " (" + index + ").json")) {
+								File.WriteAllText(DATA_DIRECTORY + "/" + addProjectTextBox.Text + " (" + index + ").json",
+									sw.ToString());
+								break;
+							}
+							else {
+								index++;
+								continue;
+							}
+						}
+					}
+				}
+				catch (ArgumentException) { // Path is an invalid name
+					int index = 0;
+					while (true) {
+						if (!File.Exists("project " + index + ".json")) {
+							File.WriteAllText("project " + index + ".json", sw.ToString());
+							break;
+						}
+						else {
+							index++;
+							continue;
+						}
+					}
+
+				}
+				
+				sb.Clear();
+				sw.Close();
+
+				addProjectTextBox.Text = "Create a new project";
+				Keyboard.ClearFocus();
+				LoadFiles();
 				SetSelectedProject();
 			}
 		}
@@ -665,8 +757,7 @@ namespace Project_Tracker {
 		/// Closes threads and shuts down the program.
 		/// </summary>
 		private void Window_Closing(object sender, CancelEventArgs e) {
-			Application.Current.Shutdown(); 
-			// If we don't do this, the AddNewProgram window doesn't close and the program keeps running in the bg
+
 		}
 
 		/// <summary>
@@ -828,6 +919,11 @@ namespace Project_Tracker {
 
 			if (addItemTextBox.Text == "") { // Clear the textbox if they click out
 				addItemTextBox.Text = "Add something to the project";
+				Keyboard.ClearFocus();
+			}
+
+			if (addProjectTextBox.Text == "") { // Clear the textbox if they click out
+				addProjectTextBox.Text = "Create a new project";
 				Keyboard.ClearFocus();
 			}
 		}
@@ -1051,8 +1147,7 @@ namespace Project_Tracker {
 				taskData[Int32.Parse(name) - 1] = "1";
 			}
 
-			Save(filesRead[selectedIndex - 1]);
-			SetSelectedProject();
+			CalculatePercentage();
 		}
 
 		#region Icon clicks
@@ -1582,6 +1677,9 @@ namespace Project_Tracker {
 			}
 		}
 
+		/// <summary>
+		/// When the user clicks to delete the project.
+		/// </summary>
 		private void DeleteProjectButtonPressed(object sender, MouseButtonEventArgs e) {
 			var deleteProject = System.Windows.Forms.MessageBox.Show(
 				"Are you sure you want to delete the " +
@@ -1609,6 +1707,89 @@ namespace Project_Tracker {
 				LoadFiles();
 
 				SetSelectedProject();
+			}
+		}
+
+		/// <summary>
+		/// Calculates the percentage complete for the project.
+		/// </summary>
+		private void CalculatePercentage() {
+			int completed = 0;
+			int incomplete = 0;
+
+			for (int i = 0; i < taskData.Count; i++) {
+				if (taskData[i] == "0") {
+					incomplete++;
+				}
+				else if (taskData[i] == "1") {
+					completed++;
+				}
+			}
+
+			int totalAmountOfItems = completed + incomplete;
+			int percentComplete;
+
+			try {
+				percentComplete = (completed * 100) / totalAmountOfItems;
+			}
+			catch (DivideByZeroException) {
+				percentComplete = 0;
+			}
+
+			if (percentComplete <= 9) {
+				percent = "0" + percentComplete;
+			}
+			else {
+				percent = percentComplete.ToString();
+			}
+
+			
+			// Set the selected index to display the new percent
+			if (selectedIndex == 1) {
+				percent1.Content = percent + "%";
+			}
+			else if (selectedIndex == 2) {
+				percent2.Content = percent + "%";
+			}
+			else if (selectedIndex == 3) {
+				percent3.Content = percent + "%";
+			}
+			else if (selectedIndex == 4) {
+				percent4.Content = percent + "%";
+			}
+			else if (selectedIndex == 5) {
+				percent5.Content = percent + "%";
+			}
+			else if (selectedIndex == 6) {
+				percent6.Content = percent + "%";
+			}
+			else if (selectedIndex == 7) {
+				percent7.Content = percent + "%";
+			}
+			else if (selectedIndex == 8) {
+				percent8.Content = percent + "%";
+			}
+			else if (selectedIndex == 9) {
+				percent9.Content = percent + "%";
+			}
+			else if (selectedIndex == 10) {
+				percent10.Content = percent + "%";
+			}
+
+			Save(filesRead[selectedIndex - 1]);
+			SetSelectedProject();
+		}
+
+		private void AddProjectClick(object sender, MouseButtonEventArgs e) {
+			if (addProjectTextBox.Text == "Create a new project") {
+				addProjectTextBox.Text = "";
+			}
+		}
+
+		private void AddProjectTextBoxLostFocus(object sender, RoutedEventArgs e) {
+			if (addProjectTextBox.Text == "") { // Clear the textbox if they click out
+				addProjectTextBox.Text = "Create a new project";
+				Keyboard.ClearFocus();
 			}
 		}
 	}
