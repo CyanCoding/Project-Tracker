@@ -274,7 +274,7 @@
 				<TextBox x:Name="addItemTextBox" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Add something to the project" VerticalContentAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" Height="67" Width="675" FontSize="28" SelectionBrush="#FF0D759C" Grid.ColumnSpan="2" BorderBrush="{x:Null}" PreviewMouseDown="AddNewItemTextBoxClick" LostFocus="addItemTextBox_LostFocus"/>
 
 				<Canvas x:Name="newItemTypeCanvas" HorizontalAlignment="Center" VerticalAlignment="Center" Height="45" Width="45" Grid.Column="1">
-					<Image Source="{StaticResource errorDrawingImage}" Height="45" Width="45" PreviewMouseDown="TypeImagePressed" Cursor="Hand"/>
+					<Image x:Name="addingTypeImage" Source="{StaticResource errorDrawingImage}" Height="45" Width="45" PreviewMouseDown="TypeImagePressed" Cursor="Hand"/>
 				</Canvas>
 			</Grid>
 		</Border>
@@ -395,29 +395,49 @@
 				<Grid.RowDefinitions>
 					<RowDefinition Height="70"/>
 					<RowDefinition Height="70"/>
-					<RowDefinition/>
+					<RowDefinition Height="70"/>
 				</Grid.RowDefinitions>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="50"/>
-					<ColumnDefinition/>
-				</Grid.ColumnDefinitions>
 				<!-- First row -->
-				<Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" Height="45" Width="45" Cursor="Hand" Grid.Row="0" Grid.Column="0">
-					<Image Source="{StaticResource errorDrawingImage}" Height="45" Width="45"/>
-				</Canvas>
-				<Label Content="Error" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Margin="20,-10,0,0" VerticalAlignment="Center" FontSize="24" Width="173" Height="70" VerticalContentAlignment="Center"/>
-
+				<Border PreviewMouseDown="ErrorItemPressed" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="50"/>
+							<ColumnDefinition/>
+						</Grid.ColumnDefinitions>
+						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,10,0,0" Cursor="Hand">
+							<Image Source="{StaticResource errorDrawingImage}" Height="45" Width="45"/>
+						</Canvas>
+						<Label Content="Error" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" Margin="20,-10,0,0" VerticalAlignment="Center" FontSize="24" Width="173" Height="70" VerticalContentAlignment="Center"/>
+					</Grid>
+				</Border>
+				
 				<!-- Second row -->
-				<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,10,0,0" Cursor="Hand" Grid.Column="0" Grid.Row="1">
-					<Image Source="{StaticResource featureDrawingImage}" Height="45" Width="45"/>
-				</Canvas>
-				<Label Content="Feature" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" Margin="20,-10,0,0" VerticalAlignment="Center" FontSize="24" Width="173" Height="70" VerticalContentAlignment="Center"/>
-
+				<Border PreviewMouseDown="FeatureItemPressed" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="50"/>
+							<ColumnDefinition/>
+						</Grid.ColumnDefinitions>
+						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,10,0,0" Cursor="Hand">
+							<Image Source="{StaticResource featureDrawingImage}" Height="45" Width="45"/>
+						</Canvas>
+						<Label Content="Feature" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" Margin="20,-10,0,0" VerticalAlignment="Center" FontSize="24" Width="173" Height="70" VerticalContentAlignment="Center"/>
+					</Grid>
+				</Border>
+				
 				<!-- Third row -->
-				<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,10,0,0" Cursor="Hand" Grid.Column="0" Grid.Row="2">
-					<Image Source="{StaticResource commentDrawingImage}" Height="45" Width="45"/>
-				</Canvas>
-				<Label Content="Comment" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" Margin="20,-10,0,0" VerticalAlignment="Center" FontSize="24" Width="173" Height="70" VerticalContentAlignment="Center"/>
+				<Border PreviewMouseDown="CommentItemPressed" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="50"/>
+							<ColumnDefinition/>
+						</Grid.ColumnDefinitions>
+						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,10,0,0" Cursor="Hand">
+							<Image Source="{StaticResource commentDrawingImage}" Height="45" Width="45"/>
+						</Canvas>
+						<Label Content="Comment" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" Margin="20,-10,0,0" VerticalAlignment="Center" FontSize="24" Width="173" Height="70" VerticalContentAlignment="Center"/>
+					</Grid>
+				</Border>
 			</Grid>
 		</Border>
 		<!-- Update notifier-->

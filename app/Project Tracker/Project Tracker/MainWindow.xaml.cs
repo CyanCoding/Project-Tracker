@@ -25,6 +25,7 @@ namespace Project_Tracker {
 		private int itemIndex = 0; // We need this to figure out the index of the item
 		private bool isIconSelecting = false;
 		private bool isTypeSelecting = false;
+		private int addingType = 0; // The type of item we're adding (0 = error, 1 = feature, 2 = comment)
 
 		// Each project's data - Used for saving
 		private string title;
@@ -815,7 +816,23 @@ namespace Project_Tracker {
 		/// Controls selection of main table.
 		/// </summary>
 		private void KeyPress(object sender, KeyEventArgs e) {
+			if (e.Key == Key.Return && addItemTextBox.Text != "" && 
+				addItemTextBox.Text != "Add something to the project" && 
+				addItemTextBox.IsFocused) {
+				tasks.Add(addItemTextBox.Text);
+				taskData.Add("0");
+				taskIdentifier.Add(addingType.ToString());
 
+				Save(filesRead[selectedIndex - 1]);
+
+				// We need to switch the category from complete to incomplete
+				if (isCompletedTasksShown) {
+					SwitchCategory(sender, null);
+				}
+
+				addItemTextBox.Text = "";
+				SetSelectedProject();
+			}
 		}
 
 		/// <summary>
@@ -1329,7 +1346,7 @@ namespace Project_Tracker {
 		}
 
 		private void TypeImagePressed(object sender, MouseButtonEventArgs e) {
-			if (!isIconSelecting) { // Display icon selector window
+			if (!isTypeSelecting) { // Display icon selector window
 				Thread thread = new Thread(() => {
 					Dispatcher.Invoke(new Action(() => {
 						isTypeSelecting = true;
@@ -1346,18 +1363,33 @@ namespace Project_Tracker {
 				});
 				thread.Start();
 			}
-			if (isTypeSelecting) { // Hide the icon selector window if they click out
+			else if (isTypeSelecting) { // Hide the icon selector window if they click out
 				Dispatcher.Invoke(new Action(() => {
 					isTypeSelecting = false;
 
 					DoubleAnimation animation = new DoubleAnimation();
 					animation.From = 210;
 					animation.To = 0;
-					animation.Duration = TimeSpan.FromSeconds(0.1);
+					animation.Duration = TimeSpan.FromSeconds(0.2);
 
 					itemTypeSelectBorder.BeginAnimation(HeightProperty, animation);
 				}));
 			}
+		}
+
+		private void ErrorItemPressed(object sender, MouseButtonEventArgs e) {
+			addingTypeImage.Source = (ImageSource)TryFindResource("errorDrawingImage");
+			addingType = 0;
+		}
+
+		private void FeatureItemPressed(object sender, MouseButtonEventArgs e) {
+			addingTypeImage.Source = (ImageSource)TryFindResource("featureDrawingImage");
+			addingType = 1;
+		}
+
+		private void CommentItemPressed(object sender, MouseButtonEventArgs e) {
+			addingTypeImage.Source = (ImageSource)TryFindResource("commentDrawingImage");
+			addingType = 2;
 		}
 	}
 }
