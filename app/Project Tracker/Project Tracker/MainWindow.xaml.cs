@@ -1044,8 +1044,6 @@ namespace Project_Tracker {
 			string name = callingImage.Name;
 			name = name.Remove(0, 1); // Removes the t from the name (e.g. t5 -> 5)
 
-			Console.WriteLine(name);
-
 			if (taskData[Int32.Parse(name) - 1] == "1") {
 				taskData[Int32.Parse(name) - 1] = "0";
 			}
