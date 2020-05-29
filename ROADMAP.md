@@ -27,14 +27,14 @@ date will be posted allowing you to stay up to date with when new updates will b
 ### v2.0:
 **Estimated release date:** `June 25th, 2020`
 
-- [ ] Create a better design for main window.
-- [ ] Add a settings menu.
-- [ ] Create a dark theme.
-- [ ] Allow users to check for updates after the app is opened.
-- [ ] A more subtle way of displaying an update.
-- [ ] A way to see the language for each project.
+- [x] Create a better design for main window.
+- [x] A more subtle way of displaying an update.
+- [x] A way to see the language for each project.
 - [ ] Allow resizing of windows.
+- [ ] Add a settings menu.
+- [ ] Allow users to check for updates after the app is opened.
 - [ ] Allow users to install pre-releases automatically from the app.
+- [ ] Create a dark theme.
 
 ### v3.0:
 **Estimated release date:** `summer 2020`
