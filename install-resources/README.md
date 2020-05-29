@@ -17,7 +17,7 @@ When updating, this is the procedure you need to follow:
 1. Double check you've changed the version in `MainWindow.xaml.cs`.
 2. Build the release `.exe` program.
 3. Copy all files from the release folder to the Project Tracker folder here.
-4. Zip the folder.
+4. Zip the folder. Make sure you zip the contents and not the folder so that it ends up as Project Tracker/ and not Project Tracker/Project Tracker.
 5. Update `version.json`.
 6. Change the `version.txt` version.
 
