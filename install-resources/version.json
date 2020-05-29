@@ -1,7 +1,13 @@
 {
-  "Version": "1.2",
-  "Updates": [],
+  "Version": "1.5",
+  "Updates": [
+    "Created a new design for the Project Tracker!",
+    "Removed project duration (coming back soon!).",
+    "Added project icons."
+  ],
   "Fixes": [
-    "Fixed some bugs with the add new item system."
+    "Improved overall performance.",
+    "Fixed project saving issues and other saving bugs.",
+    "Fixed an issue with the installer not installing properly."
   ]
 }
