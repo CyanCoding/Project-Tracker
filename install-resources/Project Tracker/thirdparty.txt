@@ -124,3 +124,9 @@ Settings Icon
 -------------
 This software uses an icon from Freepik on www.flaticon.com.
 <https://www.flaticon.com/authors/freepik>
+
+
+Trashcan Icon
+-------------
+This software uses the Trash Can icon icon by Icons8.
+<https://icons8.com/icons/set/delete>

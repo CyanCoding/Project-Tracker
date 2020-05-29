@@ -241,7 +241,7 @@
 
 		<!-- Display window content -->
 		<!-- The default view if there's no projects made yet -->
-		<Grid x:Name="noProjectsGrid" Margin="345,115,0,209" Visibility="Hidden">
+		<Grid x:Name="noProjectsGrid" Margin="345,115,0,209" Visibility="Visible">
 			<Canvas x:Name="errorCanvas" HorizontalAlignment="Center" VerticalAlignment="Center" Height="45" Width="45" Margin="0,0,120,140">
 				<Image Source="{StaticResource errorDrawingImage}" Height="45" Width="45"/>
 			</Canvas>
@@ -260,12 +260,16 @@
 
 		<!-- The view if there is projects made -->
 		<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="400,31,0,0">
-			<Image x:Name="displayingImage"  Source="{StaticResource javaIcon}" Height="45" Width="45" Visibility="Visible" PreviewMouseDown="displayingImage_PreviewMouseDown" Cursor="Hand"/>
+			<Image x:Name="displayingImage"  Source="{StaticResource noIcon}" Height="45" Width="45" Visibility="Hidden" PreviewMouseDown="displayingImage_PreviewMouseDown" Cursor="Hand"/>
+		</Canvas>
+		<Canvas HorizontalAlignment="Right" VerticalAlignment="Top" Height="40" Width="40" Margin="0,45,45,0">
+			<Image x:Name="settingsImage"  Source="{StaticResource settingsDrawingImage}" Height="40" Width="40" Visibility="Hidden" PreviewMouseDown="settingsImage_PreviewMouseDown" Cursor="Hand"/>
 		</Canvas>
 
-		<Label x:Name="displayingTitle" VerticalContentAlignment="Top" HorizontalAlignment="Left" Content="Project Tracker" FontSize="40" Margin="450,21,0,7" FontWeight="Medium" Visibility="Visible"/>
+
+		<Label x:Name="displayingTitle" VerticalContentAlignment="Top" HorizontalAlignment="Left" Content="" FontSize="40" Margin="450,21,0,7" FontWeight="Medium" Visibility="Hidden"/>
 		<!-- Make sure this has equal padding on all sides -->
-		<Border BorderBrush="Black" CornerRadius="10" BorderThickness="3" HorizontalAlignment="Left" Height="73" Margin="391,0,0,15" VerticalAlignment="Bottom" Width="750">
+		<Border x:Name="addItemBorder" BorderBrush="Black" CornerRadius="10" BorderThickness="3" HorizontalAlignment="Left" Height="73" Margin="391,0,0,15" VerticalAlignment="Bottom" Width="750" Visibility="Hidden">
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition/>
@@ -298,6 +302,7 @@
 			</Border>
 		</Grid>
 
+		<!-- The icon selection stuff -->
 		<Border x:Name="iconSelectBorder" CornerRadius="10" HorizontalAlignment="Left" Height="0" Margin="350,65,0,0" VerticalAlignment="Top" Width="260" Background="White" Visibility="Hidden" LostFocus="iconSelectBorder_LostFocus">
 			<Border.Effect>
 				<DropShadowEffect ShadowDepth="1"/>
@@ -387,6 +392,7 @@
 			</Grid>
 		</Border>
 
+		<!-- The type selection stuff -->
 		<Border x:Name="itemTypeSelectBorder" CornerRadius="10" HorizontalAlignment="Right" Height="0"  VerticalAlignment="Bottom" Width="200" Background="White" Visibility="Hidden" LostFocus="itemTypeSelectBorder_LostFocus" Margin="0,0,0,80" Cursor="Hand">
 			<Border.Effect>
 				<DropShadowEffect ShadowDepth="1"/>
@@ -410,7 +416,7 @@
 						<Label Content="Error" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" Margin="20,-10,0,0" VerticalAlignment="Center" FontSize="24" Width="173" Height="70" VerticalContentAlignment="Center"/>
 					</Grid>
 				</Border>
-				
+
 				<!-- Second row -->
 				<Border PreviewMouseDown="FeatureItemPressed" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
 					<Grid>
@@ -424,7 +430,7 @@
 						<Label Content="Feature" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" Margin="20,-10,0,0" VerticalAlignment="Center" FontSize="24" Width="173" Height="70" VerticalContentAlignment="Center"/>
 					</Grid>
 				</Border>
-				
+
 				<!-- Third row -->
 				<Border PreviewMouseDown="CommentItemPressed" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2">
 					<Grid>
@@ -440,6 +446,31 @@
 				</Border>
 			</Grid>
 		</Border>
+
+		<!-- The settings border -->
+		<!-- NOTE: If you add another floating border, you need to set the ROW DEFINITION for it to hide and show properly -->
+		<Border x:Name="settingsBorder" CornerRadius="10" HorizontalAlignment="Right" Height="0" VerticalAlignment="Top" Width="255" Background="White" Visibility="Hidden" LostFocus="settingsBorder_LostFocus" Margin="00,95,10,0" Cursor="Hand">
+			<Border.Effect>
+				<DropShadowEffect ShadowDepth="1"/>
+			</Border.Effect>
+			<Border PreviewMouseDown="DeleteProjectButtonPressed">
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="70"/>
+						<RowDefinition/>
+					</Grid.RowDefinitions>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="50"/>
+						<ColumnDefinition Width="205"/>
+					</Grid.ColumnDefinitions>
+					<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,10,0,0" Cursor="Hand" Grid.Column="0" Grid.ColumnSpan="2">
+						<Image Source="{StaticResource trashcanDrawingImage}" Height="45" Width="45" Grid.Column="0"/>
+					</Canvas>
+					<Label Content="Delete project" Grid.Column="1" HorizontalAlignment="Left" Margin="10,-5,0,0" VerticalAlignment="Center" FontSize="24" Width="173" Height="70" VerticalContentAlignment="Center"/>
+				</Grid>
+			</Border>
+		</Border>
+
 		<!-- Update notifier-->
 		<Grid x:Name="updateGrid" HorizontalAlignment="Left" Height="0" VerticalAlignment="Bottom" Margin="-5,0,0,-5" Width="350" Background="#FFE67C11" Visibility="Visible">
 			<TextBlock Text="An update to the Project Tracker is available!" TextWrapping="Wrap" HorizontalAlignment="Left" Foreground="White" FontSize="18" Margin="10,10,0,58" VerticalAlignment="Center" Width="234" Height="63"/>
