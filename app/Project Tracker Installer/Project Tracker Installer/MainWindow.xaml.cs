@@ -49,15 +49,17 @@ namespace Project_Tracker_Installer {
             try {
                 PROGRAM_VERSION = File.ReadAllText(VERSION_PATH);
             }
-            catch (Exception) {
-                FinalResult("Couldn't install at this time");
+            catch (Exception eg) {
                 return;
             }
 
             File.Delete(VERSION_PATH);
             Dispatcher.Invoke(new Action(() => {
                 if (!uninstall) {
-                    subTitle.Content = "Version: " + PROGRAM_VERSION;
+                    if (subTitle.Content.ToString() != "Couldn't install at this time" && subTitle.Content.ToString() != ("Please close every " + PROGRAM_TITLE + " Installer before continuing.")) {
+                        subTitle.Content = "Version: " + PROGRAM_VERSION;
+                    }
+                    
                 }
                 
             }));
@@ -90,7 +92,7 @@ namespace Project_Tracker_Installer {
                         File.SetAttributes(INSTALLER_PATH, FileAttributes.Normal);
                     }
                     catch (UnauthorizedAccessException) { // For some reason we can't take the file hmmf
-                        FinalResult("Couldn't install at this time");
+                        FinalResult("Couldn't install at this time (034)");
                         return;
                     }
                 }
@@ -103,7 +105,7 @@ namespace Project_Tracker_Installer {
                         File.SetAttributes(INSTALLER_PATH, FileAttributes.Normal);
                     }
                     catch (UnauthorizedAccessException) {
-                        FinalResult("Couldn't install at this time");
+                        FinalResult("Couldn't install at this time (042)");
                         return;
                     }
                 }
@@ -112,7 +114,7 @@ namespace Project_Tracker_Installer {
                     // Enter the executable to run, including the complete path
                     FileName = INSTALLER_PATH,
                     // Do you want to show a console window?
-                    WindowStyle = ProcessWindowStyle.Hidden,
+                    WindowStyle = ProcessWindowStyle.Normal,
                     CreateNoWindow = true
                 };
                 Process.Start(start);
@@ -370,7 +372,7 @@ namespace Project_Tracker_Installer {
                     subTitle.Content = "Please launch the program again with the necessary priveleges to install.";
                     installButton.Visibility = Visibility.Hidden;
                 }
-                else if (main == "Couldn't install at this time") {
+                else if (main == "Couldn't install at this time (034)" || main == "Couldn't install at this time (042)" || main == "Couldn't install at this time (092)") {
                     subTitle.Content = "Please close every " + PROGRAM_TITLE + " Installer before continuing.";
                     installButton.Visibility = Visibility.Hidden;
                 }
