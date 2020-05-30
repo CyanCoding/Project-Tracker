@@ -9,36 +9,6 @@ using IWshRuntimeLibrary;
 
 namespace Project_Tracker_Installer {
 	class Installer {
-        /// <summary>
-        /// Installs the latest Project Tracker program to the user's computer.
-        /// </summary>
-        /// <param name="PROGRAM_PATH">The path of the unzipped program.</param>
-        /// <param name="INSTALL_DIRECTORY">The directory to install to.</param>
-        /// <param name="ONLINE_PROGRAM_LINK">The URL to the program download.</param>
-        /// <param name="ZIP_PATH">The zip path to download to and extract from.</param>
-        /// <returns></returns>
-        public bool InstallProgram(string PROGRAM_PATH, string INSTALL_DIRECTORY, string ONLINE_PROGRAM_LINK, string ZIP_PATH) {
-            if (System.IO.File.Exists(PROGRAM_PATH)) {
-                System.IO.File.Delete(PROGRAM_PATH);
-            }
-            if (System.IO.File.Exists(ZIP_PATH)) {
-                System.IO.File.Delete(ZIP_PATH);
-            }
-
-            try {
-                WebClient client = new WebClient();
-                client.DownloadFile(new Uri(ONLINE_PROGRAM_LINK), ZIP_PATH);
-
-                ZipFile.ExtractToDirectory(ZIP_PATH, INSTALL_DIRECTORY);
-                System.IO.File.Delete(ZIP_PATH);
-                return true;
-            }
-            catch (WebException) {
-                return false;
-            }
-
-            
-        }
 
         /// <summary>
         /// Creates a program uninstall registry and a shortcut.
@@ -64,8 +34,8 @@ namespace Project_Tracker_Installer {
 
             //storing the values  
             key.SetValue("DisplayName", PROGRAM_TITLE);
-            key.SetValue("DisplayVersion", PROGRAM_VERSION);
-            key.SetValue("Version", PROGRAM_VERSION);
+            key.SetValue("DisplayVersion", "Version " + PROGRAM_VERSION);
+            key.SetValue("Version", "Version " + PROGRAM_VERSION);
             key.SetValue("Publisher", "CyanCoding");
             key.SetValue("InstallDate", DateTime.Now.ToString("yyyyMMdd"));
             key.SetValue("DisplayIcon", ICON_PATH);

@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Security.Principal;
 using System.Threading;
 using System.Windows;
+using System.Windows.Shell;
 
 #pragma warning disable CS0168
 
@@ -21,6 +22,7 @@ namespace Project_Tracker_Installer {
 
         bool uninstall = false; // This is true if the program is already installed on the device
         bool retrying = false; // Used to determine whether the install button is actually being used as a retry button
+        bool finishedDownloading = false;
        
         readonly string PROGRAM_TITLE = "Project Tracker";
         string PROGRAM_VERSION = "calculating version...";
@@ -32,7 +34,7 @@ namespace Project_Tracker_Installer {
         readonly string INSTALL_DIRECTORY = @"C:\Program Files\Project Tracker";
         readonly string VERSION_FILE = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Project Tracker\update.txt";
         readonly string REGISTRY = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Project Tracker";
-        readonly string ONLINE_PROGRAM_LINK = "https://github.com/CyanCoding/Project-Tracker/blob/master/install-resources/Project%20Tracker.zip?raw=true";
+        readonly string ONLINE_PROGRAM_LINK = "https://github.com/CyanCoding/Project-Tracker/raw/master/install-resources/Project%20Tracker.zip";
         readonly string ZIP_PATH = @"C:\Program Files\Project Tracker\Project Tracker.zip";
         readonly string ICON_PATH = @"C:\Program Files\Project Tracker\logo.ico";
         readonly string SHORTCUT_LOCATION = @"C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Project Tracker.lnk";
@@ -78,7 +80,7 @@ namespace Project_Tracker_Installer {
             subTitle.Content = "Version: " + PROGRAM_VERSION;
 
             // Copies the current file to the Program Data folder. Code execution doesn't pass this if it's not already there
-            if ((Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\Project Tracker Installer.exe") != INSTALLER_PATH) {
+            /*if ((Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\Project Tracker Installer.exe") != INSTALLER_PATH) {
                 string currentLocation = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\Project Tracker Installer.exe";
 
                 if (!File.Exists(INSTALLER_PATH)) { // An installer file exists
@@ -134,6 +136,17 @@ namespace Project_Tracker_Installer {
                 catch (WebException) {
                     subTitle.Visibility = Visibility.Hidden; // Couldn't get version
                 }
+            }*/
+
+            try {
+                installButton.IsEnabled = false;
+                reinstallButton.IsEnabled = false;
+                WebClient client = new WebClient();
+                client.DownloadFileCompleted += new AsyncCompletedEventHandler(GetVersion);
+                client.DownloadFileAsync(new Uri(VERSION_DOWNLOAD_LINK), VERSION_PATH);
+            }
+            catch (WebException) {
+                subTitle.Visibility = Visibility.Hidden; // Couldn't get version
             }
 
             if (!File.Exists(VERSION_FILE)) { // It's not an update
@@ -198,33 +211,19 @@ namespace Project_Tracker_Installer {
         private void ReinstallButtonClick(object sender, RoutedEventArgs e) {
             reinstallButton.Visibility = Visibility.Hidden;
             installButton.Visibility = Visibility.Hidden;
-            subTitle.Content = "Installing";
+            subTitle.Content = "Installing program...";
 
             Uninstaller uninstaller = new Uninstaller();
             uninstaller.Uninstall(DATA_DIRECTORY_PATH, INSTALLER_PATH, INSTALL_DIRECTORY, REGISTRY, SHORTCUT_LOCATION);
 
-            Installer installer = new Installer();
+            InstallProgram(PROGRAM_PATH, INSTALL_DIRECTORY, ONLINE_PROGRAM_LINK, ZIP_PATH);
 
-            bool success = installer.InstallProgram(PROGRAM_PATH, INSTALL_DIRECTORY, ONLINE_PROGRAM_LINK, ZIP_PATH);
-
-            if (!success) {
-                Dispatcher.Invoke(new Action(() => {
-                    mainTitle.Content = "Unable to connect to the internet";
-                    subTitle.Visibility = Visibility.Hidden;
-
-                    retrying = true;
-                    installButton.Visibility = Visibility.Visible;
-                    installButton.Margin = new Thickness(0, 0, 0, 30);
-                    installButton.Content = "Retry";
-
-                    installBar.Visibility = Visibility.Hidden;
-                }));
+            try {
+                Registry.CurrentUser.DeleteSubKey(REGISTRY);
             }
-            else {
-                installer.CreateUninstaller(REGISTRY, PROGRAM_TITLE, PROGRAM_VERSION, ICON_PATH, PROGRAM_PATH, INSTALL_DIRECTORY, SHORTCUT_LOCATION);
-            }
+            catch (ArgumentException) { // Registry doesn't exist
 
-            FinalResult("Project Tracker has been installed!");
+			}
         }
 
          /// <summary>
@@ -244,39 +243,17 @@ namespace Project_Tracker_Installer {
                     copyright.Visibility = Visibility.Hidden;
                     installButton.Visibility = Visibility.Hidden;
                     subTitle.Visibility = Visibility.Visible;
-                    installBar.Visibility = Visibility.Visible;
 
                     mainTitle.Content = "Installing program...";
 
                     Installer installer = new Installer();
-                    bool success = installer.InstallProgram(PROGRAM_PATH, INSTALL_DIRECTORY, ONLINE_PROGRAM_LINK, ZIP_PATH);
-
-                    if (!success) {
-                        Dispatcher.Invoke(new Action(() =>
-                        {
-                            mainTitle.Content = "Unable to connect to the internet";
-                            subTitle.Visibility = Visibility.Hidden;
-
-                            retrying = true;
-                            installButton.Visibility = Visibility.Visible;
-                            installButton.Margin = new Thickness(0, 0, 0, 30);
-                            installButton.Content = "Retry";
-
-                            installBar.Visibility = Visibility.Hidden;
-                        }));
-                    }
-                    else {
-                        installer.CreateUninstaller(REGISTRY, PROGRAM_TITLE, PROGRAM_VERSION, ICON_PATH, PROGRAM_PATH, INSTALL_DIRECTORY, SHORTCUT_LOCATION);
-                    }
-
-                    FinalResult("Project Tracker has been installed!");                
+                    InstallProgram(PROGRAM_PATH, INSTALL_DIRECTORY, ONLINE_PROGRAM_LINK, ZIP_PATH);         
                 }
                 else { // Update
                     // Hide/show components
                     copyright.Visibility = Visibility.Hidden;
                     installButton.Visibility = Visibility.Hidden;
                     subTitle.Visibility = Visibility.Visible;
-                    installBar.Visibility = Visibility.Visible;
 
                     mainTitle.Content = "Updating program...";
 
@@ -286,43 +263,12 @@ namespace Project_Tracker_Installer {
                         }
                     }
 
-                    Installer installer = new Installer();
-                    bool success = installer.InstallProgram(PROGRAM_PATH, INSTALL_DIRECTORY, ONLINE_PROGRAM_LINK, ZIP_PATH);
-
-                    if (!success) {
-                        Dispatcher.Invoke(new Action(() => {
-                            mainTitle.Content = "Unable to connect to the internet";
-                            subTitle.Visibility = Visibility.Hidden;
-
-                            retrying = true;
-                            installButton.Visibility = Visibility.Visible;
-                            installButton.Margin = new Thickness(0, 0, 0, 30);
-                            installButton.Content = "Retry";
-
-                            installBar.Visibility = Visibility.Hidden;
-                        }));
-                    }
-                    else {
+                    InstallProgram(PROGRAM_PATH, INSTALL_DIRECTORY, ONLINE_PROGRAM_LINK, ZIP_PATH);
+                    try {
                         Registry.CurrentUser.DeleteSubKey(REGISTRY);
-                        installer.CreateUninstaller(REGISTRY, PROGRAM_TITLE, PROGRAM_VERSION, ICON_PATH, PROGRAM_PATH, INSTALL_DIRECTORY, SHORTCUT_LOCATION);
                     }
+                    catch (ArgumentException) { // Registry doesn't exist
 
-                    if (File.Exists(ZIP_PATH)) {
-                        Dispatcher.Invoke(new Action(() => {
-                            mainTitle.Content = "Couldn't update at this time";
-                            subTitle.Content = "Please close every " + PROGRAM_TITLE + " Installer before continuing.";
-                            subTitle.Visibility = Visibility.Visible;
-
-                            retrying = true;
-                            installButton.Visibility = Visibility.Visible;
-                            installButton.Margin = new Thickness(0, 0, 0, 30);
-                            installButton.Content = "Retry";
-
-                            installBar.Visibility = Visibility.Hidden;
-                        }));
-                    }
-                    else {
-                        FinalResult("Project Tracker has been updated!");
                     }
                 }
             }
@@ -341,6 +287,184 @@ namespace Project_Tracker_Installer {
                 }));
             }
 
+        }
+
+        /// <summary>
+        /// Installs the latest Project Tracker program to the user's computer.
+        /// </summary>
+        /// <param name="PROGRAM_PATH">The path of the unzipped program.</param>
+        /// <param name="INSTALL_DIRECTORY">The directory to install to.</param>
+        /// <param name="ONLINE_PROGRAM_LINK">The URL to the program download.</param>
+        /// <param name="ZIP_PATH">The zip path to download to and extract from.</param>
+        /// <returns></returns>
+        public void InstallProgram(string PROGRAM_PATH, string INSTALL_DIRECTORY, string ONLINE_PROGRAM_LINK, string ZIP_PATH) {
+            if (File.Exists(PROGRAM_PATH)) {
+                File.Delete(PROGRAM_PATH);
+            }
+            if (File.Exists(ZIP_PATH)) {
+                File.Delete(ZIP_PATH);
+            }
+
+            try {
+                WebClient client = new WebClient();
+                client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(CurrentlyDownloading);
+                client.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadComplete);
+                client.DownloadFileAsync(new Uri(ONLINE_PROGRAM_LINK), ZIP_PATH);
+
+                subTitle.Content = "Starting download...";
+            }
+            catch (WebException) {
+                Dispatcher.Invoke(new Action(() => {
+                    mainTitle.Content = "Unable to connect to the internet";
+                    subTitle.Visibility = Visibility.Hidden;
+
+                    retrying = true;
+                    installButton.Visibility = Visibility.Visible;
+                    installButton.Margin = new Thickness(0, 0, 0, 30);
+                    installButton.Content = "Retry";
+
+                    installBar.Visibility = Visibility.Hidden;
+                }));
+            }
+        }
+
+        /// <summary>
+        /// Runs while the program is downloading.
+        /// </summary>
+        private void CurrentlyDownloading(object sender, DownloadProgressChangedEventArgs e) {
+            double bytesReceived = e.BytesReceived;
+            double totalBytes = e.TotalBytesToReceive;
+
+            string suffixA = "b";
+            string suffixB = "b";
+
+            if (bytesReceived > 1024) {
+                bytesReceived /= 1024;
+                suffixA = "kb";
+            }
+            if (bytesReceived > 1024) {
+                bytesReceived /= 1024;
+                suffixA = "mb";
+            }
+            if (bytesReceived > 1024) {
+                bytesReceived /= 1024;
+                suffixA = "gb";
+            }
+            if (bytesReceived > 1024) {
+                bytesReceived /= 1024;
+                suffixA = "tb";
+            }
+
+            if (totalBytes > 1024) {
+                totalBytes /= 1024;
+                suffixB = "kb";
+            }
+            if (totalBytes > 1024) {
+                totalBytes /= 1024;
+                suffixB = "mb";
+            }
+            if (totalBytes > 1024) { // I'm going to be really worried if my java installer needs either of these last two
+                totalBytes /= 1024;
+                suffixB = "gb";
+            }
+            if (totalBytes > 1024) {
+                totalBytes /= 1024;
+                suffixB = "tb";
+            }
+
+            bytesReceived = Math.Round(bytesReceived, 2);
+            totalBytes = Math.Round(totalBytes, 2);
+
+            string stringBytesReceived = bytesReceived.ToString();
+            string stringTotalBytes = totalBytes.ToString();
+
+            string[] splitBytesReceived = stringBytesReceived.Split('.');
+            try {
+                if (splitBytesReceived[1].Length == 0) {
+                    stringBytesReceived += ".00";
+                }
+                else if (splitBytesReceived[1].Length == 1) {
+                    stringBytesReceived += "0";
+                }
+            }
+            catch (IndexOutOfRangeException eg) {
+                stringBytesReceived += ".00";
+            }
+
+
+            string[] splitTotalBytes = stringTotalBytes.Split('.');
+            try {
+                if (splitTotalBytes[1].Length == 0) {
+                    stringTotalBytes += ".00";
+                }
+                else if (splitTotalBytes[1].Length == 1) {
+                    stringTotalBytes += "0";
+                }
+            }
+            catch (IndexOutOfRangeException eg) {
+                stringTotalBytes += ".00";
+            }
+
+            Dispatcher.Invoke(new Action(() => {
+                mainTitle.Content = "Downloading program...";
+                installBar.Visibility = Visibility.Visible;
+                installBar.IsIndeterminate = false;
+
+                subTitle.Content = stringBytesReceived + suffixA + " / " + stringTotalBytes + suffixB;
+                installBar.Minimum = 0;
+                installBar.Maximum = e.TotalBytesToReceive;
+                installBar.Value = e.BytesReceived;
+            }));
+
+            if (e.BytesReceived == e.TotalBytesToReceive) {
+                finishedDownloading = true;
+			}
+        }
+
+
+        /// <summary>
+        /// Runs after the download has finished.
+        /// </summary>
+        private void DownloadComplete(object sender, AsyncCompletedEventArgs e) {
+            if (finishedDownloading) {
+                Thread thread = new Thread(() => {
+                    Dispatcher.Invoke(new Action(() => {
+                        mainTitle.Content = "Installing program...";
+                        subTitle.Content = "";
+
+                        installBar.Visibility = Visibility.Visible;
+                        installBar.IsIndeterminate = true;
+
+                        ZipFile.ExtractToDirectory(ZIP_PATH, INSTALL_DIRECTORY);
+                        File.Delete(ZIP_PATH);
+
+                        Installer installer = new Installer();
+                        installer.CreateUninstaller(REGISTRY, PROGRAM_TITLE, PROGRAM_VERSION, ICON_PATH, PROGRAM_PATH, INSTALL_DIRECTORY, SHORTCUT_LOCATION);
+
+
+                        if (File.Exists(ZIP_PATH)) {
+                            mainTitle.Content = "Couldn't update at this time";
+                            subTitle.Content = "Please close every " + PROGRAM_TITLE + " Installer before continuing.";
+                            subTitle.Visibility = Visibility.Visible;
+
+                            retrying = true;
+                            installButton.Visibility = Visibility.Visible;
+                            installButton.Margin = new Thickness(0, 0, 0, 30);
+                            installButton.Content = "Retry";
+
+                            installBar.Visibility = Visibility.Hidden;
+                        }
+                        else {
+                            if (mainTitle.Content.ToString() == "Updating program...") {
+                                FinalResult("Project Tracker has been updated!");
+                            }
+                        }
+
+                        FinalResult("Project Tracker has been installed!");
+                    }));
+                });
+                thread.Start();
+            }
         }
 
         /// <summary>

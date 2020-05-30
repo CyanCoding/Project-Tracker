@@ -123,9 +123,6 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="t.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="logo.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
