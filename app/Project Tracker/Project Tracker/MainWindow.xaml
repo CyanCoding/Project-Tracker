@@ -68,11 +68,16 @@
 
 	<Grid Background="White">
 		<Rectangle x:Name="blackRectangle" Fill="#FF212121" HorizontalAlignment="Left" Height="776" VerticalAlignment="Top" Width="350" Margin="-5,-5,-5,-5" />
-		<Canvas VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,43,0,0" Height="45" Width="45">
-			<Image Source="{StaticResource checked_checkedboxDrawingImage}" Height="45" Width="45" />
-		</Canvas>
-		<Label Content="Project Tracker" HorizontalAlignment="Left" Margin="60,30,0,0" VerticalAlignment="Top" Foreground="White" FontSize="26" />
-		<Label x:Name="versionLabel" Content="" HorizontalAlignment="Left" Margin="60,69,0,0" VerticalAlignment="Top" Foreground="#FFB8B8B8" FontSize="14" />
+		<Border PreviewMouseDown="OverallSettingsBorderMouseDown" Cursor="Hand">
+			<Grid>
+				<Canvas VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,43,0,0" Height="45" Width="45">
+					<Image Source="{StaticResource checked_checkedboxDrawingImage}" Height="45" Width="45" />
+				</Canvas>
+				<Label Content="Project Tracker" HorizontalAlignment="Left" Margin="60,30,0,0" VerticalAlignment="Top" Foreground="White" FontSize="26" />
+				<Label x:Name="versionLabel" Content="" HorizontalAlignment="Left" Margin="60,69,0,0" VerticalAlignment="Top" Foreground="#FFB8B8B8" FontSize="14" />
+			</Grid>
+		</Border>
+		
 		<!-- We need this to be 10 from each side in the code -->
 		<Border HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0" CornerRadius="4,4,4,4" BorderBrush="Black" Background="#FF9B9B9B" Width="325" Height="4" Margin="10,98,0,0" />
 
@@ -514,6 +519,35 @@
 			</Grid>
 		</Border>
 
+		<!-- The border for project tracker settings -->
+		<Border x:Name="overallSettingsBorder" CornerRadius="10" HorizontalAlignment="Left" Height="70" VerticalAlignment="Top" Width="180" Background="White" Visibility="Hidden" LostFocus="overallSettingsBorder_LostFocus" Margin="20,105,10,0" Cursor="Hand">
+			<Border.Effect>
+				<DropShadowEffect ShadowDepth="1" />
+			</Border.Effect>
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="70" />
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="50" />
+					<ColumnDefinition Width="130" />
+				</Grid.ColumnDefinitions>
+
+				<!-- First item -->
+				<Border PreviewMouseDown="SettingsButtonMouseDown" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Cursor="Hand">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="50" />
+							<ColumnDefinition Width="180" />
+						</Grid.ColumnDefinitions>
+						<Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Height="40" Width="40" Cursor="Hand" Margin="10,16,1,14" Grid.Column="0">
+							<Image Source="{StaticResource settingsDrawingImage}" Height="40" Width="40" Grid.Column="0" />
+						</Canvas>
+						<Label Content="Settings" Grid.Column="1" HorizontalAlignment="Left" Margin="10,0,-9,0" VerticalAlignment="Center" FontSize="24" Width="180" Height="70" VerticalContentAlignment="Center" />
+					</Grid>
+				</Border>
+			</Grid>
+		</Border>
 		<!-- Update notifier-->
 		<Grid x:Name="updateGrid" HorizontalAlignment="Left" Height="0" VerticalAlignment="Bottom" Margin="-5,0,0,-5" Width="350" Background="#FFE67C11" Visibility="Hidden">
 			<TextBlock Text="An update to the Project Tracker is available!" TextWrapping="Wrap" HorizontalAlignment="Left" Foreground="White" FontSize="18" Margin="10,10,0,58" VerticalAlignment="Center" Width="234" Height="63" />

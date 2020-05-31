@@ -56,6 +56,7 @@ namespace Project_Tracker {
 		private bool isSettingsOpen = false;
 		private bool isSwitchingAnimationRunning = false;
 		private bool isTypeSelecting = false;
+		private bool isOverallSettingsOpen = false;
 		private int itemIndex = 0;
 		private int itemsAdded = 0;
 		// The amount of items added to the scrollviewer
@@ -1736,6 +1737,19 @@ namespace Project_Tracker {
 					displayingTitle.Visibility = Visibility.Visible;
 				}
 			}
+
+			if (isOverallSettingsOpen) { // Hide the icon selector window if they click out
+				Dispatcher.Invoke(new Action(() => {
+					isOverallSettingsOpen = false;
+
+					DoubleAnimation animation = new DoubleAnimation();
+					animation.From = 70;
+					animation.To = 0;
+					animation.Duration = TimeSpan.FromSeconds(0.2);
+
+					overallSettingsBorder.BeginAnimation(HeightProperty, animation);
+				}));
+			}
 		}
 
 		/// <summary>
@@ -1939,5 +1953,72 @@ namespace Project_Tracker {
 		}
 
 		#endregion Item selection presses
+
+		private void overallSettingsBorder_LostFocus(object sender, RoutedEventArgs e) {
+			if (isOverallSettingsOpen) { // Hide the icon selector window if they click out
+				Dispatcher.Invoke(new Action(() => {
+					isOverallSettingsOpen = false;
+
+					DoubleAnimation animation = new DoubleAnimation();
+					animation.From = 70;
+					animation.To = 0;
+					animation.Duration = TimeSpan.FromSeconds(0.2);
+
+					overallSettingsBorder.BeginAnimation(HeightProperty, animation);
+				}));
+			}
+		}
+
+		private void OverallSettingsBorderMouseDown(object sender, MouseButtonEventArgs e) {
+			if (!isOverallSettingsOpen) { // Display icon selector window
+				Thread thread = new Thread(() => {
+					Dispatcher.Invoke(new Action(() => {
+						isOverallSettingsOpen = true;
+
+						overallSettingsBorder.Visibility = Visibility.Visible;
+
+						DoubleAnimation animation = new DoubleAnimation();
+						animation.From = 0;
+						animation.To = 70;
+						animation.Duration = TimeSpan.FromSeconds(0.2);
+
+						overallSettingsBorder.BeginAnimation(HeightProperty, animation);
+					}));
+				});
+				thread.Start();
+			}
+			else if (isOverallSettingsOpen) { // Hide the icon selector window if they click out
+				Dispatcher.Invoke(new Action(() => {
+					isOverallSettingsOpen = false;
+
+					DoubleAnimation animation = new DoubleAnimation();
+					animation.From = 70;
+					animation.To = 0;
+					animation.Duration = TimeSpan.FromSeconds(0.2);
+
+					overallSettingsBorder.BeginAnimation(HeightProperty, animation);
+				}));
+			}
+		}
+
+		private void SettingsButtonMouseDown(object sender, MouseButtonEventArgs e) {
+			Window_MouseDown(sender, e);
+
+			// Hide everything in the window
+			noProjectsGrid.Visibility = Visibility.Hidden;
+			settingsImage.Visibility = Visibility.Hidden;
+			changeTitleBorder.Visibility = Visibility.Hidden;
+			addItemBorder.Visibility = Visibility.Hidden;
+			scrollviewerGrid.Visibility = Visibility.Hidden;
+			completeGrid.Visibility = Visibility.Hidden;
+
+			// Show everything
+			displayingImage.Visibility = Visibility.Visible;
+			displayingTitle.Visibility = Visibility.Visible;
+
+			// Set values
+			displayingImage.Source = (ImageSource)TryFindResource("settingsDrawingImage");
+			displayingTitle.Content = "Settings";
+		}
 	}
 }
