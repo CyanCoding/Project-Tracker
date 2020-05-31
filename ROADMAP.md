@@ -30,7 +30,7 @@ date will be posted allowing you to stay up to date with when new updates will b
 - [x] Create a better design for main window.
 - [x] A more subtle way of displaying an update.
 - [x] A way to see the language for each project.
-- [ ] Allow resizing of windows.
+- [x] Allow resizing of windows.
 - [ ] Add a settings menu.
 - [ ] Allow users to check for updates after the app is opened.
 - [ ] Allow users to install pre-releases automatically from the app.
