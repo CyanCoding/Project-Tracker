@@ -6,6 +6,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -47,6 +48,12 @@ namespace Project_Tracker {
 		private readonly string VERSION_MANIFEST_URL =
 			"https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/version.json";
 
+		private readonly string NEXT_VERSION_MANIFEST_URL =
+			"https://raw.githubusercontent.com/CyanCoding/Project-Tracker/cyancoding-settings-branch/install-resources/next-version.json";
+
+		private readonly string NEXT_VERSION_INFO = Environment.GetFolderPath
+			(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/next-version.json";
+
 		private int addingType = 0;
 		private string duration;
 		private string icon;
@@ -60,6 +67,7 @@ namespace Project_Tracker {
 		private bool isSettingsWindowDisplaying = false;
 		private int itemIndex = 0;
 		private int itemsAdded = 0;
+		private bool updateResponse = false;
 		// The amount of items added to the scrollviewer
 		private string percent;
 
@@ -1212,6 +1220,8 @@ namespace Project_Tracker {
 				isSettingsWindowDisplaying = false;
 			}
 
+			settingsGrid.Visibility = Visibility.Hidden;
+
 			border1.Style = (Style)TryFindResource("hoverOver");
 			border2.Style = (Style)TryFindResource("hoverOver");
 			border3.Style = (Style)TryFindResource("hoverOver");
@@ -1359,7 +1369,7 @@ namespace Project_Tracker {
 				}
 			}
 			else if (!isSettingsWindowDisplaying) { // There's no projects
-				   // Hide all items
+													// Hide all items
 				displayingTitle.Visibility = Visibility.Hidden;
 				displayingImage.Visibility = Visibility.Hidden;
 				settingsImage.Visibility = Visibility.Hidden;
@@ -1445,8 +1455,6 @@ namespace Project_Tracker {
 		/// Startup function that runs when code execution starts.
 		/// </summary>
 		private void Startup() {
-			// Item positioning
-
 			if (!Directory.Exists(APPDATA_DIRECTORY)) { // Create AppData directory
 				Directory.CreateDirectory(APPDATA_DIRECTORY);
 			}
@@ -1514,16 +1522,27 @@ namespace Project_Tracker {
 			if (File.Exists(VERSION_INFO)) {
 				File.Delete(VERSION_INFO);
 			}
+			if (File.Exists(NEXT_VERSION_INFO)) {
+				File.Delete(NEXT_VERSION_INFO);
+			}
 
-			// Download latest version information
-			try {
-				WebClient client = new WebClient();
-				client.DownloadFileCompleted += new AsyncCompletedEventHandler(Update);
-				client.DownloadFileAsync(new Uri(VERSION_MANIFEST_URL), VERSION_INFO);
-			}
-			catch (WebException) {
-				// Couldn't download update file. Possible their wifi isn't working
-			}
+			Thread thread = new Thread(() =>
+			{
+				Dispatcher.Invoke(new Action(() =>
+				{
+					// Download latest version information
+					try {
+						WebClient client = new WebClient();
+						client.DownloadFileCompleted += new AsyncCompletedEventHandler(Update);
+						client.DownloadFileAsync(new Uri(VERSION_MANIFEST_URL), VERSION_INFO);
+					}
+					catch (WebException) {
+						// Couldn't download update file. Possible their wifi isn't working
+					}
+				}));
+			});
+			thread.Start();
+
 		}
 
 		/// <summary>
@@ -1619,15 +1638,50 @@ namespace Project_Tracker {
 		/// Notifies the user of an update if one is available.
 		/// </summary>
 		private void Update(object sender, AsyncCompletedEventArgs e) {
+			// Download future version information
+			try {
+				WebClient client = new WebClient();
+				client.DownloadFileCompleted += new AsyncCompletedEventHandler(NextVersionDownloadComplete);
+				client.DownloadFileAsync(new Uri(NEXT_VERSION_MANIFEST_URL), NEXT_VERSION_INFO);
+			}
+			catch (WebException) {
+				// Couldn't download update file. Possible their wifi isn't working
+				nextVersionLabel.Content = "Couldn't get next release data.";
+				latestVersionLabel.Content = "Latest version: unavailable";
+				nextVersionReleaseLabel.Visibility = Visibility.Hidden;
+				nextVersionFeaturesLabel.Visibility = Visibility.Hidden;
+				nextVersionUpdateOneLabel.Visibility = Visibility.Hidden;
+				nextVersionUpdateTwoLabel.Visibility = Visibility.Hidden;
+				nextVersionUpdateThreeLabel.Visibility = Visibility.Hidden;
+				updateResponse = true;
+			}
+
 			string json = File.ReadAllText(VERSION_INFO);
+
+			if (json == "" && isSettingsWindowDisplaying) { // Didn't download the entire file properly
+				System.Windows.Forms.MessageBox.Show("Please connect to the Internet to check for an update.",
+					"No Internet Connection",
+					System.Windows.Forms.MessageBoxButtons.OK,
+					System.Windows.Forms.MessageBoxIcon.Error);
+				updateResponse = true;
+				latestVersionLabel.Content = "Latest version: unavailable";
+				return;
+			}
+			else if (json == "") {
+				nextVersionLabel.Content = "Couldn't get next release data.";
+				updateResponse = true;
+				return;
+			}
 
 			UpdateManifest.Rootobject update =
 				JsonConvert.DeserializeObject<UpdateManifest.Rootobject>(json);
 
+			latestVersionLabel.Visibility = Visibility.Visible;
+			latestVersionLabel.Content = "Latest version: " + update.Version;
+
 			if (float.Parse(CURRENT_VERSION) < float.Parse(update.Version)) { // Update is available
 				Thread thread = new Thread(() =>
 				{
-					Thread.Sleep(5000);
 					Dispatcher.Invoke(new Action(() =>
 					{
 						updateGrid.Visibility = Visibility.Visible;
@@ -1641,9 +1695,76 @@ namespace Project_Tracker {
 					}));
 				});
 				thread.Start();
+				updateResponse = true;
+			}
+			else if (isSettingsWindowDisplaying) {
+				System.Windows.Forms.MessageBox.Show("You're running the latest version of the Project Tracker!",
+					"No New Update",
+					System.Windows.Forms.MessageBoxButtons.OK,
+					System.Windows.Forms.MessageBoxIcon.Information);
+				updateResponse = true;
 			}
 		}
 
+		/// <summary>
+		/// Runs when the next version file has been downloaded.
+		/// Sets the next update info in the settings.
+		/// </summary>
+		private void NextVersionDownloadComplete(object sender, AsyncCompletedEventArgs e) {
+			string json = File.ReadAllText(NEXT_VERSION_INFO);
+
+			if (json == "" && isSettingsWindowDisplaying) { // Didn't download the entire file properly
+															// Couldn't download update file. Possible their wifi isn't working
+				nextVersionLabel.Content = "Couldn't get next release data.";
+				latestVersionLabel.Content = "Latest version: unavailable";
+				nextVersionReleaseLabel.Visibility = Visibility.Hidden;
+				nextVersionFeaturesLabel.Visibility = Visibility.Hidden;
+				nextVersionUpdateOneLabel.Visibility = Visibility.Hidden;
+				nextVersionUpdateTwoLabel.Visibility = Visibility.Hidden;
+				nextVersionUpdateThreeLabel.Visibility = Visibility.Hidden;
+				updateResponse = true;
+				return;
+			}
+			else if (json == "") {
+				updateResponse = true;
+				return;
+			}
+
+			NextVersionManifest.Rootobject nextVersionInfo =
+				JsonConvert.DeserializeObject<NextVersionManifest.Rootobject>(json);
+			nextVersionLabel.Visibility = Visibility.Visible;
+			nextVersionLabel.Content = "Version: " + nextVersionInfo.Version;
+
+			nextVersionReleaseLabel.Visibility = Visibility.Visible;
+			if (nextVersionInfo.ReleaseDateConfirmed == "false") {
+				nextVersionReleaseLabel.Content = "Estimated release date: " + nextVersionInfo.EstimatedRelease;
+			}
+			else {
+				nextVersionReleaseLabel.Content = "Release date: " + nextVersionInfo.EstimatedRelease;
+			}
+
+			nextVersionUpdateOneLabel.Visibility = Visibility.Visible;
+			nextVersionUpdateTwoLabel.Visibility = Visibility.Hidden;
+			nextVersionUpdateThreeLabel.Visibility = Visibility.Hidden;
+
+			if (nextVersionInfo.NewFeatures[0] == "") {
+				nextVersionUpdateOneLabel.Content = "Feature list coming soon...";
+			}
+			else {
+				nextVersionUpdateOneLabel.Content = "1. " + nextVersionInfo.NewFeatures[0];
+			}
+
+			if (nextVersionInfo.NewFeatures[1] != "") {
+				nextVersionUpdateTwoLabel.Visibility = Visibility.Visible;
+				nextVersionUpdateTwoLabel.Content = "2. " + nextVersionInfo.NewFeatures[1];
+			}
+
+			if (nextVersionInfo.NewFeatures[2] != "") {
+				nextVersionUpdateThreeLabel.Visibility = Visibility.Visible;
+				nextVersionUpdateThreeLabel.Content = "3. " + nextVersionInfo.NewFeatures[2];
+			}
+			updateResponse = true;
+		}
 		/// <summary>
 		/// Runs when the user presses the update button when an update is available.
 		/// </summary>
@@ -2024,9 +2145,63 @@ namespace Project_Tracker {
 			// Set values
 			displayingImage.Source = (ImageSource)TryFindResource("settingsDrawingImage");
 			displayingTitle.Content = "Settings";
+			currentVersionLabel.Content = "Installed version: " + CURRENT_VERSION;
+
 			isSettingsWindowDisplaying = true;
 			selectedIndex = 0;
 			SetSelectedProject();
+			settingsGrid.Visibility = Visibility.Visible;
+
+		}
+
+		private void UpdateButtonMouseDown(object sender, MouseButtonEventArgs e) {
+			updateButton1.IsEnabled = false;
+
+			if (File.Exists(VERSION_INFO)) {
+				File.Delete(VERSION_INFO);
+			}
+			if (File.Exists(NEXT_VERSION_INFO)) {
+				File.Delete(NEXT_VERSION_INFO);
+			}
+
+			DisableUpdateButton();
+			// Download latest version information
+			try {
+				updateButton1.IsEnabled = false;
+				updateResponse = false;
+
+				WebClient updateClient = new WebClient();
+				updateClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Update);
+				updateClient.DownloadFileAsync(new Uri(VERSION_MANIFEST_URL), VERSION_INFO);
+			}
+			catch (WebException) {
+				// Couldn't download update file. Possible their wifi isn't working
+				updateResponse = true;
+			}
+		}
+
+
+		/// <summary>
+		/// Waits for 15 seconds before allowing the user to check for an update again.
+		/// </summary>
+		/// <returns></returns>
+		private async Task DisableUpdateButton() {
+			for (int i = 15; i >= 0; i--) {
+				updateButton1.Content = i.ToString();
+				await Task.Delay(1000);
+			}
+			if (updateResponse) {
+				updateButton1.Content = "Check for an update";
+				updateButton1.IsEnabled = true;
+			}
+			else {
+				updateButton1.Content = "Please wait...";
+				while (!updateResponse) {
+					await Task.Delay(1000);
+				}
+				updateButton1.Content = "Check for an update";
+				updateButton1.IsEnabled = true;
+			}
 		}
 	}
 }
