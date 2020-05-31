@@ -36,7 +36,7 @@ date will be posted allowing you to stay up to date with when new updates will b
 - [ ] Bring back project duration.
 
 ### v3.0:
-**Estimated release date:** `July 10th 2020`
+**Estimated release date:** `July 10th, 2020`
 - [ ] Allow linking of a folder to each project to easily see files from Project Tracker.
 - [ ] GitHub integration!
 - [ ] Lines of code counting and display.
