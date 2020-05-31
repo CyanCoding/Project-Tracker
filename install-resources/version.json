@@ -1,13 +1,10 @@
 {
-  "Version": "1.5",
+  "Version": "1.6",
   "Updates": [
-    "Created a new design for the Project Tracker!",
-    "Removed project duration (coming back soon!).",
-    "Added project icons."
+    "Added the ability to resize the window!"
   ],
   "Fixes": [
     "Improved overall performance.",
-    "Fixed project saving issues and other saving bugs.",
-    "Fixed an issue with the installer not installing properly."
+    "Fixed installer issues and added download progress bar."
   ]
 }

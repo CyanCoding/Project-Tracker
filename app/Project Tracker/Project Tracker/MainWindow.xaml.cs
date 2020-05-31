@@ -20,7 +20,7 @@ namespace Project_Tracker {
 			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
 			+ "/Project Tracker";
 
-		private readonly string CURRENT_VERSION = "1.5";
+		private readonly string CURRENT_VERSION = "1.6";
 		private readonly string DATA_DIRECTORY =
 			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
 			+ "/Project Tracker/data";
