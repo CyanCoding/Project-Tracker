@@ -8,7 +8,7 @@
         mc:Ignorable="d"
 		ShowTitlebar="True"
 		Theme="Dark"
-        Title="Project Tracker" Height="800" Width="1200" Icon="icon.ico" PreviewKeyDown="KeyPress" Closing="Window_Closing" SizeChanged="Window_SizeChanged" MouseDown="Window_MouseDown" WindowState="Normal" ResizeMode="NoResize">
+        Title="Project Tracker" Height="800" Width="1200" Icon="icon.ico" PreviewKeyDown="KeyPress" Closing="Window_Closing" SizeChanged="Window_SizeChanged" MouseDown="Window_MouseDown" WindowState="Normal" MinHeight="700" MinWidth="1175">
 	<!-- If you ever change the logo, it must be 16x, 32x, 48x, 64x, 128x, and 256x. Pack it all into an ico file look up how to do it if you forgot -->
 
 	<uwp:Window.Resources>
@@ -69,7 +69,7 @@
 
 
 	<Grid Background="White">
-		<Rectangle Fill="#FF212121" HorizontalAlignment="Left" Height="776" VerticalAlignment="Top" Width="350" Margin="-5,-5,-5,-5"/>
+		<Rectangle x:Name="blackRectangle" Fill="#FF212121" HorizontalAlignment="Left" Height="776" VerticalAlignment="Top" Width="350" Margin="-5,-5,-5,-5"/>
 		<Canvas VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,43,0,0" Height="45" Width="45">
 			<Image Source="{StaticResource checked_checkedboxDrawingImage}" Height="45" Width="45"/>
 		</Canvas>
@@ -263,34 +263,36 @@
 		</Grid>
 
 		<!-- The view if there is projects made -->
-		<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="400,31,0,0">
-			<Image x:Name="displayingImage"  Source="{StaticResource noIcon}" Height="45" Width="45" Visibility="Hidden" PreviewMouseDown="displayingImage_PreviewMouseDown" Cursor="Hand"/>
-		</Canvas>
-		<Canvas HorizontalAlignment="Right" VerticalAlignment="Top" Height="40" Width="40" Margin="0,45,45,0">
-			<Image x:Name="settingsImage"  Source="{StaticResource settingsDrawingImage}" Height="40" Width="40" Visibility="Hidden" PreviewMouseDown="settingsImage_PreviewMouseDown" Cursor="Hand"/>
-		</Canvas>
+		<Grid Margin="345,0,0,0">
+			<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="75,31,0,0" >
+				<Image x:Name="displayingImage"  Source="{StaticResource noIcon}" Height="45" Width="45" Visibility="Hidden" PreviewMouseDown="displayingImage_PreviewMouseDown" Cursor="Hand"/>
+			</Canvas>
+			<Canvas HorizontalAlignment="Right" VerticalAlignment="Top" Height="40" Width="40" Margin="0,45,45,0">
+				<Image x:Name="settingsImage"  Source="{StaticResource settingsDrawingImage}" Height="40" Width="40" Visibility="Hidden" PreviewMouseDown="settingsImage_PreviewMouseDown" Cursor="Hand"/>
+			</Canvas>
 
 
-		<Label x:Name="displayingTitle" VerticalContentAlignment="Top" HorizontalAlignment="Left" Content="" FontSize="40" Margin="450,21,0,7" FontWeight="Medium" Visibility="Hidden"/>
-		<!-- Make sure this has equal padding on all sides -->
-		<Border x:Name="addItemBorder" BorderBrush="Black" CornerRadius="10" BorderThickness="3" HorizontalAlignment="Left" Height="73" Margin="391,0,0,15" VerticalAlignment="Bottom" Width="750" Visibility="Hidden">
-			<Grid>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition/>
-					<ColumnDefinition Width="60"/>
-				</Grid.ColumnDefinitions>
-				<TextBox x:Name="addItemTextBox" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Add something to the project" VerticalContentAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" Height="67" Width="675" FontSize="28" SelectionBrush="#FF0D759C" Grid.ColumnSpan="2" BorderBrush="{x:Null}" PreviewMouseDown="AddNewItemTextBoxClick" LostFocus="addItemTextBox_LostFocus"/>
+			<Label x:Name="displayingTitle" VerticalContentAlignment="Top" HorizontalAlignment="Left" Content="" FontSize="40" Margin="135,21,0,7" FontWeight="Medium" Visibility="Hidden"/>
+			<!-- Make sure this has equal padding on all sides -->
+			<Border x:Name="addItemBorder" BorderBrush="Black" CornerRadius="10" BorderThickness="3" HorizontalAlignment="Center" Height="73" Margin="0,0,0,10" VerticalAlignment="Bottom" Width="750" Visibility="Hidden">
+				<Grid x:Name="addItemGrid" HorizontalAlignment="Stretch">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition/>
+						<ColumnDefinition Width="60"/>
+					</Grid.ColumnDefinitions>
+					<TextBox x:Name="addItemTextBox" Grid.Column="0" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="Add something to the project" VerticalContentAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" Height="67" FontSize="28" SelectionBrush="#FF0D759C" BorderBrush="{x:Null}" PreviewMouseDown="AddNewItemTextBoxClick" LostFocus="addItemTextBox_LostFocus"/>
 
-				<Canvas x:Name="newItemTypeCanvas" HorizontalAlignment="Center" VerticalAlignment="Center" Height="45" Width="45" Grid.Column="1">
-					<Image x:Name="addingTypeImage" Source="{StaticResource errorDrawingImage}" Height="45" Width="45" PreviewMouseDown="TypeImagePressed" Cursor="Hand"/>
-				</Canvas>
-			</Grid>
-		</Border>
+					<Canvas x:Name="newItemTypeCanvas" HorizontalAlignment="Center" VerticalAlignment="Center" Height="45" Width="45" Grid.Column="1">
+						<Image x:Name="addingTypeImage" Source="{StaticResource errorDrawingImage}" Height="45" Width="45" PreviewMouseDown="TypeImagePressed" Cursor="Hand"/>
+					</Canvas>
+				</Grid>
+			</Border>
 
-		<ScrollViewer Margin="350,198,0,105" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
-			<Grid x:Name="scrollviewerGrid" Visibility="Hidden">
-			</Grid>
-		</ScrollViewer>
+			<ScrollViewer Margin="0,198,0,105" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden">
+				<Grid x:Name="scrollviewerGrid" Visibility="Visible" Width="750">
+				</Grid>
+			</ScrollViewer>
+		</Grid>
 
 		<!-- Incomplete vs complete grid -->
 		<Grid x:Name="completeGrid" Margin="391,136,0,0" Visibility="Hidden">
@@ -453,7 +455,7 @@
 
 		<!-- The settings border -->
 		<!-- NOTE: If you add another floating border, you need to set the ROW DEFINITION for it to hide and show properly -->
-		<Border x:Name="settingsBorder" CornerRadius="10" HorizontalAlignment="Right" Height="0" VerticalAlignment="Top" Width="255" Background="White" Visibility="Hidden" LostFocus="settingsBorder_LostFocus" Margin="00,95,10,0" Cursor="Hand">
+		<Border x:Name="settingsBorder" CornerRadius="10" HorizontalAlignment="Right" Height="0" VerticalAlignment="Top" Width="235" Background="White" Visibility="Hidden" LostFocus="settingsBorder_LostFocus" Margin="00,95,10,0" Cursor="Hand">
 			<Border.Effect>
 				<DropShadowEffect ShadowDepth="1"/>
 			</Border.Effect>
@@ -465,12 +467,12 @@
 					</Grid.RowDefinitions>
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="50"/>
-						<ColumnDefinition Width="205"/>
+						<ColumnDefinition Width="180"/>
 					</Grid.ColumnDefinitions>
 					<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,10,0,0" Cursor="Hand" Grid.Column="0" Grid.ColumnSpan="2">
 						<Image Source="{StaticResource trashcanDrawingImage}" Height="45" Width="45" Grid.Column="0"/>
 					</Canvas>
-					<Label Content="Delete project" Grid.Column="1" HorizontalAlignment="Left" Margin="10,-5,0,0" VerticalAlignment="Center" FontSize="24" Width="173" Height="70" VerticalContentAlignment="Center"/>
+					<Label Content="Delete project" Grid.Column="1" HorizontalAlignment="Left" Margin="10,-5,0,0" VerticalAlignment="Center" FontSize="24" Width="180" Height="70" VerticalContentAlignment="Center"/>
 				</Grid>
 			</Border>
 		</Border>

@@ -4,11 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -77,6 +79,8 @@ namespace Project_Tracker {
 			grid.VerticalAlignment = VerticalAlignment.Top;
 			grid.HorizontalAlignment = HorizontalAlignment.Center;
 
+			grid.Name = "g" + itemsAdded;
+
 			ColumnDefinition column1 = new ColumnDefinition();
 			column1.Width = new GridLength(50, GridUnitType.Pixel);
 			ColumnDefinition column2 = new ColumnDefinition();
@@ -90,12 +94,11 @@ namespace Project_Tracker {
 
 			// The border is a curved rectangle behind all the other objects
 			Border border = new Border();
-			border.Width = 725;
 			border.Height = 60;
 			border.CornerRadius = new CornerRadius(10);
 			border.Background = new SolidColorBrush(itemColor);
 			border.BorderThickness = new Thickness(2);
-			border.HorizontalAlignment = HorizontalAlignment.Left;
+			border.HorizontalAlignment = HorizontalAlignment.Stretch;
 			border.VerticalAlignment = VerticalAlignment.Top;
 			border.Margin = new Thickness(0, 0, -5, 0);
 			border.SetValue(Grid.ColumnSpanProperty, 4);
@@ -163,7 +166,7 @@ namespace Project_Tracker {
 			Label label = new Label();
 			label.Content = text;
 			label.Foreground = new SolidColorBrush(labelTextColor);
-			label.Margin = new Thickness(80, 6, 20, 0);
+			label.Margin = new Thickness(70, 6, 70, 0);
 			label.FontSize = 24;
 
 			border.Child = label;
@@ -489,6 +492,25 @@ namespace Project_Tracker {
 					}
 				}
 
+				scrollviewerGrid.Width = this.Width - 450;
+
+				for (int i = 0; i < scrollviewerGrid.Children.Count; i++) {
+					Grid grid = (Grid)scrollviewerGrid.Children[i];
+
+					grid.ColumnDefinitions.RemoveRange(0, 3);
+
+					ColumnDefinition column1 = new ColumnDefinition();
+					column1.Width = new GridLength(50, GridUnitType.Pixel);
+					ColumnDefinition column2 = new ColumnDefinition();
+					column2.Width = new GridLength(this.Width - 580, GridUnitType.Pixel);
+					ColumnDefinition column3 = new ColumnDefinition();
+					column3.Width = new GridLength(50, GridUnitType.Pixel);
+
+					grid.ColumnDefinitions.Add(column1);
+					grid.ColumnDefinitions.Add(column2);
+					grid.ColumnDefinitions.Add(column3);
+				}
+
 				if (itemsAdded == 0 && !isCompletedTasksShown) {
 					errorCanvas.Margin = new Thickness(0, 0, 120, 20);
 					featureCanvas.Margin = new Thickness(0, 0, 0, 20);
@@ -555,8 +577,6 @@ namespace Project_Tracker {
 		/// Startup function that runs when code execution starts.
 		/// </summary>
 		private void Startup() {
-			this.Height = 815;
-			this.Width = 1200;
 			// Item positioning
 
 			if (!Directory.Exists(APPDATA_DIRECTORY)) { // Create AppData directory
@@ -932,7 +952,29 @@ namespace Project_Tracker {
 		/// When the user resizes the window.
 		/// </summary>
 		private void Window_SizeChanged(object sender, SizeChangedEventArgs e) {
-			
+			blackRectangle.Height = this.Height + 5;
+			addItemBorder.Width = this.Width - 450;
+
+			scrollviewerGrid.Width = this.Width - 450;
+
+			for (int i = 0; i < scrollviewerGrid.Children.Count; i++) {
+				Grid grid = (Grid)scrollviewerGrid.Children[i];
+
+				grid.ColumnDefinitions.RemoveRange(0, 3);
+
+				ColumnDefinition column1 = new ColumnDefinition();
+				column1.Width = new GridLength(50, GridUnitType.Pixel);
+				ColumnDefinition column2 = new ColumnDefinition();
+				column2.Width = new GridLength(this.Width - 580, GridUnitType.Pixel);
+				ColumnDefinition column3 = new ColumnDefinition();
+				column3.Width = new GridLength(50, GridUnitType.Pixel);
+
+				grid.ColumnDefinitions.Add(column1);
+				grid.ColumnDefinitions.Add(column2);
+				grid.ColumnDefinitions.Add(column3);
+			}
+
+			Console.WriteLine("Height: " + this.Height + " Width: " + this.Width);
 		}
 
 		#region Border onclicks
