@@ -271,9 +271,8 @@
 
 			<Label x:Name="displayingTitle" VerticalContentAlignment="Top" HorizontalAlignment="Left" Content="" FontSize="40" Margin="135,21,0,7" FontWeight="Medium" Visibility="Visible" />
 			<Border x:Name="changeTitleBorder" BorderBrush="#FF919191" BorderThickness="2" HorizontalAlignment="Left" Height="64" Margin="135,21,0,0" VerticalAlignment="Top" Width="500" Visibility="Hidden">
-				<TextBox x:Name="changeTitleTextBox" TextWrapping="Wrap" Text="Project Tracker" FontSize="40" LostFocus="changeTitleTextBox_LostFocus"/>
+				<TextBox x:Name="changeTitleTextBox" TextWrapping="Wrap" Text="Project Tracker" FontSize="40" LostFocus="changeTitleTextBox_LostFocus" />
 			</Border>
-			
 
 			<!-- Make sure this has equal padding on all sides -->
 			<Border x:Name="addItemBorder" BorderBrush="Black" CornerRadius="10" BorderThickness="3" HorizontalAlignment="Center" Height="73" Margin="0,0,0,10" VerticalAlignment="Bottom" Width="750" Visibility="Hidden">
@@ -463,13 +462,13 @@
 			</Border.Effect>
 			<Grid>
 				<Grid.RowDefinitions>
-					<RowDefinition Height="70"/>
-					<RowDefinition Height="70" PreviewMouseDown="RenameProjectButtonPressed"/>
-					<RowDefinition Height="70" PreviewMouseDown="DeleteProjectButtonPressed"/>
+					<RowDefinition Height="70" />
+					<RowDefinition Height="70" PreviewMouseDown="RenameProjectButtonPressed" />
+					<RowDefinition Height="70" PreviewMouseDown="DeleteProjectButtonPressed" />
 				</Grid.RowDefinitions>
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="50"/>
-					<ColumnDefinition Width="180"/>
+					<ColumnDefinition Width="50" />
+					<ColumnDefinition Width="180" />
 				</Grid.ColumnDefinitions>
 
 				<!-- First item -->
@@ -477,7 +476,7 @@
 					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="50" />
-							<ColumnDefinition Width="180"/>
+							<ColumnDefinition Width="180" />
 						</Grid.ColumnDefinitions>
 						<Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Height="40" Width="40" Cursor="Hand" Margin="10,16,1,14" Grid.Column="0">
 							<Image Source="{StaticResource trashcanDrawingImage}" Height="40" Width="40" Grid.Column="0" />
@@ -491,25 +490,25 @@
 					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="50" />
-							<ColumnDefinition Width="180"/>
+							<ColumnDefinition Width="180" />
 						</Grid.ColumnDefinitions>
 						<Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Height="40" Width="40" Cursor="Hand" Margin="10,16,1,14" Grid.Column="0" Grid.Row="1">
 							<Image Source="{StaticResource pencilDrawingImage}" Height="40" Width="40" Grid.Column="0" />
 						</Canvas>
-						<Label Content="Rename project" Grid.Column="1" HorizontalAlignment="Left" Margin="10,0,-9,0" VerticalAlignment="Center" FontSize="24" Width="180" Height="70" VerticalContentAlignment="Center" Grid.Row="1"/>
+						<Label Content="Rename project" Grid.Column="1" HorizontalAlignment="Left" Margin="10,0,-9,0" VerticalAlignment="Center" FontSize="24" Width="180" Height="70" VerticalContentAlignment="Center" Grid.Row="1" />
 					</Grid>
 				</Border>
 				<!-- Third item -->
-				<Border PreviewMouseDown="DeleteProjectButtonPressed" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+				<Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
 					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="50" />
-							<ColumnDefinition Width="180"/>
+							<ColumnDefinition Width="180" />
 						</Grid.ColumnDefinitions>
 						<Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Height="40" Width="40" Cursor="Hand" Margin="10,16,1,14" Grid.Column="0" Grid.Row="2">
 							<Image Source="{StaticResource graphDrawingImage}" Height="40" Width="40" Grid.Column="0" />
 						</Canvas>
-						<Label Content="Project statistics" Grid.Column="1" HorizontalAlignment="Left" Margin="10,0,-9,0" VerticalAlignment="Center" FontSize="24" Width="180" Height="70" VerticalContentAlignment="Center" Grid.Row="2"/>
+						<Label Content="Project statistics" Grid.Column="1" HorizontalAlignment="Left" Margin="10,0,-9,0" VerticalAlignment="Center" FontSize="24" Width="180" Height="70" VerticalContentAlignment="Center" Grid.Row="2" />
 					</Grid>
 				</Border>
 			</Grid>
