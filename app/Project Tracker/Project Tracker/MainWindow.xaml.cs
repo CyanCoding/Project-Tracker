@@ -16,11 +16,13 @@ namespace Project_Tracker {
 
 	public partial class MainWindow : UWPHost.Window {
 		public List<string> filesRead = new List<string>();
+
 		private readonly string APPDATA_DIRECTORY =
 			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
 			+ "/Project Tracker";
 
 		private readonly string CURRENT_VERSION = "1.6";
+
 		private readonly string DATA_DIRECTORY =
 			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
 			+ "/Project Tracker/data";
@@ -33,6 +35,7 @@ namespace Project_Tracker {
 
 		private readonly Color labelTextColor = Color.FromRgb(255, 255, 255);
 		private readonly string pathExtension = "*.json";
+
 		// IF YOU CHANGE THE VERSION, CHANGE WHETHER IT'S BETA OR NOT
 		private readonly string SETTINGS_FILE =
 			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
@@ -47,17 +50,21 @@ namespace Project_Tracker {
 		private int addingType = 0;
 		private string duration;
 		private string icon;
+		private bool isChangingTitle = false;
 		private bool isCompletedTasksShown = false;
 		private bool isIconSelecting = false;
 		private bool isSettingsOpen = false;
 		private bool isSwitchingAnimationRunning = false;
 		private bool isTypeSelecting = false;
 		private int itemIndex = 0;
-		private int itemsAdded = 0; // The amount of items added to the scrollviewer
+		private int itemsAdded = 0;
+		// The amount of items added to the scrollviewer
 		private string percent;
 
-		// Keeps the user from double clicking the animation
+		private int renameProjectClicks = 0; // When we click on the rename project button it activates the "you click the window so stop renaming" so we use an index to make sure that doesn't happen
+											 // Keeps the user from double clicking the animation
 		private int selectedIndex = 0;
+
 		// We need this to figure out the index of the item
 		// The type of item we're adding (0 = error, 1 = feature, 2 = comment)
 
@@ -69,6 +76,7 @@ namespace Project_Tracker {
 
 		// Each project's data - Used for saving
 		private string title;
+
 		public MainWindow() {
 			InitializeComponent();
 			Startup();
@@ -121,6 +129,8 @@ namespace Project_Tracker {
 		}
 
 		private void AddProjectClick(object sender, MouseButtonEventArgs e) {
+			Window_MouseDown(sender, e);
+
 			if (addProjectTextBox.Text == "Create a new project") {
 				addProjectTextBox.Text = "";
 			}
@@ -344,6 +354,15 @@ namespace Project_Tracker {
 			SetSelectedProject();
 		}
 
+		private void changeTitleTextBox_LostFocus(object sender, RoutedEventArgs e) {
+			isChangingTitle = false;
+
+			changeTitleTextBox.Text = title;
+
+			changeTitleBorder.Visibility = Visibility.Hidden;
+			displayingTitle.Visibility = Visibility.Visible;
+		}
+
 		/// <summary>
 		/// When we check off a task.
 		/// </summary>
@@ -397,7 +416,7 @@ namespace Project_Tracker {
 					isSettingsOpen = false;
 
 					DoubleAnimation animation = new DoubleAnimation();
-					animation.From = 70;
+					animation.From = 210;
 					animation.To = 0;
 					animation.Duration = TimeSpan.FromSeconds(0.2);
 
@@ -607,6 +626,19 @@ namespace Project_Tracker {
 				Keyboard.ClearFocus();
 				LoadFiles();
 				SetSelectedProject();
+			}
+			else if (e.Key == Key.Return && isChangingTitle) {
+				isChangingTitle = false;
+
+				title = changeTitleTextBox.Text;
+
+				changeTitleBorder.Visibility = Visibility.Hidden;
+				displayingTitle.Visibility = Visibility.Visible;
+
+				displayingTitle.Content = title;
+
+				Save(filesRead[selectedIndex - 1]);
+				LoadFiles();
 			}
 		}
 
@@ -982,6 +1014,16 @@ namespace Project_Tracker {
 
 			itemsAdded++;
 		}
+
+		private void RenameProjectButtonPressed(object sender, MouseButtonEventArgs e) {
+			isChangingTitle = true;
+			renameProjectClicks = 0;
+			changeTitleTextBox.Text = title;
+
+			changeTitleBorder.Visibility = Visibility.Visible;
+			displayingTitle.Visibility = Visibility.Hidden;
+		}
+
 		/// <summary>
 		/// Saves the project at the provided path.
 		/// </summary>
@@ -1346,7 +1388,7 @@ namespace Project_Tracker {
 					isSettingsOpen = false;
 
 					DoubleAnimation animation = new DoubleAnimation();
-					animation.From = 70;
+					animation.From = 210;
 					animation.To = 0;
 					animation.Duration = TimeSpan.FromSeconds(0.2);
 
@@ -1370,7 +1412,7 @@ namespace Project_Tracker {
 
 						DoubleAnimation animation = new DoubleAnimation();
 						animation.From = 0;
-						animation.To = 70;
+						animation.To = 210;
 						animation.Duration = TimeSpan.FromSeconds(0.2);
 
 						settingsBorder.BeginAnimation(HeightProperty, animation);
@@ -1384,7 +1426,7 @@ namespace Project_Tracker {
 					isSettingsOpen = false;
 
 					DoubleAnimation animation = new DoubleAnimation();
-					animation.From = 70;
+					animation.From = 210;
 					animation.To = 0;
 					animation.Duration = TimeSpan.FromSeconds(0.2);
 
@@ -1595,6 +1637,7 @@ namespace Project_Tracker {
 				thread.Start();
 			}
 		}
+
 		/// <summary>
 		/// Runs when the user presses the update button when an update is available.
 		/// </summary>
@@ -1624,6 +1667,7 @@ namespace Project_Tracker {
 		/// </summary>
 		private void Window_Closing(object sender, CancelEventArgs e) {
 		}
+
 		/// <summary>
 		/// When the user clicks their mouse in the window.
 		/// Generally used to hide borders.
@@ -1663,7 +1707,7 @@ namespace Project_Tracker {
 					isSettingsOpen = false;
 
 					DoubleAnimation animation = new DoubleAnimation();
-					animation.From = 70;
+					animation.From = 210;
 					animation.To = 0;
 					animation.Duration = TimeSpan.FromSeconds(0.2);
 
@@ -1680,6 +1724,18 @@ namespace Project_Tracker {
 				addProjectTextBox.Text = "Create a new project";
 				Keyboard.ClearFocus();
 			}
+
+			if (isChangingTitle) {
+				renameProjectClicks++;
+				if (renameProjectClicks == 2) {
+					isChangingTitle = false;
+
+					changeTitleTextBox.Text = title;
+
+					changeTitleBorder.Visibility = Visibility.Hidden;
+					displayingTitle.Visibility = Visibility.Visible;
+				}
+			}
 		}
 
 		/// <summary>
@@ -1688,6 +1744,7 @@ namespace Project_Tracker {
 		private void Window_SizeChanged(object sender, SizeChangedEventArgs e) {
 			blackRectangle.Height = this.Height + 5;
 			addItemBorder.Width = this.Width - 450;
+			changeTitleBorder.Width = this.Width - 700;
 
 			scrollviewerGrid.Width = this.Width - 450;
 
@@ -1760,7 +1817,9 @@ namespace Project_Tracker {
 			selectedIndex = 9;
 			SetSelectedProject();
 		}
+
 		#endregion Border onclicks
+
 		#region Icon clicks
 
 		private void checkboxIconMouseDown(object sender, MouseButtonEventArgs e) {
@@ -1826,6 +1885,7 @@ namespace Project_Tracker {
 		private void pythonIconMouseDown(object sender, MouseButtonEventArgs e) {
 			SetProjectIcon("pythonIcon");
 		}
+
 		private void rIconMouseDown(object sender, MouseButtonEventArgs e) {
 			SetProjectIcon("rIcon");
 		}
@@ -1845,10 +1905,13 @@ namespace Project_Tracker {
 		private void swiftIconMouseDown(object sender, MouseButtonEventArgs e) {
 			SetProjectIcon("swiftIcon");
 		}
+
 		private void visualBasicMouseDown(object sender, MouseButtonEventArgs e) {
 			SetProjectIcon("visual_basicIcon");
 		}
+
 		#endregion Icon clicks
+
 		#region Item selection presses
 
 		/// <summary>
@@ -1874,6 +1937,7 @@ namespace Project_Tracker {
 			addingTypeImage.Source = (ImageSource)TryFindResource("featureDrawingImage");
 			addingType = 1;
 		}
+
 		#endregion Item selection presses
 	}
 }
