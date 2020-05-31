@@ -52,7 +52,9 @@ namespace Project_Tracker {
 		private bool isSettingsOpen = false;
 		private bool isSwitchingAnimationRunning = false;
 		private bool isTypeSelecting = false;
+		private bool isChangingTitle = false;
 		private int itemIndex = 0;
+		private int renameProjectClicks = 0; // When we click on the rename project button it activates the "you click the window so stop renaming" so we use an index to make sure that doesn't happen
 		private int itemsAdded = 0; // The amount of items added to the scrollviewer
 		private string percent;
 
@@ -121,6 +123,8 @@ namespace Project_Tracker {
 		}
 
 		private void AddProjectClick(object sender, MouseButtonEventArgs e) {
+			Window_MouseDown(sender, e);
+
 			if (addProjectTextBox.Text == "Create a new project") {
 				addProjectTextBox.Text = "";
 			}
@@ -607,6 +611,19 @@ namespace Project_Tracker {
 				Keyboard.ClearFocus();
 				LoadFiles();
 				SetSelectedProject();
+			}
+			else if (e.Key == Key.Return && isChangingTitle) {
+				isChangingTitle = false;
+
+				title = changeTitleTextBox.Text;
+
+				changeTitleBorder.Visibility = Visibility.Hidden;
+				displayingTitle.Visibility = Visibility.Visible;
+
+				displayingTitle.Content = title;
+
+				Save(filesRead[selectedIndex - 1]);
+				LoadFiles();
 			}
 		}
 
@@ -1680,6 +1697,18 @@ namespace Project_Tracker {
 				addProjectTextBox.Text = "Create a new project";
 				Keyboard.ClearFocus();
 			}
+
+			if (isChangingTitle) {
+				renameProjectClicks++;
+				if (renameProjectClicks == 2) {
+					isChangingTitle = false;
+
+					changeTitleTextBox.Text = title;
+
+					changeTitleBorder.Visibility = Visibility.Hidden;
+					displayingTitle.Visibility = Visibility.Visible;
+				}
+			}
 		}
 
 		/// <summary>
@@ -1688,6 +1717,7 @@ namespace Project_Tracker {
 		private void Window_SizeChanged(object sender, SizeChangedEventArgs e) {
 			blackRectangle.Height = this.Height + 5;
 			addItemBorder.Width = this.Width - 450;
+			changeTitleBorder.Width = this.Width - 700;
 
 			scrollviewerGrid.Width = this.Width - 450;
 
@@ -1875,5 +1905,23 @@ namespace Project_Tracker {
 			addingType = 1;
 		}
 		#endregion Item selection presses
+
+		private void changeTitleTextBox_LostFocus(object sender, RoutedEventArgs e) {
+			isChangingTitle = false;
+
+			changeTitleTextBox.Text = title;
+
+			changeTitleBorder.Visibility = Visibility.Hidden;
+			displayingTitle.Visibility = Visibility.Visible;
+		}
+
+		private void RenameProjectButtonPressed(object sender, MouseButtonEventArgs e) {
+			isChangingTitle = true;
+			renameProjectClicks = 0;
+			changeTitleTextBox.Text = title;
+
+			changeTitleBorder.Visibility = Visibility.Visible;
+			displayingTitle.Visibility = Visibility.Hidden;
+		}
 	}
 }
