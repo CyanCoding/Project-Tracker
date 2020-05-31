@@ -452,24 +452,39 @@
 
 		<!-- The settings border -->
 		<!-- NOTE: If you add another floating border, you need to set the ROW DEFINITION for it to hide and show properly -->
-		<Border x:Name="settingsBorder" CornerRadius="10" HorizontalAlignment="Right" Height="0" VerticalAlignment="Top" Width="235" Background="White" Visibility="Hidden" LostFocus="settingsBorder_LostFocus" Margin="00,95,10,0" Cursor="Hand">
+		<Border x:Name="settingsBorder" CornerRadius="10" HorizontalAlignment="Right" Height="0" VerticalAlignment="Top" Width="260" Background="White" Visibility="Hidden" LostFocus="settingsBorder_LostFocus" Margin="00,95,10,0" Cursor="Hand">
 			<Border.Effect>
 				<DropShadowEffect ShadowDepth="1" />
 			</Border.Effect>
 			<Border PreviewMouseDown="DeleteProjectButtonPressed">
 				<Grid>
 					<Grid.RowDefinitions>
-						<RowDefinition Height="70" />
-						<RowDefinition />
+						<RowDefinition Height="70"/>
+						<RowDefinition Height="70"/>
+						<RowDefinition Height="70"/>
 					</Grid.RowDefinitions>
 					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="50" />
-						<ColumnDefinition Width="180" />
+						<ColumnDefinition Width="50"/>
+						<ColumnDefinition Width="180"/>
 					</Grid.ColumnDefinitions>
-					<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,10,0,0" Cursor="Hand" Grid.Column="0" Grid.ColumnSpan="2">
-						<Image Source="{StaticResource trashcanDrawingImage}" Height="45" Width="45" Grid.Column="0" />
+					
+					<!-- First item -->
+					<Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Height="40" Width="40" Cursor="Hand" Margin="10,16,1,14" Grid.Column="0">
+						<Image Source="{StaticResource trashcanDrawingImage}" Height="40" Width="40" Grid.Column="0" />
 					</Canvas>
-					<Label Content="Delete project" Grid.Column="1" HorizontalAlignment="Left" Margin="10,-5,0,0" VerticalAlignment="Center" FontSize="24" Width="180" Height="70" VerticalContentAlignment="Center" />
+					<Label Content="Delete project" Grid.Column="1" HorizontalAlignment="Left" Margin="10,0,-9,0" VerticalAlignment="Center" FontSize="24" Width="180" Height="70" VerticalContentAlignment="Center" />
+				
+					<!-- Second item -->
+					<Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Height="40" Width="40" Cursor="Hand" Margin="10,16,1,14" Grid.Column="0" Grid.Row="1">
+						<Image Source="{StaticResource pencilDrawingImage}" Height="40" Width="40" Grid.Column="0" />
+					</Canvas>
+					<Label Content="Rename project" Grid.Column="1" HorizontalAlignment="Left" Margin="10,0,-9,0" VerticalAlignment="Center" FontSize="24" Width="180" Height="70" VerticalContentAlignment="Center" Grid.Row="1"/>
+					
+					<!-- Third item -->
+					<Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Height="40" Width="40" Cursor="Hand" Margin="10,16,1,14" Grid.Column="0" Grid.Row="2">
+						<Image Source="{StaticResource graphDrawingImage}" Height="40" Width="40" Grid.Column="0" />
+					</Canvas>
+					<Label Content="Project statistics" Grid.Column="1" HorizontalAlignment="Left" Margin="10,0,-9,0" VerticalAlignment="Center" FontSize="24" Width="180" Height="70" VerticalContentAlignment="Center" Grid.Row="2"/>
 				</Grid>
 			</Border>
 		</Border>

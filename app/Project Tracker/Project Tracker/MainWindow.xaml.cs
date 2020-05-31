@@ -397,7 +397,7 @@ namespace Project_Tracker {
 					isSettingsOpen = false;
 
 					DoubleAnimation animation = new DoubleAnimation();
-					animation.From = 70;
+					animation.From = 210;
 					animation.To = 0;
 					animation.Duration = TimeSpan.FromSeconds(0.2);
 
@@ -1346,7 +1346,7 @@ namespace Project_Tracker {
 					isSettingsOpen = false;
 
 					DoubleAnimation animation = new DoubleAnimation();
-					animation.From = 70;
+					animation.From = 210;
 					animation.To = 0;
 					animation.Duration = TimeSpan.FromSeconds(0.2);
 
@@ -1370,7 +1370,7 @@ namespace Project_Tracker {
 
 						DoubleAnimation animation = new DoubleAnimation();
 						animation.From = 0;
-						animation.To = 70;
+						animation.To = 210;
 						animation.Duration = TimeSpan.FromSeconds(0.2);
 
 						settingsBorder.BeginAnimation(HeightProperty, animation);
@@ -1384,7 +1384,7 @@ namespace Project_Tracker {
 					isSettingsOpen = false;
 
 					DoubleAnimation animation = new DoubleAnimation();
-					animation.From = 70;
+					animation.From = 210;
 					animation.To = 0;
 					animation.Duration = TimeSpan.FromSeconds(0.2);
 
@@ -1663,7 +1663,7 @@ namespace Project_Tracker {
 					isSettingsOpen = false;
 
 					DoubleAnimation animation = new DoubleAnimation();
-					animation.From = 70;
+					animation.From = 210;
 					animation.To = 0;
 					animation.Duration = TimeSpan.FromSeconds(0.2);
 
