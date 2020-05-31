@@ -35,6 +35,12 @@ namespace Project_Tracker {
 		private readonly Color itemColor = Color.FromRgb(60, 60, 60);
 
 		private readonly Color labelTextColor = Color.FromRgb(255, 255, 255);
+		private readonly string NEXT_VERSION_INFO = Environment.GetFolderPath
+			(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/next-version.json";
+
+		private readonly string NEXT_VERSION_MANIFEST_URL =
+			"https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/next-version.json";
+
 		private readonly string pathExtension = "*.json";
 
 		// IF YOU CHANGE THE VERSION, CHANGE WHETHER IT'S BETA OR NOT
@@ -47,46 +53,37 @@ namespace Project_Tracker {
 
 		private readonly string VERSION_MANIFEST_URL =
 			"https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/version.json";
-
-		private readonly string NEXT_VERSION_MANIFEST_URL =
-			"https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/next-version.json";
-
-		private readonly string NEXT_VERSION_INFO = Environment.GetFolderPath
-			(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/next-version.json";
-
 		private int addingType = 0;
 		private string duration;
 		private string icon;
 		private bool isChangingTitle = false;
 		private bool isCompletedTasksShown = false;
 		private bool isIconSelecting = false;
+		private bool isOverallSettingsOpen = false;
 		private bool isSettingsOpen = false;
+		private bool isSettingsWindowDisplaying = false;
 		private bool isSwitchingAnimationRunning = false;
 		private bool isTypeSelecting = false;
-		private bool isOverallSettingsOpen = false;
-		private bool isSettingsWindowDisplaying = false;
 		private int itemIndex = 0;
 		private int itemsAdded = 0;
-		private bool updateResponse = false;
 		// The amount of items added to the scrollviewer
 		private string percent;
 
-		private int renameProjectClicks = 0; // When we click on the rename project button it activates the "you click the window so stop renaming" so we use an index to make sure that doesn't happen
-											 // Keeps the user from double clicking the animation
+		private int renameProjectClicks = 0;
+		// Keeps the user from double clicking the animation
 		private int selectedIndex = 0;
 
+		private List<string> taskData = new List<string>();
+		// When we click on the rename project button it activates the "you click the window so stop renaming" so we use an index to make sure that doesn't happen
 		// We need this to figure out the index of the item
 		// The type of item we're adding (0 = error, 1 = feature, 2 = comment)
-
-		private List<string> taskData = new List<string>();
-
 		private List<string> taskIdentifier = new List<string>();
 
 		private List<string> tasks = new List<string>();
-
 		// Each project's data - Used for saving
 		private string title;
 
+		private bool updateResponse = false;
 		public MainWindow() {
 			InitializeComponent();
 			Startup();
@@ -440,6 +437,29 @@ namespace Project_Tracker {
 				LoadFiles();
 
 				SetSelectedProject();
+			}
+		}
+
+		/// <summary>
+		/// Waits for 15 seconds before allowing the user to check for an update again.
+		/// </summary>
+		/// <returns></returns>
+		private async Task DisableUpdateButton() {
+			for (int i = 15; i >= 0; i--) {
+				updateButton1.Content = i.ToString();
+				await Task.Delay(1000);
+			}
+			if (updateResponse) {
+				updateButton1.Content = "Check for an update";
+				updateButton1.IsEnabled = true;
+			}
+			else {
+				updateButton1.Content = "Please wait...";
+				while (!updateResponse) {
+					await Task.Delay(1000);
+				}
+				updateButton1.Content = "Check for an update";
+				updateButton1.IsEnabled = true;
 			}
 		}
 
@@ -1025,6 +1045,117 @@ namespace Project_Tracker {
 			itemsAdded++;
 		}
 
+		/// <summary>
+		/// Runs when the next version file has been downloaded.
+		/// Sets the next update info in the settings.
+		/// </summary>
+		private void NextVersionDownloadComplete(object sender, AsyncCompletedEventArgs e) {
+			string json = File.ReadAllText(NEXT_VERSION_INFO);
+
+			if (json == "" && isSettingsWindowDisplaying) { // Didn't download the entire file properly
+															// Couldn't download update file. Possible their wifi isn't working
+				nextVersionLabel.Content = "Couldn't get next release data.";
+				latestVersionLabel.Content = "Latest version: unavailable";
+				nextVersionReleaseLabel.Visibility = Visibility.Hidden;
+				nextVersionFeaturesLabel.Visibility = Visibility.Hidden;
+				nextVersionUpdateOneLabel.Visibility = Visibility.Hidden;
+				nextVersionUpdateTwoLabel.Visibility = Visibility.Hidden;
+				nextVersionUpdateThreeLabel.Visibility = Visibility.Hidden;
+				updateResponse = true;
+				return;
+			}
+			else if (json == "") {
+				updateResponse = true;
+				return;
+			}
+
+			NextVersionManifest.Rootobject nextVersionInfo =
+				JsonConvert.DeserializeObject<NextVersionManifest.Rootobject>(json);
+			nextVersionLabel.Visibility = Visibility.Visible;
+			nextVersionLabel.Content = "Version: " + nextVersionInfo.Version;
+
+			nextVersionReleaseLabel.Visibility = Visibility.Visible;
+			if (nextVersionInfo.ReleaseDateConfirmed == "false") {
+				nextVersionReleaseLabel.Content = "Estimated release date: " + nextVersionInfo.EstimatedRelease;
+			}
+			else {
+				nextVersionReleaseLabel.Content = "Release date: " + nextVersionInfo.EstimatedRelease;
+			}
+
+			nextVersionUpdateOneLabel.Visibility = Visibility.Visible;
+			nextVersionUpdateTwoLabel.Visibility = Visibility.Hidden;
+			nextVersionUpdateThreeLabel.Visibility = Visibility.Hidden;
+
+			if (nextVersionInfo.NewFeatures[0] == "") {
+				nextVersionUpdateOneLabel.Content = "Feature list coming soon...";
+			}
+			else {
+				nextVersionUpdateOneLabel.Content = "1. " + nextVersionInfo.NewFeatures[0];
+			}
+
+			if (nextVersionInfo.NewFeatures[1] != "") {
+				nextVersionUpdateTwoLabel.Visibility = Visibility.Visible;
+				nextVersionUpdateTwoLabel.Content = "2. " + nextVersionInfo.NewFeatures[1];
+			}
+
+			if (nextVersionInfo.NewFeatures[2] != "") {
+				nextVersionUpdateThreeLabel.Visibility = Visibility.Visible;
+				nextVersionUpdateThreeLabel.Content = "3. " + nextVersionInfo.NewFeatures[2];
+			}
+			updateResponse = true;
+		}
+
+		private void overallSettingsBorder_LostFocus(object sender, RoutedEventArgs e) {
+			if (isOverallSettingsOpen) { // Hide the icon selector window if they click out
+				Dispatcher.Invoke(new Action(() =>
+				{
+					isOverallSettingsOpen = false;
+
+					DoubleAnimation animation = new DoubleAnimation();
+					animation.From = 70;
+					animation.To = 0;
+					animation.Duration = TimeSpan.FromSeconds(0.2);
+
+					overallSettingsBorder.BeginAnimation(HeightProperty, animation);
+				}));
+			}
+		}
+
+		private void OverallSettingsBorderMouseDown(object sender, MouseButtonEventArgs e) {
+			if (!isOverallSettingsOpen) { // Display icon selector window
+				Thread thread = new Thread(() =>
+				{
+					Dispatcher.Invoke(new Action(() =>
+					{
+						isOverallSettingsOpen = true;
+
+						overallSettingsBorder.Visibility = Visibility.Visible;
+
+						DoubleAnimation animation = new DoubleAnimation();
+						animation.From = 0;
+						animation.To = 70;
+						animation.Duration = TimeSpan.FromSeconds(0.2);
+
+						overallSettingsBorder.BeginAnimation(HeightProperty, animation);
+					}));
+				});
+				thread.Start();
+			}
+			else if (isOverallSettingsOpen) { // Hide the icon selector window if they click out
+				Dispatcher.Invoke(new Action(() =>
+				{
+					isOverallSettingsOpen = false;
+
+					DoubleAnimation animation = new DoubleAnimation();
+					animation.From = 70;
+					animation.To = 0;
+					animation.Duration = TimeSpan.FromSeconds(0.2);
+
+					overallSettingsBorder.BeginAnimation(HeightProperty, animation);
+				}));
+			}
+		}
+
 		private void RenameProjectButtonPressed(object sender, MouseButtonEventArgs e) {
 			isChangingTitle = true;
 			renameProjectClicks = 0;
@@ -1413,6 +1544,32 @@ namespace Project_Tracker {
 			}
 		}
 
+		private void SettingsButtonMouseDown(object sender, MouseButtonEventArgs e) {
+			Window_MouseDown(sender, e);
+
+			// Hide everything in the window
+			noProjectsGrid.Visibility = Visibility.Hidden;
+			settingsImage.Visibility = Visibility.Hidden;
+			changeTitleBorder.Visibility = Visibility.Hidden;
+			addItemBorder.Visibility = Visibility.Hidden;
+			scrollviewerGrid.Visibility = Visibility.Hidden;
+			completeGrid.Visibility = Visibility.Hidden;
+
+			// Show everything
+			displayingImage.Visibility = Visibility.Visible;
+			displayingTitle.Visibility = Visibility.Visible;
+
+			// Set values
+			displayingImage.Source = (ImageSource)TryFindResource("settingsDrawingImage");
+			displayingTitle.Content = "Settings";
+			currentVersionLabel.Content = "Installed version: " + CURRENT_VERSION;
+
+			isSettingsWindowDisplaying = true;
+			selectedIndex = 0;
+			SetSelectedProject();
+			settingsGrid.Visibility = Visibility.Visible;
+		}
+
 		/// <summary>
 		/// When the user clicks on the project's settings button.
 		/// </summary>
@@ -1542,7 +1699,6 @@ namespace Project_Tracker {
 				}));
 			});
 			thread.Start();
-
 		}
 
 		/// <summary>
@@ -1705,66 +1861,32 @@ namespace Project_Tracker {
 				updateResponse = true;
 			}
 		}
+		private void UpdateButtonMouseDown(object sender, MouseButtonEventArgs e) {
+			updateButton1.IsEnabled = false;
 
-		/// <summary>
-		/// Runs when the next version file has been downloaded.
-		/// Sets the next update info in the settings.
-		/// </summary>
-		private void NextVersionDownloadComplete(object sender, AsyncCompletedEventArgs e) {
-			string json = File.ReadAllText(NEXT_VERSION_INFO);
+			if (File.Exists(VERSION_INFO)) {
+				File.Delete(VERSION_INFO);
+			}
+			if (File.Exists(NEXT_VERSION_INFO)) {
+				File.Delete(NEXT_VERSION_INFO);
+			}
 
-			if (json == "" && isSettingsWindowDisplaying) { // Didn't download the entire file properly
-															// Couldn't download update file. Possible their wifi isn't working
-				nextVersionLabel.Content = "Couldn't get next release data.";
-				latestVersionLabel.Content = "Latest version: unavailable";
-				nextVersionReleaseLabel.Visibility = Visibility.Hidden;
-				nextVersionFeaturesLabel.Visibility = Visibility.Hidden;
-				nextVersionUpdateOneLabel.Visibility = Visibility.Hidden;
-				nextVersionUpdateTwoLabel.Visibility = Visibility.Hidden;
-				nextVersionUpdateThreeLabel.Visibility = Visibility.Hidden;
+			DisableUpdateButton();
+			// Download latest version information
+			try {
+				updateButton1.IsEnabled = false;
+				updateResponse = false;
+
+				WebClient updateClient = new WebClient();
+				updateClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Update);
+				updateClient.DownloadFileAsync(new Uri(VERSION_MANIFEST_URL), VERSION_INFO);
+			}
+			catch (WebException) {
+				// Couldn't download update file. Possible their wifi isn't working
 				updateResponse = true;
-				return;
 			}
-			else if (json == "") {
-				updateResponse = true;
-				return;
-			}
-
-			NextVersionManifest.Rootobject nextVersionInfo =
-				JsonConvert.DeserializeObject<NextVersionManifest.Rootobject>(json);
-			nextVersionLabel.Visibility = Visibility.Visible;
-			nextVersionLabel.Content = "Version: " + nextVersionInfo.Version;
-
-			nextVersionReleaseLabel.Visibility = Visibility.Visible;
-			if (nextVersionInfo.ReleaseDateConfirmed == "false") {
-				nextVersionReleaseLabel.Content = "Estimated release date: " + nextVersionInfo.EstimatedRelease;
-			}
-			else {
-				nextVersionReleaseLabel.Content = "Release date: " + nextVersionInfo.EstimatedRelease;
-			}
-
-			nextVersionUpdateOneLabel.Visibility = Visibility.Visible;
-			nextVersionUpdateTwoLabel.Visibility = Visibility.Hidden;
-			nextVersionUpdateThreeLabel.Visibility = Visibility.Hidden;
-
-			if (nextVersionInfo.NewFeatures[0] == "") {
-				nextVersionUpdateOneLabel.Content = "Feature list coming soon...";
-			}
-			else {
-				nextVersionUpdateOneLabel.Content = "1. " + nextVersionInfo.NewFeatures[0];
-			}
-
-			if (nextVersionInfo.NewFeatures[1] != "") {
-				nextVersionUpdateTwoLabel.Visibility = Visibility.Visible;
-				nextVersionUpdateTwoLabel.Content = "2. " + nextVersionInfo.NewFeatures[1];
-			}
-
-			if (nextVersionInfo.NewFeatures[2] != "") {
-				nextVersionUpdateThreeLabel.Visibility = Visibility.Visible;
-				nextVersionUpdateThreeLabel.Content = "3. " + nextVersionInfo.NewFeatures[2];
-			}
-			updateResponse = true;
 		}
+
 		/// <summary>
 		/// Runs when the user presses the update button when an update is available.
 		/// </summary>
@@ -1865,7 +1987,8 @@ namespace Project_Tracker {
 			}
 
 			if (isOverallSettingsOpen) { // Hide the icon selector window if they click out
-				Dispatcher.Invoke(new Action(() => {
+				Dispatcher.Invoke(new Action(() =>
+				{
 					isOverallSettingsOpen = false;
 
 					DoubleAnimation animation = new DoubleAnimation();
@@ -2079,129 +2202,5 @@ namespace Project_Tracker {
 		}
 
 		#endregion Item selection presses
-
-		private void overallSettingsBorder_LostFocus(object sender, RoutedEventArgs e) {
-			if (isOverallSettingsOpen) { // Hide the icon selector window if they click out
-				Dispatcher.Invoke(new Action(() => {
-					isOverallSettingsOpen = false;
-
-					DoubleAnimation animation = new DoubleAnimation();
-					animation.From = 70;
-					animation.To = 0;
-					animation.Duration = TimeSpan.FromSeconds(0.2);
-
-					overallSettingsBorder.BeginAnimation(HeightProperty, animation);
-				}));
-			}
-		}
-
-		private void OverallSettingsBorderMouseDown(object sender, MouseButtonEventArgs e) {
-			if (!isOverallSettingsOpen) { // Display icon selector window
-				Thread thread = new Thread(() => {
-					Dispatcher.Invoke(new Action(() => {
-						isOverallSettingsOpen = true;
-
-						overallSettingsBorder.Visibility = Visibility.Visible;
-
-						DoubleAnimation animation = new DoubleAnimation();
-						animation.From = 0;
-						animation.To = 70;
-						animation.Duration = TimeSpan.FromSeconds(0.2);
-
-						overallSettingsBorder.BeginAnimation(HeightProperty, animation);
-					}));
-				});
-				thread.Start();
-			}
-			else if (isOverallSettingsOpen) { // Hide the icon selector window if they click out
-				Dispatcher.Invoke(new Action(() => {
-					isOverallSettingsOpen = false;
-
-					DoubleAnimation animation = new DoubleAnimation();
-					animation.From = 70;
-					animation.To = 0;
-					animation.Duration = TimeSpan.FromSeconds(0.2);
-
-					overallSettingsBorder.BeginAnimation(HeightProperty, animation);
-				}));
-			}
-		}
-
-		private void SettingsButtonMouseDown(object sender, MouseButtonEventArgs e) {
-			Window_MouseDown(sender, e);
-
-			// Hide everything in the window
-			noProjectsGrid.Visibility = Visibility.Hidden;
-			settingsImage.Visibility = Visibility.Hidden;
-			changeTitleBorder.Visibility = Visibility.Hidden;
-			addItemBorder.Visibility = Visibility.Hidden;
-			scrollviewerGrid.Visibility = Visibility.Hidden;
-			completeGrid.Visibility = Visibility.Hidden;
-
-			// Show everything
-			displayingImage.Visibility = Visibility.Visible;
-			displayingTitle.Visibility = Visibility.Visible;
-
-			// Set values
-			displayingImage.Source = (ImageSource)TryFindResource("settingsDrawingImage");
-			displayingTitle.Content = "Settings";
-			currentVersionLabel.Content = "Installed version: " + CURRENT_VERSION;
-
-			isSettingsWindowDisplaying = true;
-			selectedIndex = 0;
-			SetSelectedProject();
-			settingsGrid.Visibility = Visibility.Visible;
-
-		}
-
-		private void UpdateButtonMouseDown(object sender, MouseButtonEventArgs e) {
-			updateButton1.IsEnabled = false;
-
-			if (File.Exists(VERSION_INFO)) {
-				File.Delete(VERSION_INFO);
-			}
-			if (File.Exists(NEXT_VERSION_INFO)) {
-				File.Delete(NEXT_VERSION_INFO);
-			}
-
-			DisableUpdateButton();
-			// Download latest version information
-			try {
-				updateButton1.IsEnabled = false;
-				updateResponse = false;
-
-				WebClient updateClient = new WebClient();
-				updateClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Update);
-				updateClient.DownloadFileAsync(new Uri(VERSION_MANIFEST_URL), VERSION_INFO);
-			}
-			catch (WebException) {
-				// Couldn't download update file. Possible their wifi isn't working
-				updateResponse = true;
-			}
-		}
-
-
-		/// <summary>
-		/// Waits for 15 seconds before allowing the user to check for an update again.
-		/// </summary>
-		/// <returns></returns>
-		private async Task DisableUpdateButton() {
-			for (int i = 15; i >= 0; i--) {
-				updateButton1.Content = i.ToString();
-				await Task.Delay(1000);
-			}
-			if (updateResponse) {
-				updateButton1.Content = "Check for an update";
-				updateButton1.IsEnabled = true;
-			}
-			else {
-				updateButton1.Content = "Please wait...";
-				while (!updateResponse) {
-					await Task.Delay(1000);
-				}
-				updateButton1.Content = "Check for an update";
-				updateButton1.IsEnabled = true;
-			}
-		}
 	}
 }
