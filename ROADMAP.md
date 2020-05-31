@@ -25,7 +25,7 @@ date will be posted allowing you to stay up to date with when new updates will b
 - [x] Allow deleting of items in the add-program tables.
 
 ### v2.0:
-**Estimated release date:** `June 25th, 2020`
+**Release date:** `June 5th, 2020`
 
 - [x] Create a better design for main window.
 - [x] A more subtle way of displaying an update.
@@ -33,12 +33,13 @@ date will be posted allowing you to stay up to date with when new updates will b
 - [x] Allow resizing of windows.
 - [ ] Add a settings menu.
 - [ ] Allow users to check for updates after the app is opened.
-- [ ] Allow users to install pre-releases automatically from the app.
-- [ ] Create a dark theme.
+- [ ] Bring back project duration.
 
 ### v3.0:
-**Estimated release date:** `summer 2020`
+**Estimated release date:** `July 10th 2020`
 - [ ] Allow linking of a folder to each project to easily see files from Project Tracker.
 - [ ] GitHub integration!
 - [ ] Lines of code counting and display.
 - [ ] A way to see the release date of the next project and what new features it's bringing.
+- [ ] Search bar functionality.
+- [ ] Themes.
