@@ -49,7 +49,7 @@ namespace Project_Tracker {
 			"https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/version.json";
 
 		private readonly string NEXT_VERSION_MANIFEST_URL =
-			"https://raw.githubusercontent.com/CyanCoding/Project-Tracker/cyancoding-settings-branch/install-resources/next-version.json";
+			"https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/next-version.json";
 
 		private readonly string NEXT_VERSION_INFO = Environment.GetFolderPath
 			(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/next-version.json";
