@@ -57,6 +57,7 @@ namespace Project_Tracker {
 		private bool isSwitchingAnimationRunning = false;
 		private bool isTypeSelecting = false;
 		private bool isOverallSettingsOpen = false;
+		private bool isSettingsWindowDisplaying = false;
 		private int itemIndex = 0;
 		private int itemsAdded = 0;
 		// The amount of items added to the scrollviewer
@@ -1207,6 +1208,10 @@ namespace Project_Tracker {
 		/// Highlights the selected project based on selectedIndex.
 		/// </summary>
 		private void SetSelectedProject() {
+			if (selectedIndex != 0 && isSettingsWindowDisplaying) {
+				isSettingsWindowDisplaying = false;
+			}
+
 			border1.Style = (Style)TryFindResource("hoverOver");
 			border2.Style = (Style)TryFindResource("hoverOver");
 			border3.Style = (Style)TryFindResource("hoverOver");
@@ -1353,7 +1358,7 @@ namespace Project_Tracker {
 					fifthLineLabel.Visibility = Visibility.Hidden;
 				}
 			}
-			else { // There's no projects
+			else if (!isSettingsWindowDisplaying) { // There's no projects
 				   // Hide all items
 				displayingTitle.Visibility = Visibility.Hidden;
 				displayingImage.Visibility = Visibility.Hidden;
@@ -2019,6 +2024,9 @@ namespace Project_Tracker {
 			// Set values
 			displayingImage.Source = (ImageSource)TryFindResource("settingsDrawingImage");
 			displayingTitle.Content = "Settings";
+			isSettingsWindowDisplaying = true;
+			selectedIndex = 0;
+			SetSelectedProject();
 		}
 	}
 }
