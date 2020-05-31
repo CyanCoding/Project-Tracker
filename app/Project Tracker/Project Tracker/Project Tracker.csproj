@@ -70,6 +70,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="NextVersionManifest.cs" />
     <Compile Include="SettingsManifest.cs" />
     <Compile Include="UpdateManifest.cs" />
     <Compile Include="UpdateWindow.xaml.cs">
