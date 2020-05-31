@@ -1085,22 +1085,28 @@ namespace Project_Tracker {
 			nextVersionUpdateOneLabel.Visibility = Visibility.Visible;
 			nextVersionUpdateTwoLabel.Visibility = Visibility.Hidden;
 			nextVersionUpdateThreeLabel.Visibility = Visibility.Hidden;
+			nextVersionFeaturesLabel.Visibility = Visibility.Visible;
 
-			if (nextVersionInfo.NewFeatures[0] == "") {
-				nextVersionUpdateOneLabel.Content = "Feature list coming soon...";
-			}
-			else {
-				nextVersionUpdateOneLabel.Content = "1. " + nextVersionInfo.NewFeatures[0];
-			}
+			try {
+				if (nextVersionInfo.NewFeatures[0] == "") {
+					nextVersionUpdateOneLabel.Content = "A feature list is not yet available for this version.";
+				}
+				else {
+					nextVersionUpdateOneLabel.Content = "1. " + nextVersionInfo.NewFeatures[0];
+				}
 
-			if (nextVersionInfo.NewFeatures[1] != "") {
-				nextVersionUpdateTwoLabel.Visibility = Visibility.Visible;
-				nextVersionUpdateTwoLabel.Content = "2. " + nextVersionInfo.NewFeatures[1];
-			}
+				if (nextVersionInfo.NewFeatures[1] != "") {
+					nextVersionUpdateTwoLabel.Visibility = Visibility.Visible;
+					nextVersionUpdateTwoLabel.Content = "2. " + nextVersionInfo.NewFeatures[1];
+				}
 
-			if (nextVersionInfo.NewFeatures[2] != "") {
-				nextVersionUpdateThreeLabel.Visibility = Visibility.Visible;
-				nextVersionUpdateThreeLabel.Content = "3. " + nextVersionInfo.NewFeatures[2];
+				if (nextVersionInfo.NewFeatures[2] != "") {
+					nextVersionUpdateThreeLabel.Visibility = Visibility.Visible;
+					nextVersionUpdateThreeLabel.Content = "3. " + nextVersionInfo.NewFeatures[2];
+				}
+			}
+			catch (IndexOutOfRangeException) {
+				nextVersionUpdateOneLabel.Content = "A feature list is not yet available for this version.";
 			}
 			updateResponse = true;
 		}
