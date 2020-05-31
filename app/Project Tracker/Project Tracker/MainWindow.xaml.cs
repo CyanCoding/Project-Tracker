@@ -1,201 +1,136 @@
 ﻿using Newtonsoft.Json;
-using Project_Tracker.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
 
 namespace Project_Tracker {
 
 	public partial class MainWindow : UWPHost.Window {
 		public List<string> filesRead = new List<string>();
-		private int itemsAdded = 0; // The amount of items added to the scrollviewer
-		private bool isCompletedTasksShown = false;
-		private bool isSwitchingAnimationRunning = false; // Keeps the user from double clicking the animation
-		private int selectedIndex = 0;
-		private int itemIndex = 0; // We need this to figure out the index of the item
-		private bool isIconSelecting = false;
-		private bool isTypeSelecting = false;
-		private bool isSettingsOpen = false;
-		private int addingType = 0; // The type of item we're adding (0 = error, 1 = feature, 2 = comment)
-
-		// Each project's data - Used for saving
-		private string title;
-		private List<string> tasks = new List<string>();
-		private List<string> taskData = new List<string>();
-		private List<string> taskIdentifier = new List<string>();
-		private string duration;
-		private string icon;
-		private string percent;
-
-
-		// WARNING: READONLY VALUES. IF YOU CHANGE THESE, CHANGE IN OTHER FILES AS WELL
-		private readonly Color itemColor = Color.FromRgb(60, 60, 60);
-		private readonly Color labelTextColor = Color.FromRgb(255, 255, 255);
-		private readonly string pathExtension = "*.json";
-		private readonly string DATA_DIRECTORY = 
-			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) 
-			+ "/Project Tracker/data";
-		private readonly string VERSION_MANIFEST_URL = 
-			"https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/version.json";
-		private readonly string VERSION_INFO = Environment.GetFolderPath
-			(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/version.json";
-		private readonly string CURRENT_VERSION = "1.5"; // IF YOU CHANGE THIS, ALSO CHANGE IT IN UpdateWindow.xaml.cs
-		private readonly bool IS_BETA = false; // IF YOU CHANGE THE VERSION, CHANGE WHETHER IT'S BETA OR NOT
 		private readonly string APPDATA_DIRECTORY =
 			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
 			+ "/Project Tracker";
+
+		private readonly string CURRENT_VERSION = "1.5";
+		private readonly string DATA_DIRECTORY =
+			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
+			+ "/Project Tracker/data";
+
+		// IF YOU CHANGE THIS, ALSO CHANGE IT IN UpdateWindow.xaml.cs
+		private readonly bool IS_BETA = false;
+
+		// WARNING: READONLY VALUES. IF YOU CHANGE THESE, CHANGE IN OTHER FILES AS WELL
+		private readonly Color itemColor = Color.FromRgb(60, 60, 60);
+
+		private readonly Color labelTextColor = Color.FromRgb(255, 255, 255);
+		private readonly string pathExtension = "*.json";
+		// IF YOU CHANGE THE VERSION, CHANGE WHETHER IT'S BETA OR NOT
 		private readonly string SETTINGS_FILE =
 			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
 			+ "/Project Tracker/settings.json";
 
+		private readonly string VERSION_INFO = Environment.GetFolderPath
+			(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/version.json";
+
+		private readonly string VERSION_MANIFEST_URL =
+			"https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/version.json";
+
+		private int addingType = 0;
+		private string duration;
+		private string icon;
+		private bool isCompletedTasksShown = false;
+		private bool isIconSelecting = false;
+		private bool isSettingsOpen = false;
+		private bool isSwitchingAnimationRunning = false;
+		private bool isTypeSelecting = false;
+		private int itemIndex = 0;
+		private int itemsAdded = 0; // The amount of items added to the scrollviewer
+		private string percent;
+
+		// Keeps the user from double clicking the animation
+		private int selectedIndex = 0;
+		// We need this to figure out the index of the item
+		// The type of item we're adding (0 = error, 1 = feature, 2 = comment)
+
+		private List<string> taskData = new List<string>();
+
+		private List<string> taskIdentifier = new List<string>();
+
+		private List<string> tasks = new List<string>();
+
+		// Each project's data - Used for saving
+		private string title;
 		public MainWindow() {
 			InitializeComponent();
 			Startup();
 		}
 
-
 		/// <summary>
-		/// Loads an item into the scrollviewer.
+		/// When we click away from the add item TextBox.
 		/// </summary>
-		/// <param name="text">The text value of the item.</param>
-		/// <param name="type">The type of the item (0 = error, 1 = feature, 2 = comment).</param>
-		private void LoadValues(string text, int type) {
-			// The grid holds all of the values
-			Grid grid = new Grid();
-			grid.Margin = new Thickness(0, itemsAdded * 65, 0, 0);
-			grid.VerticalAlignment = VerticalAlignment.Top;
-			grid.HorizontalAlignment = HorizontalAlignment.Center;
-
-			grid.Name = "g" + itemsAdded;
-
-			ColumnDefinition column1 = new ColumnDefinition();
-			column1.Width = new GridLength(50, GridUnitType.Pixel);
-			ColumnDefinition column2 = new ColumnDefinition();
-			column2.Width = new GridLength(620, GridUnitType.Pixel);
-			ColumnDefinition column3 = new ColumnDefinition();
-			column3.Width = new GridLength(50, GridUnitType.Pixel);
-
-			grid.ColumnDefinitions.Add(column1);
-			grid.ColumnDefinitions.Add(column2);
-			grid.ColumnDefinitions.Add(column3);
-
-			// The border is a curved rectangle behind all the other objects
-			Border border = new Border();
-			border.Height = 60;
-			border.CornerRadius = new CornerRadius(10);
-			border.Background = new SolidColorBrush(itemColor);
-			border.BorderThickness = new Thickness(2);
-			border.HorizontalAlignment = HorizontalAlignment.Stretch;
-			border.VerticalAlignment = VerticalAlignment.Top;
-			border.Margin = new Thickness(0, 0, -5, 0);
-			border.SetValue(Grid.ColumnSpanProperty, 4);
-
-			// The canvas item for the checkmark
-			Canvas checkmarkCanvas = new Canvas();
-			checkmarkCanvas.HorizontalAlignment = HorizontalAlignment.Center;
-			checkmarkCanvas.VerticalAlignment = VerticalAlignment.Center;
-			checkmarkCanvas.Height = 40;
-			checkmarkCanvas.Width = 40;
-			checkmarkCanvas.SetValue(Grid.ColumnProperty, 0);
-			checkmarkCanvas.Margin = new Thickness(5, 10, 5, 10);
-
-			// The checkmark image
-			Image checkmarkImage = new Image();
-			checkmarkImage.Name = "t" + itemIndex.ToString();
-			checkmarkImage.Height = 40;
-			checkmarkImage.Width = 40;
-			Canvas.SetLeft(checkmarkImage, 10);
-			checkmarkImage.Cursor = Cursors.Hand;
-			checkmarkImage.MouseLeftButtonDown += CheckmarkPressed;
-
-			if (!isCompletedTasksShown) {
-				checkmarkImage.Style = (Style)TryFindResource("checkbox");
+		private void addItemTextBox_LostFocus(object sender, RoutedEventArgs e) {
+			if (addItemTextBox.Text == "") { // Clear the textbox if they click out
+				addItemTextBox.Text = "Add something to the project";
+				Keyboard.ClearFocus();
 			}
-			else {
-				checkmarkImage.Style = (Style)TryFindResource("completedTask");
-			}
-
-			checkmarkCanvas.Children.Add(checkmarkImage);
-
-			// The canvas item for the item type (error/feature/comment)
-			Canvas typeCanvas = new Canvas();
-			typeCanvas.HorizontalAlignment = HorizontalAlignment.Center;
-			typeCanvas.VerticalAlignment = VerticalAlignment.Center;
-			typeCanvas.Height = 30;
-			typeCanvas.Width = 30;
-			typeCanvas.SetValue(Grid.ColumnProperty, 2);
-
-			// The type image
-			Image typeImage = new Image();
-			typeImage.Height = 30;
-			typeImage.Width = 30;
-
-			if (type == 0) {
-				typeImage.Source = (ImageSource)TryFindResource("errorDrawingImage");
-				border.BorderBrush = new SolidColorBrush(Colors.IndianRed);
-			}
-			else if (type == 1) {
-				typeImage.Source = (ImageSource)TryFindResource("featureDrawingImage");
-				border.BorderBrush = new SolidColorBrush(Colors.Yellow);
-			}
-			else if (type == 2) {
-				typeImage.Source = (ImageSource)TryFindResource("commentDrawingImage");
-				border.BorderBrush = new SolidColorBrush(Colors.CornflowerBlue);
-			}
-			else {
-				typeImage.Source = (ImageSource)TryFindResource("noIcon");
-				border.BorderBrush = new SolidColorBrush(Colors.White);
-			}
-
-			typeCanvas.Children.Add(typeImage);
-
-			// The label displaying the content of the item
-			Label label = new Label();
-			label.Content = text;
-			label.Foreground = new SolidColorBrush(labelTextColor);
-			label.Margin = new Thickness(70, 6, 70, 0);
-			label.FontSize = 24;
-
-			border.Child = label;
-			grid.Children.Add(border);
-			grid.Children.Add(checkmarkCanvas);
-			grid.Children.Add(typeCanvas);
-			scrollviewerGrid.Children.Add(grid);
-			
-			itemsAdded++;
 		}
 
-
 		/// <summary>
-		/// Checks each file value for null values.
+		/// When we click on the add new item TextBox.
 		/// </summary>
-		/// <returns>True if no null values, otherwise false.</returns>
-		private bool CheckValues(string projectTitle, string[] projectTasks,
-			string[] projectData, string[] projectIdentifier, string projectDuration,
-			string projectIcon, string projectPercent) {
-
-
-			if (projectTitle == null || projectTasks == null || projectData == null || 
-				projectIdentifier == null || projectDuration == null || projectIcon == null ||
-				projectPercent == null) { 
-				// Check all strings for null values
-				return false;
+		private void AddNewItemTextBoxClick(object sender, MouseButtonEventArgs e) {
+			if (addItemTextBox.Text == "Add something to the project") {
+				addItemTextBox.Text = "";
 			}
 
-			return true;
+			if (isTypeSelecting) { // Hide the icon selector window if they click out
+				Dispatcher.Invoke(new Action(() =>
+				{
+					isTypeSelecting = false;
+
+					DoubleAnimation animation = new DoubleAnimation();
+					animation.From = 210;
+					animation.To = 0;
+					animation.Duration = TimeSpan.FromSeconds(0.2);
+
+					itemTypeSelectBorder.BeginAnimation(HeightProperty, animation);
+				}));
+			}
+			if (isIconSelecting) { // Hide the icon selector window if they click out
+				Dispatcher.Invoke(new Action(() =>
+				{
+					isIconSelecting = false;
+
+					DoubleAnimation animation = new DoubleAnimation();
+					animation.From = 250;
+					animation.To = 0;
+					animation.Duration = TimeSpan.FromSeconds(0.2);
+
+					iconSelectBorder.BeginAnimation(HeightProperty, animation);
+				}));
+			}
+		}
+
+		private void AddProjectClick(object sender, MouseButtonEventArgs e) {
+			if (addProjectTextBox.Text == "Create a new project") {
+				addProjectTextBox.Text = "";
+			}
+		}
+
+		private void AddProjectTextBoxLostFocus(object sender, RoutedEventArgs e) {
+			if (addProjectTextBox.Text == "") { // Clear the textbox if they click out
+				addProjectTextBox.Text = "Create a new project";
+				Keyboard.ClearFocus();
+			}
 		}
 
 		/// <summary>
@@ -207,7 +142,6 @@ namespace Project_Tracker {
 		/// <param name="index">The index of the adding project.</param>
 		private void AddProjectToWindow(string projectTitle, string projectIcon,
 			string projectPercent, int index) {
-
 			switch (index) {
 				case 1:
 					if (projectIcon == "noIcon") {
@@ -221,6 +155,7 @@ namespace Project_Tracker {
 					percent1.Content = projectPercent + "%";
 					border1.Visibility = Visibility.Visible;
 					break;
+
 				case 2:
 					if (projectIcon == "noIcon") {
 						image2.Source = (ImageSource)TryFindResource("checked_checkedboxDrawingImage");
@@ -233,6 +168,7 @@ namespace Project_Tracker {
 					percent2.Content = projectPercent + "%";
 					border2.Visibility = Visibility.Visible;
 					break;
+
 				case 3:
 					if (projectIcon == "noIcon") {
 						image3.Source = (ImageSource)TryFindResource("checked_checkedboxDrawingImage");
@@ -245,6 +181,7 @@ namespace Project_Tracker {
 					percent3.Content = projectPercent + "%";
 					border3.Visibility = Visibility.Visible;
 					break;
+
 				case 4:
 					if (projectIcon == "noIcon") {
 						image4.Source = (ImageSource)TryFindResource("checked_checkedboxDrawingImage");
@@ -257,6 +194,7 @@ namespace Project_Tracker {
 					percent4.Content = projectPercent + "%";
 					border4.Visibility = Visibility.Visible;
 					break;
+
 				case 5:
 					if (projectIcon == "noIcon") {
 						image5.Source = (ImageSource)TryFindResource("checked_checkedboxDrawingImage");
@@ -269,6 +207,7 @@ namespace Project_Tracker {
 					percent5.Content = projectPercent + "%";
 					border5.Visibility = Visibility.Visible;
 					break;
+
 				case 6:
 					if (projectIcon == "noIcon") {
 						image6.Source = (ImageSource)TryFindResource("checked_checkedboxDrawingImage");
@@ -281,6 +220,7 @@ namespace Project_Tracker {
 					percent6.Content = projectPercent + "%";
 					border6.Visibility = Visibility.Visible;
 					break;
+
 				case 7:
 					if (projectIcon == "noIcon") {
 						image7.Source = (ImageSource)TryFindResource("checked_checkedboxDrawingImage");
@@ -293,6 +233,7 @@ namespace Project_Tracker {
 					percent7.Content = projectPercent + "%";
 					border7.Visibility = Visibility.Visible;
 					break;
+
 				case 8:
 					if (projectIcon == "noIcon") {
 						image8.Source = (ImageSource)TryFindResource("checked_checkedboxDrawingImage");
@@ -305,6 +246,7 @@ namespace Project_Tracker {
 					percent8.Content = projectPercent + "%";
 					border8.Visibility = Visibility.Visible;
 					break;
+
 				case 9:
 					if (projectIcon == "noIcon") {
 						image9.Source = (ImageSource)TryFindResource("checked_checkedboxDrawingImage");
@@ -317,6 +259,7 @@ namespace Project_Tracker {
 					percent9.Content = projectPercent + "%";
 					border9.Visibility = Visibility.Visible;
 					break;
+
 				case 10:
 					if (projectIcon == "noIcon") {
 						image10.Source = (ImageSource)TryFindResource("checked_checkedboxDrawingImage");
@@ -333,60 +276,164 @@ namespace Project_Tracker {
 		}
 
 		/// <summary>
-		/// Sets the variables for the project to allow easy saving.
+		/// Calculates the percentage complete for the project.
 		/// </summary>
-		/// <param name="projectTitle">The project title.</param>
-		/// <param name="projectTasks">The project's tasks array.</param>
-		/// <param name="projectTasksData">The project's task data array.</param>
-		/// <param name="projectTasksIdentifier">The project's task identifier array.</param>
-		/// <param name="projectDuration">The project's duration.</param>
-		/// <param name="projectIcon">The project's icon.</param>
-		/// <param name="projectPercent">The project's percent.</param>
-		private void SetProjectValues(string projectTitle, string[] projectTasks, 
-			string[] projectTasksData, string[] projectTasksIdentifier, 
-			string projectDuration, string projectIcon, string projectPercent) {
-			title = projectTitle;
+		private void CalculatePercentage() {
+			int completed = 0;
+			int incomplete = 0;
 
-			tasks.Clear();
-			foreach (string task in projectTasks) {
-				tasks.Add(task);
-			}
-			taskData.Clear();
-			foreach (string data in projectTasksData) {
-				taskData.Add(data);
-			}
-			taskIdentifier.Clear();
-			foreach (string identifier in projectTasksIdentifier) {
-				taskIdentifier.Add(identifier);
+			for (int i = 0; i < taskData.Count; i++) {
+				if (taskData[i] == "0") {
+					incomplete++;
+				}
+				else if (taskData[i] == "1") {
+					completed++;
+				}
 			}
 
-			duration = projectDuration;
-			icon = projectIcon;
-			percent = projectPercent;
+			int totalAmountOfItems = completed + incomplete;
+			int percentComplete;
+
+			try {
+				percentComplete = (completed * 100) / totalAmountOfItems;
+			}
+			catch (DivideByZeroException) {
+				percentComplete = 0;
+			}
+
+			if (percentComplete <= 9) {
+				percent = "0" + percentComplete;
+			}
+			else {
+				percent = percentComplete.ToString();
+			}
+
+			// Set the selected index to display the new percent
+			if (selectedIndex == 1) {
+				percent1.Content = percent + "%";
+			}
+			else if (selectedIndex == 2) {
+				percent2.Content = percent + "%";
+			}
+			else if (selectedIndex == 3) {
+				percent3.Content = percent + "%";
+			}
+			else if (selectedIndex == 4) {
+				percent4.Content = percent + "%";
+			}
+			else if (selectedIndex == 5) {
+				percent5.Content = percent + "%";
+			}
+			else if (selectedIndex == 6) {
+				percent6.Content = percent + "%";
+			}
+			else if (selectedIndex == 7) {
+				percent7.Content = percent + "%";
+			}
+			else if (selectedIndex == 8) {
+				percent8.Content = percent + "%";
+			}
+			else if (selectedIndex == 9) {
+				percent9.Content = percent + "%";
+			}
+			else if (selectedIndex == 10) {
+				percent10.Content = percent + "%";
+			}
+
+			Save(filesRead[selectedIndex - 1]);
+			SetSelectedProject();
 		}
 
 		/// <summary>
-		/// Runs when the update file has been downloaded. 
-		/// Notifies the user of an update if one is available.
+		/// When we check off a task.
 		/// </summary>
-		private void Update(object sender, AsyncCompletedEventArgs e) {
-			string json = File.ReadAllText(VERSION_INFO);
+		private void CheckmarkPressed(object sender, MouseButtonEventArgs e) {
+			Image callingImage = (Image)sender;
 
-			UpdateManifest.Rootobject update =
-				JsonConvert.DeserializeObject<UpdateManifest.Rootobject>(json);
+			string name = callingImage.Name;
+			name = name.Remove(0, 1); // Removes the t from the name (e.g. t5 -> 5)
 
-			if (float.Parse(CURRENT_VERSION) < float.Parse(update.Version)) { // Update is available
-				Thread thread = new Thread(() => {
-					Thread.Sleep(5000);
-					Dispatcher.Invoke(new Action(() => {
-						updateGrid.Visibility = Visibility.Visible;
+			if (taskData[Int32.Parse(name) - 1] == "1") {
+				taskData[Int32.Parse(name) - 1] = "0";
+			}
+			else {
+				taskData[Int32.Parse(name) - 1] = "1";
+			}
+
+			CalculatePercentage();
+		}
+
+		/// <summary>
+		/// Checks each file value for null values.
+		/// </summary>
+		/// <returns>True if no null values, otherwise false.</returns>
+		private bool CheckValues(string projectTitle, string[] projectTasks,
+			string[] projectData, string[] projectIdentifier, string projectDuration,
+			string projectIcon, string projectPercent) {
+			if (projectTitle == null || projectTasks == null || projectData == null ||
+				projectIdentifier == null || projectDuration == null || projectIcon == null ||
+				projectPercent == null) {
+				// Check all strings for null values
+				return false;
+			}
+
+			return true;
+		}
+
+		/// <summary>
+		/// When the user clicks to delete the project.
+		/// </summary>
+		private void DeleteProjectButtonPressed(object sender, MouseButtonEventArgs e) {
+			var deleteProject = System.Windows.Forms.MessageBox.Show(
+				"Are you sure you want to delete the " +
+				title + " project?\nThis cannot be undone",
+				"Confirm Project Deletion",
+				System.Windows.Forms.MessageBoxButtons.YesNo,
+				System.Windows.Forms.MessageBoxIcon.Question);
+
+			if (deleteProject == System.Windows.Forms.DialogResult.Yes) { // They want to delete the project
+				Dispatcher.Invoke(new Action(() =>
+				{
+					isSettingsOpen = false;
+
+					DoubleAnimation animation = new DoubleAnimation();
+					animation.From = 70;
+					animation.To = 0;
+					animation.Duration = TimeSpan.FromSeconds(0.2);
+
+					settingsBorder.BeginAnimation(HeightProperty, animation);
+				}));
+
+				File.Delete(filesRead[selectedIndex - 1]);
+
+				selectedIndex = 0;
+				SaveSettings();
+				LoadFiles();
+
+				SetSelectedProject();
+			}
+		}
+
+		/// <summary>
+		/// When the user clicks on the icon of the program.
+		/// We want to open the change icon dialog.
+		/// </summary>
+		private void displayingImage_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
+			if (!isIconSelecting) { // Display icon selector window
+				Thread thread = new Thread(() =>
+				{
+					Dispatcher.Invoke(new Action(() =>
+					{
+						isIconSelecting = true;
+
+						iconSelectBorder.Visibility = Visibility.Visible;
 
 						DoubleAnimation animation = new DoubleAnimation();
 						animation.From = 0;
-						animation.To = 130;
+						animation.To = 250;
 						animation.Duration = TimeSpan.FromSeconds(0.2);
 
-						updateGrid.BeginAnimation(HeightProperty, animation);
+						iconSelectBorder.BeginAnimation(HeightProperty, animation);
 					}));
 				});
 				thread.Start();
@@ -394,267 +441,61 @@ namespace Project_Tracker {
 		}
 
 		/// <summary>
-		/// Highlights the selected project based on selectedIndex.
+		/// When we click away from the icon selection border.
 		/// </summary>
-		private void SetSelectedProject() {
-			border1.Style = (Style)TryFindResource("hoverOver");
-			border2.Style = (Style)TryFindResource("hoverOver");
-			border3.Style = (Style)TryFindResource("hoverOver");
-			border4.Style = (Style)TryFindResource("hoverOver");
-			border5.Style = (Style)TryFindResource("hoverOver");
-			border6.Style = (Style)TryFindResource("hoverOver");
-			border7.Style = (Style)TryFindResource("hoverOver");
-			border8.Style = (Style)TryFindResource("hoverOver");
-			border9.Style = (Style)TryFindResource("hoverOver");
-			border10.Style = (Style)TryFindResource("hoverOver");
+		private void iconSelectBorder_LostFocus(object sender, RoutedEventArgs e) {
+			if (isIconSelecting) { // Hide the icon selector window if they click out
+				Dispatcher.Invoke(new Action(() =>
+				{
+					isIconSelecting = false;
 
-			scrollviewerGrid.Children.Clear();
-			itemsAdded = 0;
+					DoubleAnimation animation = new DoubleAnimation();
+					animation.From = 250;
+					animation.To = 0;
+					animation.Duration = TimeSpan.FromSeconds(0.2);
 
-			if (selectedIndex == 1) {
-				border1.Style = (Style)TryFindResource("solidOver");
-			}
-			else if (selectedIndex == 2) {
-				border2.Style = (Style)TryFindResource("solidOver");
-			}
-			else if (selectedIndex == 3) {
-				border3.Style = (Style)TryFindResource("solidOver");
-			}
-			else if (selectedIndex == 4) {
-				border4.Style = (Style)TryFindResource("solidOver");
-			}
-			else if (selectedIndex == 5) {
-				border5.Style = (Style)TryFindResource("solidOver");
-			}
-			else if (selectedIndex == 6) {
-				border6.Style = (Style)TryFindResource("solidOver");
-			}
-			else if (selectedIndex == 7) {
-				border7.Style = (Style)TryFindResource("solidOver");
-			}
-			else if (selectedIndex == 8) {
-				border8.Style = (Style)TryFindResource("solidOver");
-			}
-			else if (selectedIndex == 9) {
-				border9.Style = (Style)TryFindResource("solidOver");
-			}
-			else if (selectedIndex == 10) {
-				border10.Style = (Style)TryFindResource("solidOver");
-			}
-			else { // selectedIndex isn't a valid number
-				selectedIndex = 0;
-			}
-
-			SaveSettings();
-
-			// Read the values from this project
-			if (selectedIndex != 0) {
-				noProjectsGrid.Visibility = Visibility.Hidden;
-				displayingImage.Visibility = Visibility.Visible;
-				displayingTitle.Visibility = Visibility.Visible;
-				scrollviewerGrid.Visibility = Visibility.Visible;
-				completeGrid.Visibility = Visibility.Visible;
-				addItemBorder.Visibility = Visibility.Visible;
-				settingsImage.Visibility = Visibility.Visible;
-
-
-				string json = File.ReadAllText(filesRead[selectedIndex - 1]);
-				MainTableManifest.Rootobject projectInfo =
-					JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
-
-				SetProjectValues(projectInfo.Title, projectInfo.Tasks, projectInfo.TaskData,
-					projectInfo.TaskIdentifier, projectInfo.Duration, projectInfo.Icon,
-					projectInfo.Percent);
-
-				// Set values
-				displayingTitle.Content = projectInfo.Title;
-
-				if (projectInfo.Icon == "rustIcon") { 
-					// Our default rust icon is white so we need to use the
-					// black one for the display image
-					displayingImage.Source = (ImageSource)TryFindResource("blackRustIcon");
-				}
-				else if (projectInfo.Icon == "noIcon") {
-					displayingImage.Source = (ImageSource)TryFindResource("checked_checkedboxDrawingImage");
-				}
-				else {
-					displayingImage.Source = (ImageSource)TryFindResource(projectInfo.Icon);
-				}
-
-				itemIndex = 0;
-				for (int i = 0; i < projectInfo.Tasks.Length; i++) {
-					itemIndex++;
-					if (projectInfo.TaskData[i] == "0" && !isCompletedTasksShown) { // It's not a completed task
-						LoadValues(projectInfo.Tasks[i], Int32.Parse(taskIdentifier[i]));
-					}
-					else if (projectInfo.TaskData[i] == "1" && isCompletedTasksShown) {
-						LoadValues(projectInfo.Tasks[i], Int32.Parse(taskIdentifier[i]));
-					}
-				}
-
-				scrollviewerGrid.Width = this.Width - 450;
-
-				for (int i = 0; i < scrollviewerGrid.Children.Count; i++) {
-					Grid grid = (Grid)scrollviewerGrid.Children[i];
-
-					grid.ColumnDefinitions.RemoveRange(0, 3);
-
-					ColumnDefinition column1 = new ColumnDefinition();
-					column1.Width = new GridLength(50, GridUnitType.Pixel);
-					ColumnDefinition column2 = new ColumnDefinition();
-					column2.Width = new GridLength(this.Width - 580, GridUnitType.Pixel);
-					ColumnDefinition column3 = new ColumnDefinition();
-					column3.Width = new GridLength(50, GridUnitType.Pixel);
-
-					grid.ColumnDefinitions.Add(column1);
-					grid.ColumnDefinitions.Add(column2);
-					grid.ColumnDefinitions.Add(column3);
-				}
-
-				if (itemsAdded == 0 && !isCompletedTasksShown) {
-					errorCanvas.Margin = new Thickness(0, 0, 120, 20);
-					featureCanvas.Margin = new Thickness(0, 0, 0, 20);
-					commentCanvas.Margin = new Thickness(0, 0, -120, 20);
-
-					noProjectsGrid.Visibility = Visibility.Visible;
-					secondLineLabel.Visibility = Visibility.Visible;
-					thirdLineLabel.Visibility = Visibility.Visible;
-					fourthLineLabel.Visibility = Visibility.Visible;
-
-					firstLineLabel.Visibility = Visibility.Hidden;
-					secondLineLabel.Content = "Everything is finished!";
-					thirdLineLabel.Content = "You don't have any";
-					fourthLineLabel.Content = "tasks for this project.";
-					fifthLineLabel.Visibility = Visibility.Hidden;
-				}
-				else if (itemsAdded == 0 && isCompletedTasksShown) {
-					errorCanvas.Margin = new Thickness(0, 0, 120, 20);
-					featureCanvas.Margin = new Thickness(0, 0, 0, 20);
-					commentCanvas.Margin = new Thickness(0, 0, -120, 20);
-
-					noProjectsGrid.Visibility = Visibility.Visible;
-					secondLineLabel.Visibility = Visibility.Visible;
-					thirdLineLabel.Visibility = Visibility.Visible;
-					fourthLineLabel.Visibility = Visibility.Visible;
-
-					firstLineLabel.Visibility = Visibility.Hidden;
-					secondLineLabel.Content = "There's nothing to see here!";
-					thirdLineLabel.Content = "You haven't completed";
-					fourthLineLabel.Content = "any tasks yet.";
-					fifthLineLabel.Visibility = Visibility.Hidden;
-				}
-			}
-			else { // There's no projects
-				// Hide all items
-				displayingTitle.Visibility = Visibility.Hidden;
-				displayingImage.Visibility = Visibility.Hidden;
-				settingsImage.Visibility = Visibility.Hidden;
-				addItemBorder.Visibility = Visibility.Hidden;
-				scrollviewerGrid.Visibility = Visibility.Hidden;
-				completeGrid.Visibility = Visibility.Hidden;
-
-				// Show new items
-				noProjectsGrid.Visibility = Visibility.Visible;
-				firstLineLabel.Visibility = Visibility.Visible;
-				secondLineLabel.Visibility = Visibility.Visible;
-				thirdLineLabel.Visibility = Visibility.Visible;
-				fourthLineLabel.Visibility = Visibility.Visible;
-				fifthLineLabel.Visibility = Visibility.Visible;
-
-				errorCanvas.Margin = new Thickness(0, 0, 120, 140);
-				featureCanvas.Margin = new Thickness(0, 0, 0, 140);
-				commentCanvas.Margin = new Thickness(0, 0, -120, 140);
-
-				firstLineLabel.Content = "You haven't started a project yet.";
-				secondLineLabel.Content = "Create your first one!";
-				thirdLineLabel.Content = "With the Project Tracker, easily";
-				fourthLineLabel.Content = "create, manage, track, and develop";
-				fifthLineLabel.Content = "all of your programming projects.";
+					iconSelectBorder.BeginAnimation(HeightProperty, animation);
+				}));
 			}
 		}
 
 		/// <summary>
-		/// Startup function that runs when code execution starts.
+		/// Runs when the user chooses to ignore a shown update.
 		/// </summary>
-		private void Startup() {
-			// Item positioning
+		private void IgnoreUpdate(object sender, MouseButtonEventArgs e) {
+			Thread thread = new Thread(() =>
+			{
+				Dispatcher.Invoke(new Action(() =>
+				{
+					updateGrid.Visibility = Visibility.Visible;
 
-			if (!Directory.Exists(APPDATA_DIRECTORY)) { // Create AppData directory
-				Directory.CreateDirectory(APPDATA_DIRECTORY);
-			}
-			if (!Directory.Exists(DATA_DIRECTORY)) { // Create AppData/Data directory
-				Directory.CreateDirectory(DATA_DIRECTORY);
-			}
+					DoubleAnimation animation = new DoubleAnimation();
+					animation.From = 130;
+					animation.To = 0;
+					animation.Duration = TimeSpan.FromSeconds(0.2);
 
-			if (!File.Exists(SETTINGS_FILE)) { // Settings file doesn't exist. Create it
-				File.Create(SETTINGS_FILE);
+					updateGrid.BeginAnimation(HeightProperty, animation);
+				}));
+			});
+			thread.Start();
+		}
 
-				StringBuilder sb = new StringBuilder();
-				StringWriter sw = new StringWriter(sb);
+		/// <summary>
+		/// When we click away from the item selection border.
+		/// </summary>
+		private void itemTypeSelectBorder_LostFocus(object sender, RoutedEventArgs e) {
+			if (isTypeSelecting) { // Hide the icon selector window if they click out
+				Dispatcher.Invoke(new Action(() =>
+				{
+					isTypeSelecting = false;
 
-				using (JsonWriter js = new JsonTextWriter(sw)) {
-					js.Formatting = Formatting.Indented;
+					DoubleAnimation animation = new DoubleAnimation();
+					animation.From = 210;
+					animation.To = 0;
+					animation.Duration = TimeSpan.FromSeconds(0.1);
 
-					js.WriteStartObject();
-
-					// LastSelectedIndex
-					js.WritePropertyName("LastSelectedIndex");
-					js.WriteValue("1");
-
-					// DisplayingCompleted
-					js.WritePropertyName("DisplayingCompleted");
-					js.WriteValue("false");
-
-					js.WriteEndObject();
-				}
-
-				File.WriteAllText(SETTINGS_FILE, sw.ToString());
-				sb.Clear();
-				sw.Close();
-			}
-			else { // Settings file exists, read from it
-				string json = File.ReadAllText(SETTINGS_FILE);
-				SettingsManifest.Rootobject settings =
-					JsonConvert.DeserializeObject<SettingsManifest.Rootobject>(json);
-
-				if (settings.LastSelectedIndex != null) {
-					try {
-						selectedIndex = Int32.Parse(settings.LastSelectedIndex);
-					}
-					catch (FormatException) { // The index isn't a number for some reason, someone probably tampered with the file
-						selectedIndex = 1;
-					}
-				}
-				if (settings.DisplayingCompleted != null) {
-					if (settings.DisplayingCompleted == "true") {
-						isCompletedTasksShown = true;
-						completedTaskSwitchLabel.Content = "Completed tasks";
-					}
-				}
-			}
-
-			if (IS_BETA) {
-				versionLabel.Content = "Version " + CURRENT_VERSION + " (beta)";
-			}
-			else {
-				versionLabel.Content = "Version " + CURRENT_VERSION;
-			}
-
-			LoadFiles();
-			SetSelectedProject();
-
-			if (File.Exists(VERSION_INFO)) {
-				File.Delete(VERSION_INFO);
-			}
-
-			// Download latest version information
-			try {
-				WebClient client = new WebClient();
-				client.DownloadFileCompleted += new AsyncCompletedEventHandler(Update);
-				client.DownloadFileAsync(new Uri(VERSION_MANIFEST_URL), VERSION_INFO);
-			}
-			catch (WebException) {
-				// Couldn't download update file. Possible their wifi isn't working
+					itemTypeSelectBorder.BeginAnimation(HeightProperty, animation);
+				}));
 			}
 		}
 
@@ -664,13 +505,12 @@ namespace Project_Tracker {
 		/// </summary>
 		private void KeyPress(object sender, KeyEventArgs e) {
 			// Add a new item
-			if (e.Key == Key.Return && addItemTextBox.Text != "" && 
-				addItemTextBox.Text != "Add something to the project" && 
+			if (e.Key == Key.Return && addItemTextBox.Text != "" &&
+				addItemTextBox.Text != "Add something to the project" &&
 				addItemTextBox.IsFocused) {
 				tasks.Add(addItemTextBox.Text);
 				taskData.Add("0");
 				taskIdentifier.Add(addingType.ToString());
-
 
 				// We need to switch the category from complete to incomplete
 				if (isCompletedTasksShown) {
@@ -723,14 +563,12 @@ namespace Project_Tracker {
 					js.WritePropertyName("Percent");
 					js.WriteValue("00");
 
-
 					js.WriteEndObject();
 				}
 
-				
 				try {
 					if (!File.Exists(DATA_DIRECTORY + "/" + addProjectTextBox.Text + ".json")) {
-						File.WriteAllText(DATA_DIRECTORY + "/" + addProjectTextBox.Text + ".json", 
+						File.WriteAllText(DATA_DIRECTORY + "/" + addProjectTextBox.Text + ".json",
 							sw.ToString());
 					}
 					else {
@@ -760,9 +598,8 @@ namespace Project_Tracker {
 							continue;
 						}
 					}
-
 				}
-				
+
 				sb.Clear();
 				sw.Close();
 
@@ -770,685 +607,6 @@ namespace Project_Tracker {
 				Keyboard.ClearFocus();
 				LoadFiles();
 				SetSelectedProject();
-			}
-		}
-
-		/// <summary>
-		/// Closes threads and shuts down the program.
-		/// </summary>
-		private void Window_Closing(object sender, CancelEventArgs e) {
-
-		}
-
-		/// <summary>
-		/// Runs when the user presses the update button when an update is available.
-		/// </summary>
-		private void UpdateButtonPressed(object sender, MouseButtonEventArgs e) {
-			Thread thread = new Thread(() => {
-				Dispatcher.Invoke(new Action(() => {
-					updateGrid.Visibility = Visibility.Visible;
-
-					DoubleAnimation animation = new DoubleAnimation();
-					animation.From = 130;
-					animation.To = 0;
-					animation.Duration = TimeSpan.FromSeconds(0.2);
-
-					updateGrid.BeginAnimation(HeightProperty, animation);
-				}));
-			});
-			thread.Start();
-
-			UpdateWindow updateWindow = new UpdateWindow();
-			updateWindow.Show();
-		}
-
-		/// <summary>
-		/// Runs when the user chooses to ignore a shown update.
-		/// </summary>
-		private void IgnoreUpdate(object sender, MouseButtonEventArgs e) {
-			Thread thread = new Thread(() => {		
-				Dispatcher.Invoke(new Action(() => {
-					updateGrid.Visibility = Visibility.Visible;
-
-					DoubleAnimation animation = new DoubleAnimation();
-					animation.From = 130;
-					animation.To = 0;
-					animation.Duration = TimeSpan.FromSeconds(0.2);
-
-					updateGrid.BeginAnimation(HeightProperty, animation);
-				}));
-			});
-			thread.Start();
-		}
-
-		/// <summary>
-		/// A function that displays the completed vs incompleted tasks.
-		/// </summary>
-		private void SwitchCategory(object sender, MouseButtonEventArgs e) {
-			// ANIMATION
-			if (!isSwitchingAnimationRunning) {
-				isSwitchingAnimationRunning = true;
-				Dispatcher.Invoke(new Action(() => {
-					ThicknessAnimation animation = new ThicknessAnimation();
-
-					animation.From = new Thickness(0, 0, 0, 0);
-					animation.To = new Thickness(50, 0, 0, 0);
-					animation.Duration = TimeSpan.FromSeconds(0.2);
-
-					switchButtonLabel.BeginAnimation(MarginProperty, animation);
-				}));
-
-				Thread thread = new Thread(() => {
-					Thread.Sleep(200);
-					Dispatcher.Invoke(new Action(() => {
-						switchButtonLabel.Margin = new Thickness(-50, 0, 0, 0);
-						ThicknessAnimation animation = new ThicknessAnimation();
-
-						animation.From = new Thickness(-50, 0, 0, 0);
-						animation.To = new Thickness(0, 0, 0, 0);
-						animation.Duration = TimeSpan.FromSeconds(0.2);
-
-						switchButtonLabel.BeginAnimation(MarginProperty, animation);
-						isSwitchingAnimationRunning = false;
-					}));
-				});
-				thread.Start();
-			}
-
-			if (!isCompletedTasksShown) {
-				isCompletedTasksShown = true;
-				completedTaskSwitchLabel.Content = "Completed tasks";
-
-			}
-			else {
-				isCompletedTasksShown = false;
-				completedTaskSwitchLabel.Content = "Incomplete tasks";
-			}
-
-			SetSelectedProject(); // We use this to reset the scrollviewer grid
-			SaveSettings();
-		}
-
-		/// <summary>
-		/// When the user clicks on the icon of the program.
-		/// We want to open the change icon dialog.
-		/// </summary>
-		private void displayingImage_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
-			if (!isIconSelecting) { // Display icon selector window
-				Thread thread = new Thread(() => {
-					Dispatcher.Invoke(new Action(() => {
-						isIconSelecting = true;
-
-						iconSelectBorder.Visibility = Visibility.Visible;
-
-						DoubleAnimation animation = new DoubleAnimation();
-						animation.From = 0;
-						animation.To = 250;
-						animation.Duration = TimeSpan.FromSeconds(0.2);
-
-						iconSelectBorder.BeginAnimation(HeightProperty, animation);
-					}));
-				});
-				thread.Start();
-			}
-		}
-
-		/// <summary>
-		/// When the user clicks their mouse in the window.
-		/// Generally used to hide borders.
-		/// </summary>
-		private void Window_MouseDown(object sender, MouseButtonEventArgs e) {
-			if (isIconSelecting) { // Hide the icon selector window if they click out
-				Dispatcher.Invoke(new Action(() => {
-					isIconSelecting = false;
-
-					DoubleAnimation animation = new DoubleAnimation();
-					animation.From = 250;
-					animation.To = 0;
-					animation.Duration = TimeSpan.FromSeconds(0.2);
-
-					iconSelectBorder.BeginAnimation(HeightProperty, animation);
-				}));
-			}
-
-			if (isTypeSelecting) { // Hide the icon selector window if they click out
-				Dispatcher.Invoke(new Action(() => {
-					isTypeSelecting = false;
-
-					DoubleAnimation animation = new DoubleAnimation();
-					animation.From = 210;
-					animation.To = 0;
-					animation.Duration = TimeSpan.FromSeconds(0.2);
-
-					itemTypeSelectBorder.BeginAnimation(HeightProperty, animation);
-				}));
-			}
-
-			if (isSettingsOpen) { // Hide the icon selector window if they click out
-				Dispatcher.Invoke(new Action(() => {
-					isSettingsOpen = false;
-
-					DoubleAnimation animation = new DoubleAnimation();
-					animation.From = 70;
-					animation.To = 0;
-					animation.Duration = TimeSpan.FromSeconds(0.2);
-
-					settingsBorder.BeginAnimation(HeightProperty, animation);
-				}));
-			}
-
-			if (addItemTextBox.Text == "") { // Clear the textbox if they click out
-				addItemTextBox.Text = "Add something to the project";
-				Keyboard.ClearFocus();
-			}
-
-			if (addProjectTextBox.Text == "") { // Clear the textbox if they click out
-				addProjectTextBox.Text = "Create a new project";
-				Keyboard.ClearFocus();
-			}
-		}
-
-		/// <summary>
-		/// When the user resizes the window.
-		/// </summary>
-		private void Window_SizeChanged(object sender, SizeChangedEventArgs e) {
-			blackRectangle.Height = this.Height + 5;
-			addItemBorder.Width = this.Width - 450;
-
-			scrollviewerGrid.Width = this.Width - 450;
-
-			for (int i = 0; i < scrollviewerGrid.Children.Count; i++) {
-				Grid grid = (Grid)scrollviewerGrid.Children[i];
-
-				grid.ColumnDefinitions.RemoveRange(0, 3);
-
-				ColumnDefinition column1 = new ColumnDefinition();
-				column1.Width = new GridLength(50, GridUnitType.Pixel);
-				ColumnDefinition column2 = new ColumnDefinition();
-				column2.Width = new GridLength(this.Width - 580, GridUnitType.Pixel);
-				ColumnDefinition column3 = new ColumnDefinition();
-				column3.Width = new GridLength(50, GridUnitType.Pixel);
-
-				grid.ColumnDefinitions.Add(column1);
-				grid.ColumnDefinitions.Add(column2);
-				grid.ColumnDefinitions.Add(column3);
-			}
-
-			Console.WriteLine("Height: " + this.Height + " Width: " + this.Width);
-		}
-
-		#region Border onclicks
-		private void border1_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
-			selectedIndex = 1;
-			SetSelectedProject();
-		}
-
-		private void border2_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
-			selectedIndex = 2;
-			SetSelectedProject();
-		}
-
-		private void border3_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
-			selectedIndex = 3;
-			SetSelectedProject();
-		}
-
-		private void border4_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
-			selectedIndex = 4;
-			SetSelectedProject();
-		}
-
-		private void border5_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
-			selectedIndex = 5;
-			SetSelectedProject();
-		}
-
-		private void border6_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
-			selectedIndex = 6;
-			SetSelectedProject();
-		}
-
-		private void border7_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
-			selectedIndex = 7;
-			SetSelectedProject();
-		}
-
-		private void border8_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
-			selectedIndex = 8;
-			SetSelectedProject();
-		}
-
-		private void border9_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
-			selectedIndex = 9;
-			SetSelectedProject();
-		}
-
-		private void border10_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
-			selectedIndex = 10;
-			SetSelectedProject();
-		}
-		#endregion
-
-		/// <summary>
-		/// Change the icon for the project.
-		/// </summary>
-		/// <param name="selectedIcon">The icon to change to.</param>
-		private void SetProjectIcon(string selectedIcon) {
-			if (selectedIcon == "rustIcon") {
-				displayingImage.Source = (ImageSource)TryFindResource("blackRustIcon");
-			}
-			else {
-				displayingImage.Source = (ImageSource)TryFindResource(selectedIcon);
-			}
-			icon = selectedIcon;
-
-			Save(filesRead[selectedIndex - 1]);
-
-			// Set the icon in the project borders
-			if (selectedIndex == 1) {
-				image1.Source = (ImageSource)TryFindResource(selectedIcon);
-			}
-			else if (selectedIndex == 2) {
-				image2.Source = (ImageSource)TryFindResource(selectedIcon);
-			}
-			else if (selectedIndex == 3) {
-				image3.Source = (ImageSource)TryFindResource(selectedIcon);
-			}
-			else if (selectedIndex == 4) {
-				image4.Source = (ImageSource)TryFindResource(selectedIcon);
-			}
-			else if (selectedIndex == 5) {
-				image5.Source = (ImageSource)TryFindResource(selectedIcon);
-			}
-			else if (selectedIndex == 6) {
-				image6.Source = (ImageSource)TryFindResource(selectedIcon);
-			}
-			else if (selectedIndex == 7) {
-				image7.Source = (ImageSource)TryFindResource(selectedIcon);
-			}
-			else if (selectedIndex == 8) {
-				image8.Source = (ImageSource)TryFindResource(selectedIcon);
-			}
-			else if (selectedIndex == 9) {
-				image9.Source = (ImageSource)TryFindResource(selectedIcon);
-			}
-			else if (selectedIndex == 10) {
-				image10.Source = (ImageSource)TryFindResource(selectedIcon);
-			}
-
-			// Hide icon window
-			Dispatcher.Invoke(new Action(() => {
-				isIconSelecting = false;
-
-				DoubleAnimation animation = new DoubleAnimation();
-				animation.From = 250;
-				animation.To = 0;
-				animation.Duration = TimeSpan.FromSeconds(0.2);
-
-				iconSelectBorder.BeginAnimation(HeightProperty, animation);
-			}));
-		}
-
-		/// <summary>
-		/// Saves the project at the provided path.
-		/// </summary>
-		/// <param name="filePath">The path to save to.</param>
-		private void Save(string filePath) {
-			StringBuilder sb = new StringBuilder();
-			StringWriter sw = new StringWriter(sb);
-
-			using (JsonWriter js = new JsonTextWriter(sw)) {
-				js.Formatting = Formatting.Indented;
-
-				js.WriteStartObject();
-
-				js.WritePropertyName("Title");
-				js.WriteValue(title);
-
-				js.WritePropertyName("Tasks");
-				js.WriteStartArray();
-				foreach (string task in tasks) {
-					js.WriteValue(task);
-				}
-				js.WriteEnd();
-
-				js.WritePropertyName("TaskData");
-				js.WriteStartArray();
-				foreach (string data in taskData) {
-					js.WriteValue(data);
-				}
-				js.WriteEnd();
-
-				js.WritePropertyName("TaskIdentifier");
-				js.WriteStartArray();
-				foreach (string identifier in taskIdentifier) {
-					js.WriteValue(identifier);
-				}
-				js.WriteEnd();
-
-				js.WritePropertyName("Duration");
-				js.WriteValue(duration);
-				js.WritePropertyName("Icon");
-				js.WriteValue(icon);
-				js.WritePropertyName("Percent");
-				js.WriteValue(percent);
-
-				js.WriteEndObject();
-			}
-
-			File.WriteAllText(filePath, sw.ToString());
-			sb.Clear();
-			sw.Close();
-		}
-
-		/// <summary>
-		/// Saves the settings for the project.
-		/// </summary>
-		private void SaveSettings() {
-			StringBuilder sb = new StringBuilder();
-			StringWriter sw = new StringWriter(sb);
-			using (JsonWriter js = new JsonTextWriter(sw)) {
-				js.Formatting = Formatting.Indented;
-
-				js.WriteStartObject();
-
-				// LastSelectedIndex
-				js.WritePropertyName("LastSelectedIndex");
-				js.WriteValue(selectedIndex);
-
-				// DisplayingCompleted
-				js.WritePropertyName("DisplayingCompleted");
-				if (isCompletedTasksShown) {
-					js.WriteValue("true");
-				}
-				else {
-					js.WriteValue("false");
-				}
-
-				js.WriteEndObject();
-			}
-
-			File.WriteAllText(SETTINGS_FILE, sw.ToString());
-			sb.Clear();
-			sw.Close();
-		}
-
-		/// <summary>
-		/// When we check off a task.
-		/// </summary>
-		private void CheckmarkPressed(object sender, MouseButtonEventArgs e) {
-			Image callingImage = (Image)sender;
-
-			string name = callingImage.Name;
-			name = name.Remove(0, 1); // Removes the t from the name (e.g. t5 -> 5)
-
-			if (taskData[Int32.Parse(name) - 1] == "1") {
-				taskData[Int32.Parse(name) - 1] = "0";
-			}
-			else {
-				taskData[Int32.Parse(name) - 1] = "1";
-			}
-
-			CalculatePercentage();
-		}
-
-		#region Icon clicks
-		private void pythonIconMouseDown(object sender, MouseButtonEventArgs e) {
-			SetProjectIcon("pythonIcon");
-		}
-		private void javascriptIconMouseDown(object sender, MouseButtonEventArgs e) {
-			SetProjectIcon("javascriptIcon");
-		}
-		private void javaIconMouseDown(object sender, MouseButtonEventArgs e) {
-			SetProjectIcon("javaIcon");
-		}
-		private void csharpIconMouseDown(object sender, MouseButtonEventArgs e) {
-			SetProjectIcon("csharpIcon");
-		}
-		private void cplusplusIconMouseDown(object sender, MouseButtonEventArgs e) {
-			SetProjectIcon("cplusplusIcon");
-		}
-		private void htmlIconMouseDown(object sender, MouseButtonEventArgs e) {
-			SetProjectIcon("htmlIcon");
-		}
-		private void kotlinIconMouseDown(object sender, MouseButtonEventArgs e) {
-			SetProjectIcon("kotlinIcon");
-		}
-		private void goIconMouseDown(object sender, MouseButtonEventArgs e) {
-			SetProjectIcon("goIcon");
-		}
-		private void swiftIconMouseDown(object sender, MouseButtonEventArgs e) {
-			SetProjectIcon("swiftIcon");
-		}
-		private void rustIconMouseDown(object sender, MouseButtonEventArgs e) {
-			SetProjectIcon("rustIcon");
-		}
-		private void rubyIconMouseDown(object sender, MouseButtonEventArgs e) {
-			SetProjectIcon("rubyIcon");
-		}
-		private void objectiveCIconMouseDown(object sender, MouseButtonEventArgs e) {
-			SetProjectIcon("objective_cIcon");
-		}
-		private void cIconMouseDown(object sender, MouseButtonEventArgs e) {
-			SetProjectIcon("cIcon");
-		}
-		private void visualBasicMouseDown(object sender, MouseButtonEventArgs e) {
-			SetProjectIcon("visual_basicIcon");
-		}
-		private void rIconMouseDown(object sender, MouseButtonEventArgs e) {
-			SetProjectIcon("rIcon");
-		}
-		private void phpIconMouseDown(object sender, MouseButtonEventArgs e) {
-			SetProjectIcon("phpIcon");
-		}
-		private void sqlIconMouseDown(object sender, MouseButtonEventArgs e) {
-			SetProjectIcon("sqlIcon");
-		}
-		private void groovyIconMouseDown(object sender, MouseButtonEventArgs e) {
-			SetProjectIcon("groovyIcon");
-		}
-		private void perlIconMouseDown(object sender, MouseButtonEventArgs e) {
-			SetProjectIcon("perlIcon");
-		}
-		private void dartIconMouseDown(object sender, MouseButtonEventArgs e) {
-			SetProjectIcon("dartIcon");
-		}
-		private void githubIconMouseDown(object sender, MouseButtonEventArgs e) {
-			SetProjectIcon("githubDrawingImage");
-		}
-		private void checkboxIconMouseDown(object sender, MouseButtonEventArgs e) {
-			SetProjectIcon("checked_checkedboxDrawingImage");
-		}
-		#endregion
-
-		/// <summary>
-		/// When we click on the add new item TextBox.
-		/// </summary>
-		private void AddNewItemTextBoxClick(object sender, MouseButtonEventArgs e) {
-			if (addItemTextBox.Text == "Add something to the project") {
-				addItemTextBox.Text = "";
-			}
-
-			if (isTypeSelecting) { // Hide the icon selector window if they click out
-				Dispatcher.Invoke(new Action(() => {
-					isTypeSelecting = false;
-
-					DoubleAnimation animation = new DoubleAnimation();
-					animation.From = 210;
-					animation.To = 0;
-					animation.Duration = TimeSpan.FromSeconds(0.2);
-
-					itemTypeSelectBorder.BeginAnimation(HeightProperty, animation);
-				}));
-			}
-			if (isIconSelecting) { // Hide the icon selector window if they click out
-				Dispatcher.Invoke(new Action(() => {
-					isIconSelecting = false;
-
-					DoubleAnimation animation = new DoubleAnimation();
-					animation.From = 250;
-					animation.To = 0;
-					animation.Duration = TimeSpan.FromSeconds(0.2);
-
-					iconSelectBorder.BeginAnimation(HeightProperty, animation);
-				}));
-			}
-		}
-
-		/// <summary>
-		/// When we click away from the icon selection border.
-		/// </summary>
-		private void iconSelectBorder_LostFocus(object sender, RoutedEventArgs e) {
-			if (isIconSelecting) { // Hide the icon selector window if they click out
-				Dispatcher.Invoke(new Action(() => {
-					isIconSelecting = false;
-
-					DoubleAnimation animation = new DoubleAnimation();
-					animation.From = 250;
-					animation.To = 0;
-					animation.Duration = TimeSpan.FromSeconds(0.2);
-
-					iconSelectBorder.BeginAnimation(HeightProperty, animation);
-				}));
-			}
-		}
-
-		/// <summary>
-		/// When we click away from the add item TextBox.
-		/// </summary>
-		private void addItemTextBox_LostFocus(object sender, RoutedEventArgs e) {
-			if (addItemTextBox.Text == "") { // Clear the textbox if they click out
-				addItemTextBox.Text = "Add something to the project";
-				Keyboard.ClearFocus();
-			}
-		}
-
-		/// <summary>
-		/// When we click away from the item selection border.
-		/// </summary>
-		private void itemTypeSelectBorder_LostFocus(object sender, RoutedEventArgs e) {
-			if (isTypeSelecting) { // Hide the icon selector window if they click out
-				Dispatcher.Invoke(new Action(() => {
-					isTypeSelecting = false;
-
-					DoubleAnimation animation = new DoubleAnimation();
-					animation.From = 210;
-					animation.To = 0;
-					animation.Duration = TimeSpan.FromSeconds(0.1);
-
-					itemTypeSelectBorder.BeginAnimation(HeightProperty, animation);
-				}));
-			}
-		}
-
-		/// <summary>
-		/// When the user clicks on the type image to change the type.
-		/// </summary>
-		private void TypeImagePressed(object sender, MouseButtonEventArgs e) {
-			if (!isTypeSelecting) { // Display icon selector window
-				Thread thread = new Thread(() => {
-					Dispatcher.Invoke(new Action(() => {
-						isTypeSelecting = true;
-
-						itemTypeSelectBorder.Visibility = Visibility.Visible;
-
-						DoubleAnimation animation = new DoubleAnimation();
-						animation.From = 0;
-						animation.To = 210;
-						animation.Duration = TimeSpan.FromSeconds(0.2);
-
-						itemTypeSelectBorder.BeginAnimation(HeightProperty, animation);
-					}));
-				});
-				thread.Start();
-			}
-			else if (isTypeSelecting) { // Hide the icon selector window if they click out
-				Dispatcher.Invoke(new Action(() => {
-					isTypeSelecting = false;
-
-					DoubleAnimation animation = new DoubleAnimation();
-					animation.From = 210;
-					animation.To = 0;
-					animation.Duration = TimeSpan.FromSeconds(0.2);
-
-					itemTypeSelectBorder.BeginAnimation(HeightProperty, animation);
-				}));
-			}
-		}
-
-		#region Item selection presses
-		/// <summary>
-		/// When the user selects the error type.
-		/// </summary>
-		private void ErrorItemPressed(object sender, MouseButtonEventArgs e) {
-			addingTypeImage.Source = (ImageSource)TryFindResource("errorDrawingImage");
-			addingType = 0;
-		}
-
-		/// <summary>
-		/// When the user selects the feature type.
-		/// </summary>
-		private void FeatureItemPressed(object sender, MouseButtonEventArgs e) {
-			addingTypeImage.Source = (ImageSource)TryFindResource("featureDrawingImage");
-			addingType = 1;
-		}
-
-		/// <summary>
-		/// When the user selects the comment type.
-		/// </summary>
-		private void CommentItemPressed(object sender, MouseButtonEventArgs e) {
-			addingTypeImage.Source = (ImageSource)TryFindResource("commentDrawingImage");
-			addingType = 2;
-		}
-		#endregion
-
-		/// <summary>
-		/// When the user clicks on the project's settings button.
-		/// </summary>
-		private void settingsImage_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
-			if (!isSettingsOpen) { // Display icon selector window
-				Thread thread = new Thread(() => {
-					Dispatcher.Invoke(new Action(() => {
-						isSettingsOpen = true;
-
-						settingsBorder.Visibility = Visibility.Visible;
-
-						DoubleAnimation animation = new DoubleAnimation();
-						animation.From = 0;
-						animation.To = 70;
-						animation.Duration = TimeSpan.FromSeconds(0.2);
-
-						settingsBorder.BeginAnimation(HeightProperty, animation);
-					}));
-				});
-				thread.Start();
-			}
-			else if (isSettingsOpen) { // Hide the icon selector window if they click out
-				Dispatcher.Invoke(new Action(() => {
-					isSettingsOpen = false;
-
-					DoubleAnimation animation = new DoubleAnimation();
-					animation.From = 70;
-					animation.To = 0;
-					animation.Duration = TimeSpan.FromSeconds(0.2);
-
-					settingsBorder.BeginAnimation(HeightProperty, animation);
-				}));
-			}
-		}
-
-		private void settingsBorder_LostFocus(object sender, RoutedEventArgs e) {
-			if (isSettingsOpen) { // Hide the icon selector window if they click out
-				Dispatcher.Invoke(new Action(() => {
-					isSettingsOpen = false;
-
-					DoubleAnimation animation = new DoubleAnimation();
-					animation.From = 70;
-					animation.To = 0;
-					animation.Duration = TimeSpan.FromSeconds(0.2);
-
-					settingsBorder.BeginAnimation(HeightProperty, animation);
-				}));
 			}
 		}
 
@@ -1655,7 +813,6 @@ namespace Project_Tracker {
 										js.WriteValue("00");
 									}
 
-
 									js.WriteEndObject();
 								}
 
@@ -1674,8 +831,6 @@ namespace Project_Tracker {
 									"Project Migrated",
 									System.Windows.Forms.MessageBoxButtons.OK,
 									System.Windows.Forms.MessageBoxIcon.Information);
-
-
 							}
 							else { // They chose not to migrate the data
 								System.Windows.Forms.MessageBox.Show(
@@ -1703,7 +858,6 @@ namespace Project_Tracker {
 							AddProjectToWindow(mainTable.Title, mainTable.Icon, mainTable.Percent, index);
 							filesRead.Add(path);
 						}
-
 					}
 				}
 
@@ -1715,23 +869,480 @@ namespace Project_Tracker {
 				}
 			}
 			catch (IOException) {
-
 			}
 		}
 
 		/// <summary>
-		/// When the user clicks to delete the project.
+		/// Loads an item into the scrollviewer.
 		/// </summary>
-		private void DeleteProjectButtonPressed(object sender, MouseButtonEventArgs e) {
-			var deleteProject = System.Windows.Forms.MessageBox.Show(
-				"Are you sure you want to delete the " +
-				title + " project?\nThis cannot be undone",
-				"Confirm Project Deletion",
-				System.Windows.Forms.MessageBoxButtons.YesNo,
-				System.Windows.Forms.MessageBoxIcon.Question);
+		/// <param name="text">The text value of the item.</param>
+		/// <param name="type">The type of the item (0 = error, 1 = feature, 2 = comment).</param>
+		private void LoadValues(string text, int type) {
+			// The grid holds all of the values
+			Grid grid = new Grid();
+			grid.Margin = new Thickness(0, itemsAdded * 65, 0, 0);
+			grid.VerticalAlignment = VerticalAlignment.Top;
+			grid.HorizontalAlignment = HorizontalAlignment.Center;
 
-			if (deleteProject == System.Windows.Forms.DialogResult.Yes) { // They want to delete the project
-				Dispatcher.Invoke(new Action(() => {
+			grid.Name = "g" + itemsAdded;
+
+			ColumnDefinition column1 = new ColumnDefinition();
+			column1.Width = new GridLength(50, GridUnitType.Pixel);
+			ColumnDefinition column2 = new ColumnDefinition();
+			column2.Width = new GridLength(620, GridUnitType.Pixel);
+			ColumnDefinition column3 = new ColumnDefinition();
+			column3.Width = new GridLength(50, GridUnitType.Pixel);
+
+			grid.ColumnDefinitions.Add(column1);
+			grid.ColumnDefinitions.Add(column2);
+			grid.ColumnDefinitions.Add(column3);
+
+			// The border is a curved rectangle behind all the other objects
+			Border border = new Border();
+			border.Height = 60;
+			border.CornerRadius = new CornerRadius(10);
+			border.Background = new SolidColorBrush(itemColor);
+			border.BorderThickness = new Thickness(2);
+			border.HorizontalAlignment = HorizontalAlignment.Stretch;
+			border.VerticalAlignment = VerticalAlignment.Top;
+			border.Margin = new Thickness(0, 0, -5, 0);
+			border.SetValue(Grid.ColumnSpanProperty, 4);
+
+			// The canvas item for the checkmark
+			Canvas checkmarkCanvas = new Canvas();
+			checkmarkCanvas.HorizontalAlignment = HorizontalAlignment.Center;
+			checkmarkCanvas.VerticalAlignment = VerticalAlignment.Center;
+			checkmarkCanvas.Height = 40;
+			checkmarkCanvas.Width = 40;
+			checkmarkCanvas.SetValue(Grid.ColumnProperty, 0);
+			checkmarkCanvas.Margin = new Thickness(5, 10, 5, 10);
+
+			// The checkmark image
+			Image checkmarkImage = new Image();
+			checkmarkImage.Name = "t" + itemIndex.ToString();
+			checkmarkImage.Height = 40;
+			checkmarkImage.Width = 40;
+			Canvas.SetLeft(checkmarkImage, 10);
+			checkmarkImage.Cursor = Cursors.Hand;
+			checkmarkImage.MouseLeftButtonDown += CheckmarkPressed;
+
+			if (!isCompletedTasksShown) {
+				checkmarkImage.Style = (Style)TryFindResource("checkbox");
+			}
+			else {
+				checkmarkImage.Style = (Style)TryFindResource("completedTask");
+			}
+
+			checkmarkCanvas.Children.Add(checkmarkImage);
+
+			// The canvas item for the item type (error/feature/comment)
+			Canvas typeCanvas = new Canvas();
+			typeCanvas.HorizontalAlignment = HorizontalAlignment.Center;
+			typeCanvas.VerticalAlignment = VerticalAlignment.Center;
+			typeCanvas.Height = 30;
+			typeCanvas.Width = 30;
+			typeCanvas.SetValue(Grid.ColumnProperty, 2);
+
+			// The type image
+			Image typeImage = new Image();
+			typeImage.Height = 30;
+			typeImage.Width = 30;
+
+			if (type == 0) {
+				typeImage.Source = (ImageSource)TryFindResource("errorDrawingImage");
+				border.BorderBrush = new SolidColorBrush(Colors.IndianRed);
+			}
+			else if (type == 1) {
+				typeImage.Source = (ImageSource)TryFindResource("featureDrawingImage");
+				border.BorderBrush = new SolidColorBrush(Colors.Yellow);
+			}
+			else if (type == 2) {
+				typeImage.Source = (ImageSource)TryFindResource("commentDrawingImage");
+				border.BorderBrush = new SolidColorBrush(Colors.CornflowerBlue);
+			}
+			else {
+				typeImage.Source = (ImageSource)TryFindResource("noIcon");
+				border.BorderBrush = new SolidColorBrush(Colors.White);
+			}
+
+			typeCanvas.Children.Add(typeImage);
+
+			// The label displaying the content of the item
+			Label label = new Label();
+			label.Content = text;
+			label.Foreground = new SolidColorBrush(labelTextColor);
+			label.Margin = new Thickness(70, 6, 70, 0);
+			label.FontSize = 24;
+
+			border.Child = label;
+			grid.Children.Add(border);
+			grid.Children.Add(checkmarkCanvas);
+			grid.Children.Add(typeCanvas);
+			scrollviewerGrid.Children.Add(grid);
+
+			itemsAdded++;
+		}
+		/// <summary>
+		/// Saves the project at the provided path.
+		/// </summary>
+		/// <param name="filePath">The path to save to.</param>
+		private void Save(string filePath) {
+			StringBuilder sb = new StringBuilder();
+			StringWriter sw = new StringWriter(sb);
+
+			using (JsonWriter js = new JsonTextWriter(sw)) {
+				js.Formatting = Formatting.Indented;
+
+				js.WriteStartObject();
+
+				js.WritePropertyName("Title");
+				js.WriteValue(title);
+
+				js.WritePropertyName("Tasks");
+				js.WriteStartArray();
+				foreach (string task in tasks) {
+					js.WriteValue(task);
+				}
+				js.WriteEnd();
+
+				js.WritePropertyName("TaskData");
+				js.WriteStartArray();
+				foreach (string data in taskData) {
+					js.WriteValue(data);
+				}
+				js.WriteEnd();
+
+				js.WritePropertyName("TaskIdentifier");
+				js.WriteStartArray();
+				foreach (string identifier in taskIdentifier) {
+					js.WriteValue(identifier);
+				}
+				js.WriteEnd();
+
+				js.WritePropertyName("Duration");
+				js.WriteValue(duration);
+				js.WritePropertyName("Icon");
+				js.WriteValue(icon);
+				js.WritePropertyName("Percent");
+				js.WriteValue(percent);
+
+				js.WriteEndObject();
+			}
+
+			File.WriteAllText(filePath, sw.ToString());
+			sb.Clear();
+			sw.Close();
+		}
+
+		/// <summary>
+		/// Saves the settings for the project.
+		/// </summary>
+		private void SaveSettings() {
+			StringBuilder sb = new StringBuilder();
+			StringWriter sw = new StringWriter(sb);
+			using (JsonWriter js = new JsonTextWriter(sw)) {
+				js.Formatting = Formatting.Indented;
+
+				js.WriteStartObject();
+
+				// LastSelectedIndex
+				js.WritePropertyName("LastSelectedIndex");
+				js.WriteValue(selectedIndex);
+
+				// DisplayingCompleted
+				js.WritePropertyName("DisplayingCompleted");
+				if (isCompletedTasksShown) {
+					js.WriteValue("true");
+				}
+				else {
+					js.WriteValue("false");
+				}
+
+				js.WriteEndObject();
+			}
+
+			File.WriteAllText(SETTINGS_FILE, sw.ToString());
+			sb.Clear();
+			sw.Close();
+		}
+
+		/// <summary>
+		/// Change the icon for the project.
+		/// </summary>
+		/// <param name="selectedIcon">The icon to change to.</param>
+		private void SetProjectIcon(string selectedIcon) {
+			if (selectedIcon == "rustIcon") {
+				displayingImage.Source = (ImageSource)TryFindResource("blackRustIcon");
+			}
+			else {
+				displayingImage.Source = (ImageSource)TryFindResource(selectedIcon);
+			}
+			icon = selectedIcon;
+
+			Save(filesRead[selectedIndex - 1]);
+
+			// Set the icon in the project borders
+			if (selectedIndex == 1) {
+				image1.Source = (ImageSource)TryFindResource(selectedIcon);
+			}
+			else if (selectedIndex == 2) {
+				image2.Source = (ImageSource)TryFindResource(selectedIcon);
+			}
+			else if (selectedIndex == 3) {
+				image3.Source = (ImageSource)TryFindResource(selectedIcon);
+			}
+			else if (selectedIndex == 4) {
+				image4.Source = (ImageSource)TryFindResource(selectedIcon);
+			}
+			else if (selectedIndex == 5) {
+				image5.Source = (ImageSource)TryFindResource(selectedIcon);
+			}
+			else if (selectedIndex == 6) {
+				image6.Source = (ImageSource)TryFindResource(selectedIcon);
+			}
+			else if (selectedIndex == 7) {
+				image7.Source = (ImageSource)TryFindResource(selectedIcon);
+			}
+			else if (selectedIndex == 8) {
+				image8.Source = (ImageSource)TryFindResource(selectedIcon);
+			}
+			else if (selectedIndex == 9) {
+				image9.Source = (ImageSource)TryFindResource(selectedIcon);
+			}
+			else if (selectedIndex == 10) {
+				image10.Source = (ImageSource)TryFindResource(selectedIcon);
+			}
+
+			// Hide icon window
+			Dispatcher.Invoke(new Action(() =>
+			{
+				isIconSelecting = false;
+
+				DoubleAnimation animation = new DoubleAnimation();
+				animation.From = 250;
+				animation.To = 0;
+				animation.Duration = TimeSpan.FromSeconds(0.2);
+
+				iconSelectBorder.BeginAnimation(HeightProperty, animation);
+			}));
+		}
+
+		/// <summary>
+		/// Sets the variables for the project to allow easy saving.
+		/// </summary>
+		/// <param name="projectTitle">The project title.</param>
+		/// <param name="projectTasks">The project's tasks array.</param>
+		/// <param name="projectTasksData">The project's task data array.</param>
+		/// <param name="projectTasksIdentifier">The project's task identifier array.</param>
+		/// <param name="projectDuration">The project's duration.</param>
+		/// <param name="projectIcon">The project's icon.</param>
+		/// <param name="projectPercent">The project's percent.</param>
+		private void SetProjectValues(string projectTitle, string[] projectTasks,
+			string[] projectTasksData, string[] projectTasksIdentifier,
+			string projectDuration, string projectIcon, string projectPercent) {
+			title = projectTitle;
+
+			tasks.Clear();
+			foreach (string task in projectTasks) {
+				tasks.Add(task);
+			}
+			taskData.Clear();
+			foreach (string data in projectTasksData) {
+				taskData.Add(data);
+			}
+			taskIdentifier.Clear();
+			foreach (string identifier in projectTasksIdentifier) {
+				taskIdentifier.Add(identifier);
+			}
+
+			duration = projectDuration;
+			icon = projectIcon;
+			percent = projectPercent;
+		}
+
+		/// <summary>
+		/// Highlights the selected project based on selectedIndex.
+		/// </summary>
+		private void SetSelectedProject() {
+			border1.Style = (Style)TryFindResource("hoverOver");
+			border2.Style = (Style)TryFindResource("hoverOver");
+			border3.Style = (Style)TryFindResource("hoverOver");
+			border4.Style = (Style)TryFindResource("hoverOver");
+			border5.Style = (Style)TryFindResource("hoverOver");
+			border6.Style = (Style)TryFindResource("hoverOver");
+			border7.Style = (Style)TryFindResource("hoverOver");
+			border8.Style = (Style)TryFindResource("hoverOver");
+			border9.Style = (Style)TryFindResource("hoverOver");
+			border10.Style = (Style)TryFindResource("hoverOver");
+
+			scrollviewerGrid.Children.Clear();
+			itemsAdded = 0;
+
+			if (selectedIndex == 1) {
+				border1.Style = (Style)TryFindResource("solidOver");
+			}
+			else if (selectedIndex == 2) {
+				border2.Style = (Style)TryFindResource("solidOver");
+			}
+			else if (selectedIndex == 3) {
+				border3.Style = (Style)TryFindResource("solidOver");
+			}
+			else if (selectedIndex == 4) {
+				border4.Style = (Style)TryFindResource("solidOver");
+			}
+			else if (selectedIndex == 5) {
+				border5.Style = (Style)TryFindResource("solidOver");
+			}
+			else if (selectedIndex == 6) {
+				border6.Style = (Style)TryFindResource("solidOver");
+			}
+			else if (selectedIndex == 7) {
+				border7.Style = (Style)TryFindResource("solidOver");
+			}
+			else if (selectedIndex == 8) {
+				border8.Style = (Style)TryFindResource("solidOver");
+			}
+			else if (selectedIndex == 9) {
+				border9.Style = (Style)TryFindResource("solidOver");
+			}
+			else if (selectedIndex == 10) {
+				border10.Style = (Style)TryFindResource("solidOver");
+			}
+			else { // selectedIndex isn't a valid number
+				selectedIndex = 0;
+			}
+
+			SaveSettings();
+
+			// Read the values from this project
+			if (selectedIndex != 0) {
+				noProjectsGrid.Visibility = Visibility.Hidden;
+				displayingImage.Visibility = Visibility.Visible;
+				displayingTitle.Visibility = Visibility.Visible;
+				scrollviewerGrid.Visibility = Visibility.Visible;
+				completeGrid.Visibility = Visibility.Visible;
+				addItemBorder.Visibility = Visibility.Visible;
+				settingsImage.Visibility = Visibility.Visible;
+
+				string json = File.ReadAllText(filesRead[selectedIndex - 1]);
+				MainTableManifest.Rootobject projectInfo =
+					JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
+
+				SetProjectValues(projectInfo.Title, projectInfo.Tasks, projectInfo.TaskData,
+					projectInfo.TaskIdentifier, projectInfo.Duration, projectInfo.Icon,
+					projectInfo.Percent);
+
+				// Set values
+				displayingTitle.Content = projectInfo.Title;
+
+				if (projectInfo.Icon == "rustIcon") {
+					// Our default rust icon is white so we need to use the
+					// black one for the display image
+					displayingImage.Source = (ImageSource)TryFindResource("blackRustIcon");
+				}
+				else if (projectInfo.Icon == "noIcon") {
+					displayingImage.Source = (ImageSource)TryFindResource("checked_checkedboxDrawingImage");
+				}
+				else {
+					displayingImage.Source = (ImageSource)TryFindResource(projectInfo.Icon);
+				}
+
+				itemIndex = 0;
+				for (int i = 0; i < projectInfo.Tasks.Length; i++) {
+					itemIndex++;
+					if (projectInfo.TaskData[i] == "0" && !isCompletedTasksShown) { // It's not a completed task
+						LoadValues(projectInfo.Tasks[i], Int32.Parse(taskIdentifier[i]));
+					}
+					else if (projectInfo.TaskData[i] == "1" && isCompletedTasksShown) {
+						LoadValues(projectInfo.Tasks[i], Int32.Parse(taskIdentifier[i]));
+					}
+				}
+
+				scrollviewerGrid.Width = this.Width - 450;
+
+				for (int i = 0; i < scrollviewerGrid.Children.Count; i++) {
+					Grid grid = (Grid)scrollviewerGrid.Children[i];
+
+					grid.ColumnDefinitions.RemoveRange(0, 3);
+
+					ColumnDefinition column1 = new ColumnDefinition();
+					column1.Width = new GridLength(50, GridUnitType.Pixel);
+					ColumnDefinition column2 = new ColumnDefinition();
+					column2.Width = new GridLength(this.Width - 580, GridUnitType.Pixel);
+					ColumnDefinition column3 = new ColumnDefinition();
+					column3.Width = new GridLength(50, GridUnitType.Pixel);
+
+					grid.ColumnDefinitions.Add(column1);
+					grid.ColumnDefinitions.Add(column2);
+					grid.ColumnDefinitions.Add(column3);
+				}
+
+				if (itemsAdded == 0 && !isCompletedTasksShown) {
+					errorCanvas.Margin = new Thickness(0, 0, 120, 20);
+					featureCanvas.Margin = new Thickness(0, 0, 0, 20);
+					commentCanvas.Margin = new Thickness(0, 0, -120, 20);
+
+					noProjectsGrid.Visibility = Visibility.Visible;
+					secondLineLabel.Visibility = Visibility.Visible;
+					thirdLineLabel.Visibility = Visibility.Visible;
+					fourthLineLabel.Visibility = Visibility.Visible;
+
+					firstLineLabel.Visibility = Visibility.Hidden;
+					secondLineLabel.Content = "Everything is finished!";
+					thirdLineLabel.Content = "You don't have any";
+					fourthLineLabel.Content = "tasks for this project.";
+					fifthLineLabel.Visibility = Visibility.Hidden;
+				}
+				else if (itemsAdded == 0 && isCompletedTasksShown) {
+					errorCanvas.Margin = new Thickness(0, 0, 120, 20);
+					featureCanvas.Margin = new Thickness(0, 0, 0, 20);
+					commentCanvas.Margin = new Thickness(0, 0, -120, 20);
+
+					noProjectsGrid.Visibility = Visibility.Visible;
+					secondLineLabel.Visibility = Visibility.Visible;
+					thirdLineLabel.Visibility = Visibility.Visible;
+					fourthLineLabel.Visibility = Visibility.Visible;
+
+					firstLineLabel.Visibility = Visibility.Hidden;
+					secondLineLabel.Content = "There's nothing to see here!";
+					thirdLineLabel.Content = "You haven't completed";
+					fourthLineLabel.Content = "any tasks yet.";
+					fifthLineLabel.Visibility = Visibility.Hidden;
+				}
+			}
+			else { // There's no projects
+				   // Hide all items
+				displayingTitle.Visibility = Visibility.Hidden;
+				displayingImage.Visibility = Visibility.Hidden;
+				settingsImage.Visibility = Visibility.Hidden;
+				addItemBorder.Visibility = Visibility.Hidden;
+				scrollviewerGrid.Visibility = Visibility.Hidden;
+				completeGrid.Visibility = Visibility.Hidden;
+
+				// Show new items
+				noProjectsGrid.Visibility = Visibility.Visible;
+				firstLineLabel.Visibility = Visibility.Visible;
+				secondLineLabel.Visibility = Visibility.Visible;
+				thirdLineLabel.Visibility = Visibility.Visible;
+				fourthLineLabel.Visibility = Visibility.Visible;
+				fifthLineLabel.Visibility = Visibility.Visible;
+
+				errorCanvas.Margin = new Thickness(0, 0, 120, 140);
+				featureCanvas.Margin = new Thickness(0, 0, 0, 140);
+				commentCanvas.Margin = new Thickness(0, 0, -120, 140);
+
+				firstLineLabel.Content = "You haven't started a project yet.";
+				secondLineLabel.Content = "Create your first one!";
+				thirdLineLabel.Content = "With the Project Tracker, easily";
+				fourthLineLabel.Content = "create, manage, track, and develop";
+				fifthLineLabel.Content = "all of your programming projects.";
+			}
+		}
+
+		private void settingsBorder_LostFocus(object sender, RoutedEventArgs e) {
+			if (isSettingsOpen) { // Hide the icon selector window if they click out
+				Dispatcher.Invoke(new Action(() =>
+				{
 					isSettingsOpen = false;
 
 					DoubleAnimation animation = new DoubleAnimation();
@@ -1741,98 +1352,528 @@ namespace Project_Tracker {
 
 					settingsBorder.BeginAnimation(HeightProperty, animation);
 				}));
-
-				File.Delete(filesRead[selectedIndex - 1]);
-
-				selectedIndex = 0;
-				SaveSettings();
-				LoadFiles();
-
-				SetSelectedProject();
 			}
 		}
 
 		/// <summary>
-		/// Calculates the percentage complete for the project.
+		/// When the user clicks on the project's settings button.
 		/// </summary>
-		private void CalculatePercentage() {
-			int completed = 0;
-			int incomplete = 0;
+		private void settingsImage_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
+			if (!isSettingsOpen) { // Display icon selector window
+				Thread thread = new Thread(() =>
+				{
+					Dispatcher.Invoke(new Action(() =>
+					{
+						isSettingsOpen = true;
 
-			for (int i = 0; i < taskData.Count; i++) {
-				if (taskData[i] == "0") {
-					incomplete++;
+						settingsBorder.Visibility = Visibility.Visible;
+
+						DoubleAnimation animation = new DoubleAnimation();
+						animation.From = 0;
+						animation.To = 70;
+						animation.Duration = TimeSpan.FromSeconds(0.2);
+
+						settingsBorder.BeginAnimation(HeightProperty, animation);
+					}));
+				});
+				thread.Start();
+			}
+			else if (isSettingsOpen) { // Hide the icon selector window if they click out
+				Dispatcher.Invoke(new Action(() =>
+				{
+					isSettingsOpen = false;
+
+					DoubleAnimation animation = new DoubleAnimation();
+					animation.From = 70;
+					animation.To = 0;
+					animation.Duration = TimeSpan.FromSeconds(0.2);
+
+					settingsBorder.BeginAnimation(HeightProperty, animation);
+				}));
+			}
+		}
+
+		/// <summary>
+		/// Startup function that runs when code execution starts.
+		/// </summary>
+		private void Startup() {
+			// Item positioning
+
+			if (!Directory.Exists(APPDATA_DIRECTORY)) { // Create AppData directory
+				Directory.CreateDirectory(APPDATA_DIRECTORY);
+			}
+			if (!Directory.Exists(DATA_DIRECTORY)) { // Create AppData/Data directory
+				Directory.CreateDirectory(DATA_DIRECTORY);
+			}
+
+			if (!File.Exists(SETTINGS_FILE)) { // Settings file doesn't exist. Create it
+				File.Create(SETTINGS_FILE);
+
+				StringBuilder sb = new StringBuilder();
+				StringWriter sw = new StringWriter(sb);
+
+				using (JsonWriter js = new JsonTextWriter(sw)) {
+					js.Formatting = Formatting.Indented;
+
+					js.WriteStartObject();
+
+					// LastSelectedIndex
+					js.WritePropertyName("LastSelectedIndex");
+					js.WriteValue("1");
+
+					// DisplayingCompleted
+					js.WritePropertyName("DisplayingCompleted");
+					js.WriteValue("false");
+
+					js.WriteEndObject();
 				}
-				else if (taskData[i] == "1") {
-					completed++;
+
+				File.WriteAllText(SETTINGS_FILE, sw.ToString());
+				sb.Clear();
+				sw.Close();
+			}
+			else { // Settings file exists, read from it
+				string json = File.ReadAllText(SETTINGS_FILE);
+				SettingsManifest.Rootobject settings =
+					JsonConvert.DeserializeObject<SettingsManifest.Rootobject>(json);
+
+				if (settings.LastSelectedIndex != null) {
+					try {
+						selectedIndex = Int32.Parse(settings.LastSelectedIndex);
+					}
+					catch (FormatException) { // The index isn't a number for some reason, someone probably tampered with the file
+						selectedIndex = 1;
+					}
+				}
+				if (settings.DisplayingCompleted != null) {
+					if (settings.DisplayingCompleted == "true") {
+						isCompletedTasksShown = true;
+						completedTaskSwitchLabel.Content = "Completed tasks";
+					}
 				}
 			}
 
-			int totalAmountOfItems = completed + incomplete;
-			int percentComplete;
-
-			try {
-				percentComplete = (completed * 100) / totalAmountOfItems;
-			}
-			catch (DivideByZeroException) {
-				percentComplete = 0;
-			}
-
-			if (percentComplete <= 9) {
-				percent = "0" + percentComplete;
+			if (IS_BETA) {
+				versionLabel.Content = "Version " + CURRENT_VERSION + " (beta)";
 			}
 			else {
-				percent = percentComplete.ToString();
+				versionLabel.Content = "Version " + CURRENT_VERSION;
 			}
 
-			
-			// Set the selected index to display the new percent
-			if (selectedIndex == 1) {
-				percent1.Content = percent + "%";
-			}
-			else if (selectedIndex == 2) {
-				percent2.Content = percent + "%";
-			}
-			else if (selectedIndex == 3) {
-				percent3.Content = percent + "%";
-			}
-			else if (selectedIndex == 4) {
-				percent4.Content = percent + "%";
-			}
-			else if (selectedIndex == 5) {
-				percent5.Content = percent + "%";
-			}
-			else if (selectedIndex == 6) {
-				percent6.Content = percent + "%";
-			}
-			else if (selectedIndex == 7) {
-				percent7.Content = percent + "%";
-			}
-			else if (selectedIndex == 8) {
-				percent8.Content = percent + "%";
-			}
-			else if (selectedIndex == 9) {
-				percent9.Content = percent + "%";
-			}
-			else if (selectedIndex == 10) {
-				percent10.Content = percent + "%";
-			}
-
-			Save(filesRead[selectedIndex - 1]);
+			LoadFiles();
 			SetSelectedProject();
-		}
 
-		private void AddProjectClick(object sender, MouseButtonEventArgs e) {
-			if (addProjectTextBox.Text == "Create a new project") {
-				addProjectTextBox.Text = "";
+			if (File.Exists(VERSION_INFO)) {
+				File.Delete(VERSION_INFO);
+			}
+
+			// Download latest version information
+			try {
+				WebClient client = new WebClient();
+				client.DownloadFileCompleted += new AsyncCompletedEventHandler(Update);
+				client.DownloadFileAsync(new Uri(VERSION_MANIFEST_URL), VERSION_INFO);
+			}
+			catch (WebException) {
+				// Couldn't download update file. Possible their wifi isn't working
 			}
 		}
 
-		private void AddProjectTextBoxLostFocus(object sender, RoutedEventArgs e) {
+		/// <summary>
+		/// A function that displays the completed vs incompleted tasks.
+		/// </summary>
+		private void SwitchCategory(object sender, MouseButtonEventArgs e) {
+			// ANIMATION
+			if (!isSwitchingAnimationRunning) {
+				isSwitchingAnimationRunning = true;
+				Dispatcher.Invoke(new Action(() =>
+				{
+					ThicknessAnimation animation = new ThicknessAnimation();
+
+					animation.From = new Thickness(0, 0, 0, 0);
+					animation.To = new Thickness(50, 0, 0, 0);
+					animation.Duration = TimeSpan.FromSeconds(0.2);
+
+					switchButtonLabel.BeginAnimation(MarginProperty, animation);
+				}));
+
+				Thread thread = new Thread(() =>
+				{
+					Thread.Sleep(200);
+					Dispatcher.Invoke(new Action(() =>
+					{
+						switchButtonLabel.Margin = new Thickness(-50, 0, 0, 0);
+						ThicknessAnimation animation = new ThicknessAnimation();
+
+						animation.From = new Thickness(-50, 0, 0, 0);
+						animation.To = new Thickness(0, 0, 0, 0);
+						animation.Duration = TimeSpan.FromSeconds(0.2);
+
+						switchButtonLabel.BeginAnimation(MarginProperty, animation);
+						isSwitchingAnimationRunning = false;
+					}));
+				});
+				thread.Start();
+			}
+
+			if (!isCompletedTasksShown) {
+				isCompletedTasksShown = true;
+				completedTaskSwitchLabel.Content = "Completed tasks";
+			}
+			else {
+				isCompletedTasksShown = false;
+				completedTaskSwitchLabel.Content = "Incomplete tasks";
+			}
+
+			SetSelectedProject(); // We use this to reset the scrollviewer grid
+			SaveSettings();
+		}
+
+		/// <summary>
+		/// When the user clicks on the type image to change the type.
+		/// </summary>
+		private void TypeImagePressed(object sender, MouseButtonEventArgs e) {
+			if (!isTypeSelecting) { // Display icon selector window
+				Thread thread = new Thread(() =>
+				{
+					Dispatcher.Invoke(new Action(() =>
+					{
+						isTypeSelecting = true;
+
+						itemTypeSelectBorder.Visibility = Visibility.Visible;
+
+						DoubleAnimation animation = new DoubleAnimation();
+						animation.From = 0;
+						animation.To = 210;
+						animation.Duration = TimeSpan.FromSeconds(0.2);
+
+						itemTypeSelectBorder.BeginAnimation(HeightProperty, animation);
+					}));
+				});
+				thread.Start();
+			}
+			else if (isTypeSelecting) { // Hide the icon selector window if they click out
+				Dispatcher.Invoke(new Action(() =>
+				{
+					isTypeSelecting = false;
+
+					DoubleAnimation animation = new DoubleAnimation();
+					animation.From = 210;
+					animation.To = 0;
+					animation.Duration = TimeSpan.FromSeconds(0.2);
+
+					itemTypeSelectBorder.BeginAnimation(HeightProperty, animation);
+				}));
+			}
+		}
+
+		/// <summary>
+		/// Runs when the update file has been downloaded.
+		/// Notifies the user of an update if one is available.
+		/// </summary>
+		private void Update(object sender, AsyncCompletedEventArgs e) {
+			string json = File.ReadAllText(VERSION_INFO);
+
+			UpdateManifest.Rootobject update =
+				JsonConvert.DeserializeObject<UpdateManifest.Rootobject>(json);
+
+			if (float.Parse(CURRENT_VERSION) < float.Parse(update.Version)) { // Update is available
+				Thread thread = new Thread(() =>
+				{
+					Thread.Sleep(5000);
+					Dispatcher.Invoke(new Action(() =>
+					{
+						updateGrid.Visibility = Visibility.Visible;
+
+						DoubleAnimation animation = new DoubleAnimation();
+						animation.From = 0;
+						animation.To = 130;
+						animation.Duration = TimeSpan.FromSeconds(0.2);
+
+						updateGrid.BeginAnimation(HeightProperty, animation);
+					}));
+				});
+				thread.Start();
+			}
+		}
+		/// <summary>
+		/// Runs when the user presses the update button when an update is available.
+		/// </summary>
+		private void UpdateButtonPressed(object sender, MouseButtonEventArgs e) {
+			Thread thread = new Thread(() =>
+			{
+				Dispatcher.Invoke(new Action(() =>
+				{
+					updateGrid.Visibility = Visibility.Visible;
+
+					DoubleAnimation animation = new DoubleAnimation();
+					animation.From = 130;
+					animation.To = 0;
+					animation.Duration = TimeSpan.FromSeconds(0.2);
+
+					updateGrid.BeginAnimation(HeightProperty, animation);
+				}));
+			});
+			thread.Start();
+
+			UpdateWindow updateWindow = new UpdateWindow();
+			updateWindow.Show();
+		}
+
+		/// <summary>
+		/// Closes threads and shuts down the program.
+		/// </summary>
+		private void Window_Closing(object sender, CancelEventArgs e) {
+		}
+		/// <summary>
+		/// When the user clicks their mouse in the window.
+		/// Generally used to hide borders.
+		/// </summary>
+		private void Window_MouseDown(object sender, MouseButtonEventArgs e) {
+			if (isIconSelecting) { // Hide the icon selector window if they click out
+				Dispatcher.Invoke(new Action(() =>
+				{
+					isIconSelecting = false;
+
+					DoubleAnimation animation = new DoubleAnimation();
+					animation.From = 250;
+					animation.To = 0;
+					animation.Duration = TimeSpan.FromSeconds(0.2);
+
+					iconSelectBorder.BeginAnimation(HeightProperty, animation);
+				}));
+			}
+
+			if (isTypeSelecting) { // Hide the icon selector window if they click out
+				Dispatcher.Invoke(new Action(() =>
+				{
+					isTypeSelecting = false;
+
+					DoubleAnimation animation = new DoubleAnimation();
+					animation.From = 210;
+					animation.To = 0;
+					animation.Duration = TimeSpan.FromSeconds(0.2);
+
+					itemTypeSelectBorder.BeginAnimation(HeightProperty, animation);
+				}));
+			}
+
+			if (isSettingsOpen) { // Hide the icon selector window if they click out
+				Dispatcher.Invoke(new Action(() =>
+				{
+					isSettingsOpen = false;
+
+					DoubleAnimation animation = new DoubleAnimation();
+					animation.From = 70;
+					animation.To = 0;
+					animation.Duration = TimeSpan.FromSeconds(0.2);
+
+					settingsBorder.BeginAnimation(HeightProperty, animation);
+				}));
+			}
+
+			if (addItemTextBox.Text == "") { // Clear the textbox if they click out
+				addItemTextBox.Text = "Add something to the project";
+				Keyboard.ClearFocus();
+			}
+
 			if (addProjectTextBox.Text == "") { // Clear the textbox if they click out
 				addProjectTextBox.Text = "Create a new project";
 				Keyboard.ClearFocus();
 			}
 		}
+
+		/// <summary>
+		/// When the user resizes the window.
+		/// </summary>
+		private void Window_SizeChanged(object sender, SizeChangedEventArgs e) {
+			blackRectangle.Height = this.Height + 5;
+			addItemBorder.Width = this.Width - 450;
+
+			scrollviewerGrid.Width = this.Width - 450;
+
+			for (int i = 0; i < scrollviewerGrid.Children.Count; i++) {
+				Grid grid = (Grid)scrollviewerGrid.Children[i];
+
+				grid.ColumnDefinitions.RemoveRange(0, 3);
+
+				ColumnDefinition column1 = new ColumnDefinition();
+				column1.Width = new GridLength(50, GridUnitType.Pixel);
+				ColumnDefinition column2 = new ColumnDefinition();
+				column2.Width = new GridLength(this.Width - 580, GridUnitType.Pixel);
+				ColumnDefinition column3 = new ColumnDefinition();
+				column3.Width = new GridLength(50, GridUnitType.Pixel);
+
+				grid.ColumnDefinitions.Add(column1);
+				grid.ColumnDefinitions.Add(column2);
+				grid.ColumnDefinitions.Add(column3);
+			}
+		}
+
+		#region Border onclicks
+
+		private void border1_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+			selectedIndex = 1;
+			SetSelectedProject();
+		}
+
+		private void border10_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+			selectedIndex = 10;
+			SetSelectedProject();
+		}
+
+		private void border2_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+			selectedIndex = 2;
+			SetSelectedProject();
+		}
+
+		private void border3_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+			selectedIndex = 3;
+			SetSelectedProject();
+		}
+
+		private void border4_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+			selectedIndex = 4;
+			SetSelectedProject();
+		}
+
+		private void border5_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+			selectedIndex = 5;
+			SetSelectedProject();
+		}
+
+		private void border6_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+			selectedIndex = 6;
+			SetSelectedProject();
+		}
+
+		private void border7_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+			selectedIndex = 7;
+			SetSelectedProject();
+		}
+
+		private void border8_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+			selectedIndex = 8;
+			SetSelectedProject();
+		}
+
+		private void border9_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+			selectedIndex = 9;
+			SetSelectedProject();
+		}
+		#endregion Border onclicks
+		#region Icon clicks
+
+		private void checkboxIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("checked_checkedboxDrawingImage");
+		}
+
+		private void cIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("cIcon");
+		}
+
+		private void cplusplusIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("cplusplusIcon");
+		}
+
+		private void csharpIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("csharpIcon");
+		}
+
+		private void dartIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("dartIcon");
+		}
+
+		private void githubIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("githubDrawingImage");
+		}
+
+		private void goIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("goIcon");
+		}
+
+		private void groovyIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("groovyIcon");
+		}
+
+		private void htmlIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("htmlIcon");
+		}
+
+		private void javaIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("javaIcon");
+		}
+
+		private void javascriptIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("javascriptIcon");
+		}
+
+		private void kotlinIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("kotlinIcon");
+		}
+
+		private void objectiveCIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("objective_cIcon");
+		}
+
+		private void perlIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("perlIcon");
+		}
+
+		private void phpIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("phpIcon");
+		}
+
+		private void pythonIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("pythonIcon");
+		}
+		private void rIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("rIcon");
+		}
+
+		private void rubyIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("rubyIcon");
+		}
+
+		private void rustIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("rustIcon");
+		}
+
+		private void sqlIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("sqlIcon");
+		}
+
+		private void swiftIconMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("swiftIcon");
+		}
+		private void visualBasicMouseDown(object sender, MouseButtonEventArgs e) {
+			SetProjectIcon("visual_basicIcon");
+		}
+		#endregion Icon clicks
+		#region Item selection presses
+
+		/// <summary>
+		/// When the user selects the comment type.
+		/// </summary>
+		private void CommentItemPressed(object sender, MouseButtonEventArgs e) {
+			addingTypeImage.Source = (ImageSource)TryFindResource("commentDrawingImage");
+			addingType = 2;
+		}
+
+		/// <summary>
+		/// When the user selects the error type.
+		/// </summary>
+		private void ErrorItemPressed(object sender, MouseButtonEventArgs e) {
+			addingTypeImage.Source = (ImageSource)TryFindResource("errorDrawingImage");
+			addingType = 0;
+		}
+
+		/// <summary>
+		/// When the user selects the feature type.
+		/// </summary>
+		private void FeatureItemPressed(object sender, MouseButtonEventArgs e) {
+			addingTypeImage.Source = (ImageSource)TryFindResource("featureDrawingImage");
+			addingType = 1;
+		}
+		#endregion Item selection presses
 	}
 }

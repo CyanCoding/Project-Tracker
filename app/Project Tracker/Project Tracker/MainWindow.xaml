@@ -13,21 +13,21 @@
 
 	<uwp:Window.Resources>
 		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries >
-				<ResourceDictionary Source="style.xaml"/>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="style.xaml" />
 				<ResourceDictionary Source="pack://application:,,,/UWPHost;component/Themes/Generic.xaml" />
 			</ResourceDictionary.MergedDictionaries>
 
 			<Style TargetType="{x:Type TextBox}">
-				<Setter Property="SnapsToDevicePixels" Value="True"/>
-				<Setter Property="OverridesDefaultStyle" Value="True"/>
-				<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-				<Setter Property="AllowDrop" Value="true"/>
+				<Setter Property="SnapsToDevicePixels" Value="True" />
+				<Setter Property="OverridesDefaultStyle" Value="True" />
+				<Setter Property="FocusVisualStyle" Value="{x:Null}" />
+				<Setter Property="AllowDrop" Value="true" />
 				<Setter Property="Template">
 					<Setter.Value>
 						<ControlTemplate TargetType="{x:Type TextBoxBase}">
 							<Border Name="Border" Padding="2" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0">
-								<ScrollViewer Margin="0" x:Name="PART_ContentHost"/>
+								<ScrollViewer Margin="0" x:Name="PART_ContentHost" />
 							</Border>
 						</ControlTemplate>
 					</Setter.Value>
@@ -35,255 +35,252 @@
 			</Style>
 
 			<Style TargetType="{x:Type Image}" x:Key="checkbox">
-				<Setter Property="Image.Source" Value="{StaticResource unchecked_checkboxDrawingImage}"/>
+				<Setter Property="Image.Source" Value="{StaticResource unchecked_checkboxDrawingImage}" />
 				<Style.Triggers>
 					<Trigger Property="Border.IsMouseOver" Value="True">
-						<Setter Property="Image.Source" Value="{StaticResource checked_checkedboxDrawingImage}"/>
+						<Setter Property="Image.Source" Value="{StaticResource checked_checkedboxDrawingImage}" />
 					</Trigger>
 				</Style.Triggers>
 			</Style>
 
 			<Style TargetType="{x:Type Image}" x:Key="completedTask">
-				<Setter Property="Image.Source" Value="{StaticResource checked_checkedboxDrawingImage}"/>
+				<Setter Property="Image.Source" Value="{StaticResource checked_checkedboxDrawingImage}" />
 			</Style>
 
 			<Style TargetType="{x:Type Border}" x:Key="hoverOver">
-				<Setter Property="Border.Background" Value="LightGray"/>
-				<Setter Property="Border.Opacity" Value="0"/>
-				<Setter Property="Border.Cursor" Value="Hand"/>
+				<Setter Property="Border.Background" Value="LightGray" />
+				<Setter Property="Border.Opacity" Value="0" />
+				<Setter Property="Border.Cursor" Value="Hand" />
 				<Style.Triggers>
 					<Trigger Property="Border.IsMouseOver" Value="True">
-						<Setter Property="Border.Opacity" Value="0.2"/>
+						<Setter Property="Border.Opacity" Value="0.2" />
 					</Trigger>
 				</Style.Triggers>
 			</Style>
 
 			<Style TargetType="{x:Type Border}" x:Key="solidOver">
-				<Setter Property="Border.Background" Value="LightGray"/>
-				<Setter Property="Border.Opacity" Value="0.2"/>
-				<Setter Property="Border.Cursor" Value="Hand"/>
+				<Setter Property="Border.Background" Value="LightGray" />
+				<Setter Property="Border.Opacity" Value="0.2" />
+				<Setter Property="Border.Cursor" Value="Hand" />
 			</Style>
 		</ResourceDictionary>
 	</uwp:Window.Resources>
 
-
-
 	<Grid Background="White">
-		<Rectangle x:Name="blackRectangle" Fill="#FF212121" HorizontalAlignment="Left" Height="776" VerticalAlignment="Top" Width="350" Margin="-5,-5,-5,-5"/>
+		<Rectangle x:Name="blackRectangle" Fill="#FF212121" HorizontalAlignment="Left" Height="776" VerticalAlignment="Top" Width="350" Margin="-5,-5,-5,-5" />
 		<Canvas VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,43,0,0" Height="45" Width="45">
-			<Image Source="{StaticResource checked_checkedboxDrawingImage}" Height="45" Width="45"/>
+			<Image Source="{StaticResource checked_checkedboxDrawingImage}" Height="45" Width="45" />
 		</Canvas>
-		<Label Content="Project Tracker" HorizontalAlignment="Left" Margin="60,30,0,0" VerticalAlignment="Top" Foreground="White" FontSize="26"/>
-		<Label x:Name="versionLabel" Content="" HorizontalAlignment="Left" Margin="60,69,0,0" VerticalAlignment="Top" Foreground="#FFB8B8B8" FontSize="14"/>
+		<Label Content="Project Tracker" HorizontalAlignment="Left" Margin="60,30,0,0" VerticalAlignment="Top" Foreground="White" FontSize="26" />
+		<Label x:Name="versionLabel" Content="" HorizontalAlignment="Left" Margin="60,69,0,0" VerticalAlignment="Top" Foreground="#FFB8B8B8" FontSize="14" />
 		<!-- We need this to be 10 from each side in the code -->
-		<Border HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0" CornerRadius="4,4,4,4" BorderBrush="Black" Background="#FF9B9B9B" Width="325" Height="4" Margin="10,98,0,0"/>
+		<Border HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0" CornerRadius="4,4,4,4" BorderBrush="Black" Background="#FF9B9B9B" Width="325" Height="4" Margin="10,98,0,0" />
 
 		<!-- First project -->
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,115,0,0" Width="325">
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="32"/>
-				<ColumnDefinition Width="224"/>
-				<ColumnDefinition Width="60"/>
+				<ColumnDefinition Width="32" />
+				<ColumnDefinition Width="224" />
+				<ColumnDefinition Width="60" />
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image x:Name="image1"  Source="{StaticResource noIcon}" Height="30" Width="30"/>
+				<Image x:Name="image1"  Source="{StaticResource noIcon}" Height="30" Width="30" />
 			</Canvas>
-			<Label x:Name="name1" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
-			<Label x:Name="percent1" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="50" Margin="0,0,-8,0"/>
+			<Label x:Name="name1" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22" />
+			<Label x:Name="percent1" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="50" Margin="0,0,-8,0" />
 		</Grid>
-		<Border x:Name="border1" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,115,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border1_MouseLeftButtonDown" Style="{StaticResource hoverOver}"/>
+		<Border x:Name="border1" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,115,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border1_MouseLeftButtonDown" Style="{StaticResource hoverOver}" />
 
 		<!-- Second project -->
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,165,0,0" Width="325">
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="32"/>
-				<ColumnDefinition Width="224"/>
-				<ColumnDefinition Width="60"/>
+				<ColumnDefinition Width="32" />
+				<ColumnDefinition Width="224" />
+				<ColumnDefinition Width="60" />
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image x:Name="image2" Source="{StaticResource noIcon}" Height="30" Width="30"/>
+				<Image x:Name="image2" Source="{StaticResource noIcon}" Height="30" Width="30" />
 			</Canvas>
-			<Label x:Name="name2" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
-			<Label x:Name="percent2" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+			<Label x:Name="name2" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22" />
+			<Label x:Name="percent2" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0" />
 		</Grid>
-		<Border x:Name="border2" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,165,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border2_MouseLeftButtonDown" Style="{StaticResource hoverOver}"/>
+		<Border x:Name="border2" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,165,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border2_MouseLeftButtonDown" Style="{StaticResource hoverOver}" />
 
 		<!-- Third project -->
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,215,0,0" Width="325">
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="32"/>
-				<ColumnDefinition Width="224"/>
-				<ColumnDefinition Width="60"/>
+				<ColumnDefinition Width="32" />
+				<ColumnDefinition Width="224" />
+				<ColumnDefinition Width="60" />
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image x:Name="image3" Source="{StaticResource noIcon}" Height="30" Width="30"/>
+				<Image x:Name="image3" Source="{StaticResource noIcon}" Height="30" Width="30" />
 			</Canvas>
-			<Label x:Name="name3" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
-			<Label x:Name="percent3" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+			<Label x:Name="name3" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22" />
+			<Label x:Name="percent3" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0" />
 		</Grid>
-		<Border x:Name="border3" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,215,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border3_MouseLeftButtonDown" Style="{StaticResource hoverOver}"/>
+		<Border x:Name="border3" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,215,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border3_MouseLeftButtonDown" Style="{StaticResource hoverOver}" />
 
 		<!-- Fourth project -->
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,265,0,0" Width="325">
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="32"/>
-				<ColumnDefinition Width="224"/>
-				<ColumnDefinition Width="60"/>
+				<ColumnDefinition Width="32" />
+				<ColumnDefinition Width="224" />
+				<ColumnDefinition Width="60" />
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image x:Name="image4" Source="{StaticResource noIcon}" Height="30" Width="30"/>
+				<Image x:Name="image4" Source="{StaticResource noIcon}" Height="30" Width="30" />
 			</Canvas>
-			<Label x:Name="name4" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
-			<Label x:Name="percent4" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+			<Label x:Name="name4" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22" />
+			<Label x:Name="percent4" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0" />
 		</Grid>
-		<Border x:Name="border4" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,265,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border4_MouseLeftButtonDown" Style="{StaticResource hoverOver}"/>
+		<Border x:Name="border4" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,265,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border4_MouseLeftButtonDown" Style="{StaticResource hoverOver}" />
 
 		<!-- Fifth project -->
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,315,0,0" Width="325">
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="32"/>
-				<ColumnDefinition Width="224"/>
-				<ColumnDefinition Width="60"/>
+				<ColumnDefinition Width="32" />
+				<ColumnDefinition Width="224" />
+				<ColumnDefinition Width="60" />
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image x:Name="image5" Source="{StaticResource noIcon}" Height="30" Width="30"/>
+				<Image x:Name="image5" Source="{StaticResource noIcon}" Height="30" Width="30" />
 			</Canvas>
-			<Label x:Name="name5" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
-			<Label x:Name="percent5" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+			<Label x:Name="name5" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22" />
+			<Label x:Name="percent5" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0" />
 		</Grid>
-		<Border x:Name="border5" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,315,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border5_MouseLeftButtonDown" Style="{StaticResource hoverOver}"/>
+		<Border x:Name="border5" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,315,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border5_MouseLeftButtonDown" Style="{StaticResource hoverOver}" />
 
 		<!-- Sixth project -->
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,365,0,0" Width="325">
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="32"/>
-				<ColumnDefinition Width="224"/>
-				<ColumnDefinition Width="60"/>
+				<ColumnDefinition Width="32" />
+				<ColumnDefinition Width="224" />
+				<ColumnDefinition Width="60" />
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image x:Name="image6" Source="{StaticResource noIcon}" Height="30" Width="30"/>
+				<Image x:Name="image6" Source="{StaticResource noIcon}" Height="30" Width="30" />
 			</Canvas>
-			<Label x:Name="name6" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
-			<Label x:Name="percent6" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+			<Label x:Name="name6" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22" />
+			<Label x:Name="percent6" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0" />
 		</Grid>
-		<Border x:Name="border6" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,365,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border6_MouseLeftButtonDown" Style="{StaticResource hoverOver}"/>
+		<Border x:Name="border6" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,365,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border6_MouseLeftButtonDown" Style="{StaticResource hoverOver}" />
 
 		<!-- Seventh project -->
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,415,0,0" Width="325">
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="32"/>
-				<ColumnDefinition Width="224"/>
-				<ColumnDefinition Width="60"/>
+				<ColumnDefinition Width="32" />
+				<ColumnDefinition Width="224" />
+				<ColumnDefinition Width="60" />
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image x:Name="image7" Source="{StaticResource noIcon}" Height="30" Width="30"/>
+				<Image x:Name="image7" Source="{StaticResource noIcon}" Height="30" Width="30" />
 			</Canvas>
-			<Label x:Name="name7" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
-			<Label x:Name="percent7" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+			<Label x:Name="name7" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22" />
+			<Label x:Name="percent7" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0" />
 		</Grid>
-		<Border x:Name="border7" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,415,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border7_MouseLeftButtonDown" Style="{StaticResource hoverOver}"/>
+		<Border x:Name="border7" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,415,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border7_MouseLeftButtonDown" Style="{StaticResource hoverOver}" />
 
 		<!-- Eighth project -->
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,465,0,0" Width="325">
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="32"/>
-				<ColumnDefinition Width="224"/>
-				<ColumnDefinition Width="60"/>
+				<ColumnDefinition Width="32" />
+				<ColumnDefinition Width="224" />
+				<ColumnDefinition Width="60" />
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image x:Name="image8" Source="{StaticResource noIcon}" Height="30" Width="30"/>
+				<Image x:Name="image8" Source="{StaticResource noIcon}" Height="30" Width="30" />
 			</Canvas>
-			<Label x:Name="name8" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
-			<Label x:Name="percent8" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+			<Label x:Name="name8" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22" />
+			<Label x:Name="percent8" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0" />
 		</Grid>
-		<Border x:Name="border8" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,465,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border8_MouseLeftButtonDown" Style="{StaticResource hoverOver}"/>
+		<Border x:Name="border8" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,465,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border8_MouseLeftButtonDown" Style="{StaticResource hoverOver}" />
 
 		<!-- Ninth project -->
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,515,0,0" Width="325">
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="32"/>
-				<ColumnDefinition Width="224"/>
-				<ColumnDefinition Width="60"/>
+				<ColumnDefinition Width="32" />
+				<ColumnDefinition Width="224" />
+				<ColumnDefinition Width="60" />
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image x:Name="image9" Source="{StaticResource noIcon}" Height="30" Width="30"/>
+				<Image x:Name="image9" Source="{StaticResource noIcon}" Height="30" Width="30" />
 			</Canvas>
-			<Label x:Name="name9" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
-			<Label x:Name="percent9" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+			<Label x:Name="name9" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22" />
+			<Label x:Name="percent9" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0" />
 		</Grid>
-		<Border x:Name="border9" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,515,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border9_MouseLeftButtonDown" Style="{StaticResource hoverOver}"/>
+		<Border x:Name="border9" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,515,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border9_MouseLeftButtonDown" Style="{StaticResource hoverOver}" />
 
 		<!-- Tenth project -->
 		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Margin="10,565,0,0" Width="325">
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="32"/>
-				<ColumnDefinition Width="224"/>
-				<ColumnDefinition Width="60"/>
+				<ColumnDefinition Width="32" />
+				<ColumnDefinition Width="224" />
+				<ColumnDefinition Width="60" />
 			</Grid.ColumnDefinitions>
 
 			<Canvas VerticalAlignment="Center" Margin="0,0,0,33" Grid.Column="0" Height="0">
-				<Image x:Name="image10" Source="{StaticResource noIcon}" Height="30" Width="30"/>
+				<Image x:Name="image10" Source="{StaticResource noIcon}" Height="30" Width="30" />
 			</Canvas>
-			<Label x:Name="name10" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22"/>
-			<Label x:Name="percent10" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0"/>
+			<Label x:Name="name10" VerticalContentAlignment="Center" Width="224" Grid.Column="1" HorizontalAlignment="Left" Content="" Foreground="White" FontSize="22" />
+			<Label x:Name="percent10" VerticalContentAlignment="Center" Grid.Column="2" VerticalAlignment="Top" Content="" Foreground="White" FontSize="22" Height="45" Margin="0,0,-8,0" />
 		</Grid>
-		<Border x:Name="border10" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,565,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border10_MouseLeftButtonDown" Style="{StaticResource hoverOver}"/>
+		<Border x:Name="border10" VerticalAlignment="Top" HorizontalAlignment="Left" Height="50" Margin="0,565,0,0" Width="350" Visibility="Hidden" MouseLeftButtonDown="border10_MouseLeftButtonDown" Style="{StaticResource hoverOver}" />
 
 		<!-- The add new item border -->
 		<Border BorderBrush="#FF666666" BorderThickness="2" CornerRadius="10" HorizontalAlignment="Left" Height="60" VerticalAlignment="Bottom" Margin="5" Width="335">
-			<TextBox x:Name="addProjectTextBox" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Create a new project" VerticalContentAlignment="Center" VerticalAlignment="Center" Margin="10,8,0,8" Height="60" Width="324" FontSize="22" SelectionBrush="#FF0D759C" Grid.ColumnSpan="2" BorderBrush="{x:Null}" PreviewMouseDown="AddProjectClick" LostFocus="AddProjectTextBoxLostFocus" Foreground="White"/>
+			<TextBox x:Name="addProjectTextBox" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Create a new project" VerticalContentAlignment="Center" VerticalAlignment="Center" Margin="10,8,0,8" Height="60" Width="324" FontSize="22" SelectionBrush="#FF0D759C" Grid.ColumnSpan="2" BorderBrush="{x:Null}" PreviewMouseDown="AddProjectClick" LostFocus="AddProjectTextBoxLostFocus" Foreground="White" />
 		</Border>
 
 		<!-- Display window content -->
 		<!-- The default view if there's no projects made yet -->
 		<Grid x:Name="noProjectsGrid" Margin="345,115,0,209" Visibility="Visible">
 			<Canvas x:Name="errorCanvas" HorizontalAlignment="Center" VerticalAlignment="Center" Height="45" Width="45" Margin="0,0,120,140">
-				<Image Source="{StaticResource errorDrawingImage}" Height="45" Width="45"/>
+				<Image Source="{StaticResource errorDrawingImage}" Height="45" Width="45" />
 			</Canvas>
 			<Canvas x:Name="featureCanvas" HorizontalAlignment="Center" VerticalAlignment="Center" Height="45" Width="45" Margin="0,0,0,140">
-				<Image Source="{StaticResource featureDrawingImage}" Height="45" Width="45"/>
+				<Image Source="{StaticResource featureDrawingImage}" Height="45" Width="45" />
 			</Canvas>
 			<Canvas x:Name="commentCanvas" HorizontalAlignment="Center" VerticalAlignment="Center" Height="45" Width="45" Margin="0,0,-120,140">
-				<Image Source="{StaticResource commentDrawingImage}" Height="45" Width="45"/>
+				<Image Source="{StaticResource commentDrawingImage}" Height="45" Width="45" />
 			</Canvas>
-			<Label x:Name="firstLineLabel" Content="You haven't started a project yet." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40"/>
-			<Label x:Name="secondLineLabel" Content="Create your first one!" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0, 0, -120" FontSize="40"/>
-			<Label x:Name="thirdLineLabel" Content="With the Project Tracker, easily" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0, 0, -400" FontSize="28"/>
-			<Label x:Name="fourthLineLabel" Content="create, manage, track, and develop" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0, 0, -480" FontSize="28"/>
-			<Label x:Name="fifthLineLabel" Content="all of your programming projects." HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0, 0, -560" FontSize="28"/>
+			<Label x:Name="firstLineLabel" Content="You haven't started a project yet." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40" />
+			<Label x:Name="secondLineLabel" Content="Create your first one!" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0, 0, -120" FontSize="40" />
+			<Label x:Name="thirdLineLabel" Content="With the Project Tracker, easily" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0, 0, -400" FontSize="28" />
+			<Label x:Name="fourthLineLabel" Content="create, manage, track, and develop" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0, 0, -480" FontSize="28" />
+			<Label x:Name="fifthLineLabel" Content="all of your programming projects." HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0, 0, -560" FontSize="28" />
 		</Grid>
 
 		<!-- The view if there is projects made -->
 		<Grid Margin="345,0,0,0">
-			<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="75,31,0,0" >
-				<Image x:Name="displayingImage"  Source="{StaticResource noIcon}" Height="45" Width="45" Visibility="Hidden" PreviewMouseDown="displayingImage_PreviewMouseDown" Cursor="Hand"/>
+			<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="75,31,0,0">
+				<Image x:Name="displayingImage"  Source="{StaticResource noIcon}" Height="45" Width="45" Visibility="Hidden" PreviewMouseDown="displayingImage_PreviewMouseDown" Cursor="Hand" />
 			</Canvas>
 			<Canvas HorizontalAlignment="Right" VerticalAlignment="Top" Height="40" Width="40" Margin="0,45,45,0">
-				<Image x:Name="settingsImage"  Source="{StaticResource settingsDrawingImage}" Height="40" Width="40" Visibility="Hidden" PreviewMouseDown="settingsImage_PreviewMouseDown" Cursor="Hand"/>
+				<Image x:Name="settingsImage"  Source="{StaticResource settingsDrawingImage}" Height="40" Width="40" Visibility="Hidden" PreviewMouseDown="settingsImage_PreviewMouseDown" Cursor="Hand" />
 			</Canvas>
 
-
-			<Label x:Name="displayingTitle" VerticalContentAlignment="Top" HorizontalAlignment="Left" Content="" FontSize="40" Margin="135,21,0,7" FontWeight="Medium" Visibility="Hidden"/>
+			<Label x:Name="displayingTitle" VerticalContentAlignment="Top" HorizontalAlignment="Left" Content="" FontSize="40" Margin="135,21,0,7" FontWeight="Medium" Visibility="Hidden" />
 			<!-- Make sure this has equal padding on all sides -->
 			<Border x:Name="addItemBorder" BorderBrush="Black" CornerRadius="10" BorderThickness="3" HorizontalAlignment="Center" Height="73" Margin="0,0,0,10" VerticalAlignment="Bottom" Width="750" Visibility="Hidden">
 				<Grid x:Name="addItemGrid" HorizontalAlignment="Stretch">
 					<Grid.ColumnDefinitions>
-						<ColumnDefinition/>
-						<ColumnDefinition Width="60"/>
+						<ColumnDefinition />
+						<ColumnDefinition Width="60" />
 					</Grid.ColumnDefinitions>
-					<TextBox x:Name="addItemTextBox" Grid.Column="0" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="Add something to the project" VerticalContentAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" Height="67" FontSize="28" SelectionBrush="#FF0D759C" BorderBrush="{x:Null}" PreviewMouseDown="AddNewItemTextBoxClick" LostFocus="addItemTextBox_LostFocus"/>
+					<TextBox x:Name="addItemTextBox" Grid.Column="0" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="Add something to the project" VerticalContentAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" Height="67" FontSize="28" SelectionBrush="#FF0D759C" BorderBrush="{x:Null}" PreviewMouseDown="AddNewItemTextBoxClick" LostFocus="addItemTextBox_LostFocus" />
 
 					<Canvas x:Name="newItemTypeCanvas" HorizontalAlignment="Center" VerticalAlignment="Center" Height="45" Width="45" Grid.Column="1">
-						<Image x:Name="addingTypeImage" Source="{StaticResource errorDrawingImage}" Height="45" Width="45" PreviewMouseDown="TypeImagePressed" Cursor="Hand"/>
+						<Image x:Name="addingTypeImage" Source="{StaticResource errorDrawingImage}" Height="45" Width="45" PreviewMouseDown="TypeImagePressed" Cursor="Hand" />
 					</Canvas>
 				</Grid>
 			</Border>
@@ -297,101 +294,101 @@
 		<!-- Incomplete vs complete grid -->
 		<Grid x:Name="completeGrid" Margin="391,136,0,0" Visibility="Hidden">
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="199"/>
-				<ColumnDefinition Width="88"/>
+				<ColumnDefinition Width="199" />
+				<ColumnDefinition Width="88" />
 			</Grid.ColumnDefinitions>
 			<Border CornerRadius="5" Background="Black" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Column="0" Height="43" Width="200">
-				<Label x:Name="completedTaskSwitchLabel" Content="Incomplete tasks" Foreground="White" FontSize="24" Margin="5,0,5,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+				<Label x:Name="completedTaskSwitchLabel" Content="Incomplete tasks" Foreground="White" FontSize="24" Margin="5,0,5,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
 			</Border>
 			<Border CornerRadius="5" Background="Black" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Column="1" Cursor="Hand" PreviewMouseDown="SwitchCategory" Height="43" Width="43">
-				<Label x:Name="switchButtonLabel" Content="&#xE8AB;" Foreground="White" Margin="0,0,0,0" FontSize="24" FontFamily="Segoe MDL2 Assets" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+				<Label x:Name="switchButtonLabel" Content="&#xE8AB;" Foreground="White" Margin="0,0,0,0" FontSize="24" FontFamily="Segoe MDL2 Assets" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
 			</Border>
 		</Grid>
 
 		<!-- The icon selection stuff -->
 		<Border x:Name="iconSelectBorder" CornerRadius="10" HorizontalAlignment="Left" Height="0" Margin="350,65,0,0" VerticalAlignment="Top" Width="260" Background="White" Visibility="Hidden" LostFocus="iconSelectBorder_LostFocus">
 			<Border.Effect>
-				<DropShadowEffect ShadowDepth="1"/>
+				<DropShadowEffect ShadowDepth="1" />
 			</Border.Effect>
 			<Grid>
 				<ScrollViewer HorizontalAlignment="Left" Height="250" VerticalAlignment="Top" Width="260" VerticalScrollBarVisibility="Visible">
 					<Grid>
 						<!-- First row -->
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,10,10,10" Cursor="Hand">
-							<Image Source="{StaticResource pythonIcon}" Height="44" Width="45" PreviewMouseDown="pythonIconMouseDown"/>
+							<Image Source="{StaticResource pythonIcon}" Height="44" Width="45" PreviewMouseDown="pythonIconMouseDown" />
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="70,10,10,10" Cursor="Hand">
-							<Image Source="{StaticResource javascriptIcon}" Height="44" Width="45" PreviewMouseDown="javascriptIconMouseDown"/>
+							<Image Source="{StaticResource javascriptIcon}" Height="44" Width="45" PreviewMouseDown="javascriptIconMouseDown" />
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="130,10,10,10" Cursor="Hand">
-							<Image Source="{StaticResource javaIcon}" Height="44" Width="45" PreviewMouseDown="javaIconMouseDown"/>
+							<Image Source="{StaticResource javaIcon}" Height="44" Width="45" PreviewMouseDown="javaIconMouseDown" />
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="190,10,10,10" Cursor="Hand">
-							<Image Source="{StaticResource csharpIcon}" Height="44" Width="45" PreviewMouseDown="csharpIconMouseDown"/>
+							<Image Source="{StaticResource csharpIcon}" Height="44" Width="45" PreviewMouseDown="csharpIconMouseDown" />
 						</Canvas>
 
 						<!-- Second row -->
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,70,10,10" Cursor="Hand">
-							<Image Source="{StaticResource cplusplusIcon}" Height="44" Width="45" PreviewMouseDown="cplusplusIconMouseDown"/>
+							<Image Source="{StaticResource cplusplusIcon}" Height="44" Width="45" PreviewMouseDown="cplusplusIconMouseDown" />
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="70,70,10,10" Cursor="Hand">
-							<Image Source="{StaticResource htmlIcon}" Height="44" Width="45" PreviewMouseDown="htmlIconMouseDown"/>
+							<Image Source="{StaticResource htmlIcon}" Height="44" Width="45" PreviewMouseDown="htmlIconMouseDown" />
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="130,70,10,10" Cursor="Hand">
-							<Image Source="{StaticResource kotlinIcon}" Height="44" Width="45" PreviewMouseDown="kotlinIconMouseDown"/>
+							<Image Source="{StaticResource kotlinIcon}" Height="44" Width="45" PreviewMouseDown="kotlinIconMouseDown" />
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="190,70,10,10" Cursor="Hand">
-							<Image Source="{StaticResource goIcon}" Height="44" Width="45" PreviewMouseDown="goIconMouseDown"/>
+							<Image Source="{StaticResource goIcon}" Height="44" Width="45" PreviewMouseDown="goIconMouseDown" />
 						</Canvas>
 
 						<!-- Third row -->
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,130,10,10" Cursor="Hand">
-							<Image Source="{StaticResource swiftIcon}" Height="44" Width="45" PreviewMouseDown="swiftIconMouseDown"/>
+							<Image Source="{StaticResource swiftIcon}" Height="44" Width="45" PreviewMouseDown="swiftIconMouseDown" />
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="70,130,10,10" Cursor="Hand">
-							<Image Source="{StaticResource blackRustIcon}" Height="44" Width="45" PreviewMouseDown="rustIconMouseDown"/>
+							<Image Source="{StaticResource blackRustIcon}" Height="44" Width="45" PreviewMouseDown="rustIconMouseDown" />
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="130,130,10,10" Cursor="Hand">
-							<Image Source="{StaticResource rubyIcon}" Height="44" Width="45" PreviewMouseDown="rubyIconMouseDown"/>
+							<Image Source="{StaticResource rubyIcon}" Height="44" Width="45" PreviewMouseDown="rubyIconMouseDown" />
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="190,130,10,10" Cursor="Hand">
-							<Image Source="{StaticResource objective_cIcon}" Height="44" Width="45" PreviewMouseDown="objectiveCIconMouseDown"/>
+							<Image Source="{StaticResource objective_cIcon}" Height="44" Width="45" PreviewMouseDown="objectiveCIconMouseDown" />
 						</Canvas>
 
 						<!-- Fourth row -->
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,190,10,10" Cursor="Hand">
-							<Image Source="{StaticResource cIcon}" Height="44" Width="45" PreviewMouseDown="cIconMouseDown"/>
+							<Image Source="{StaticResource cIcon}" Height="44" Width="45" PreviewMouseDown="cIconMouseDown" />
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="70,190,10,10" Cursor="Hand">
-							<Image Source="{StaticResource visual_basicIcon}" Height="44" Width="45" PreviewMouseDown="visualBasicMouseDown"/>
+							<Image Source="{StaticResource visual_basicIcon}" Height="44" Width="45" PreviewMouseDown="visualBasicMouseDown" />
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="130,190,10,10" Cursor="Hand">
-							<Image Source="{StaticResource rIcon}" Height="44" Width="45" PreviewMouseDown="rIconMouseDown"/>
+							<Image Source="{StaticResource rIcon}" Height="44" Width="45" PreviewMouseDown="rIconMouseDown" />
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="190,190,10,10" Cursor="Hand">
-							<Image Source="{StaticResource phpIcon}" Height="44" Width="45" PreviewMouseDown="phpIconMouseDown"/>
+							<Image Source="{StaticResource phpIcon}" Height="44" Width="45" PreviewMouseDown="phpIconMouseDown" />
 						</Canvas>
 
 						<!-- Fifth row -->
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,250,10,10" Cursor="Hand">
-							<Image Source="{StaticResource sqlIcon}" Height="44" Width="45" PreviewMouseDown="sqlIconMouseDown"/>
+							<Image Source="{StaticResource sqlIcon}" Height="44" Width="45" PreviewMouseDown="sqlIconMouseDown" />
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="70,250,10,10" Cursor="Hand">
-							<Image Source="{StaticResource groovyIcon}" Height="44" Width="45" PreviewMouseDown="groovyIconMouseDown"/>
+							<Image Source="{StaticResource groovyIcon}" Height="44" Width="45" PreviewMouseDown="groovyIconMouseDown" />
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="130,250,10,10" Cursor="Hand">
-							<Image Source="{StaticResource perlIcon}" Height="44" Width="45" PreviewMouseDown="perlIconMouseDown"/>
+							<Image Source="{StaticResource perlIcon}" Height="44" Width="45" PreviewMouseDown="perlIconMouseDown" />
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="190,250,10,10" Cursor="Hand">
-							<Image Source="{StaticResource dartIcon}" Height="44" Width="45" PreviewMouseDown="dartIconMouseDown"/>
+							<Image Source="{StaticResource dartIcon}" Height="44" Width="45" PreviewMouseDown="dartIconMouseDown" />
 						</Canvas>
 
 						<!-- Sixth row -->
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,310,10,10" Cursor="Hand">
-							<Image Source="{StaticResource githubDrawingImage}" Height="44" Width="45" PreviewMouseDown="githubIconMouseDown"/>
+							<Image Source="{StaticResource githubDrawingImage}" Height="44" Width="45" PreviewMouseDown="githubIconMouseDown" />
 						</Canvas>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="70,310,10,10" Cursor="Hand">
-							<Image Source="{StaticResource checked_checkedboxDrawingImage}" Height="44" Width="45" PreviewMouseDown="checkboxIconMouseDown"/>
+							<Image Source="{StaticResource checked_checkedboxDrawingImage}" Height="44" Width="45" PreviewMouseDown="checkboxIconMouseDown" />
 						</Canvas>
 					</Grid>
 				</ScrollViewer>
@@ -401,25 +398,25 @@
 		<!-- The type selection stuff -->
 		<Border x:Name="itemTypeSelectBorder" CornerRadius="10" HorizontalAlignment="Right" Height="0"  VerticalAlignment="Bottom" Width="200" Background="White" Visibility="Hidden" LostFocus="itemTypeSelectBorder_LostFocus" Margin="0,0,0,80" Cursor="Hand">
 			<Border.Effect>
-				<DropShadowEffect ShadowDepth="1"/>
+				<DropShadowEffect ShadowDepth="1" />
 			</Border.Effect>
 			<Grid>
 				<Grid.RowDefinitions>
-					<RowDefinition Height="70"/>
-					<RowDefinition Height="70"/>
-					<RowDefinition Height="70"/>
+					<RowDefinition Height="70" />
+					<RowDefinition Height="70" />
+					<RowDefinition Height="70" />
 				</Grid.RowDefinitions>
 				<!-- First row -->
 				<Border PreviewMouseDown="ErrorItemPressed" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2">
 					<Grid>
 						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="50"/>
-							<ColumnDefinition/>
+							<ColumnDefinition Width="50" />
+							<ColumnDefinition />
 						</Grid.ColumnDefinitions>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,10,0,0" Cursor="Hand">
-							<Image Source="{StaticResource errorDrawingImage}" Height="45" Width="45"/>
+							<Image Source="{StaticResource errorDrawingImage}" Height="45" Width="45" />
 						</Canvas>
-						<Label Content="Error" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" Margin="20,-10,0,0" VerticalAlignment="Center" FontSize="24" Width="173" Height="70" VerticalContentAlignment="Center"/>
+						<Label Content="Error" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" Margin="20,-10,0,0" VerticalAlignment="Center" FontSize="24" Width="173" Height="70" VerticalContentAlignment="Center" />
 					</Grid>
 				</Border>
 
@@ -427,13 +424,13 @@
 				<Border PreviewMouseDown="FeatureItemPressed" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
 					<Grid>
 						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="50"/>
-							<ColumnDefinition/>
+							<ColumnDefinition Width="50" />
+							<ColumnDefinition />
 						</Grid.ColumnDefinitions>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,10,0,0" Cursor="Hand">
-							<Image Source="{StaticResource featureDrawingImage}" Height="45" Width="45"/>
+							<Image Source="{StaticResource featureDrawingImage}" Height="45" Width="45" />
 						</Canvas>
-						<Label Content="Feature" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" Margin="20,-10,0,0" VerticalAlignment="Center" FontSize="24" Width="173" Height="70" VerticalContentAlignment="Center"/>
+						<Label Content="Feature" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" Margin="20,-10,0,0" VerticalAlignment="Center" FontSize="24" Width="173" Height="70" VerticalContentAlignment="Center" />
 					</Grid>
 				</Border>
 
@@ -441,13 +438,13 @@
 				<Border PreviewMouseDown="CommentItemPressed" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2">
 					<Grid>
 						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="50"/>
-							<ColumnDefinition/>
+							<ColumnDefinition Width="50" />
+							<ColumnDefinition />
 						</Grid.ColumnDefinitions>
 						<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,10,0,0" Cursor="Hand">
-							<Image Source="{StaticResource commentDrawingImage}" Height="45" Width="45"/>
+							<Image Source="{StaticResource commentDrawingImage}" Height="45" Width="45" />
 						</Canvas>
-						<Label Content="Comment" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" Margin="20,-10,0,0" VerticalAlignment="Center" FontSize="24" Width="173" Height="70" VerticalContentAlignment="Center"/>
+						<Label Content="Comment" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" Margin="20,-10,0,0" VerticalAlignment="Center" FontSize="24" Width="173" Height="70" VerticalContentAlignment="Center" />
 					</Grid>
 				</Border>
 			</Grid>
@@ -457,31 +454,31 @@
 		<!-- NOTE: If you add another floating border, you need to set the ROW DEFINITION for it to hide and show properly -->
 		<Border x:Name="settingsBorder" CornerRadius="10" HorizontalAlignment="Right" Height="0" VerticalAlignment="Top" Width="235" Background="White" Visibility="Hidden" LostFocus="settingsBorder_LostFocus" Margin="00,95,10,0" Cursor="Hand">
 			<Border.Effect>
-				<DropShadowEffect ShadowDepth="1"/>
+				<DropShadowEffect ShadowDepth="1" />
 			</Border.Effect>
 			<Border PreviewMouseDown="DeleteProjectButtonPressed">
 				<Grid>
 					<Grid.RowDefinitions>
-						<RowDefinition Height="70"/>
-						<RowDefinition/>
+						<RowDefinition Height="70" />
+						<RowDefinition />
 					</Grid.RowDefinitions>
 					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="50"/>
-						<ColumnDefinition Width="180"/>
+						<ColumnDefinition Width="50" />
+						<ColumnDefinition Width="180" />
 					</Grid.ColumnDefinitions>
 					<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="10,10,0,0" Cursor="Hand" Grid.Column="0" Grid.ColumnSpan="2">
-						<Image Source="{StaticResource trashcanDrawingImage}" Height="45" Width="45" Grid.Column="0"/>
+						<Image Source="{StaticResource trashcanDrawingImage}" Height="45" Width="45" Grid.Column="0" />
 					</Canvas>
-					<Label Content="Delete project" Grid.Column="1" HorizontalAlignment="Left" Margin="10,-5,0,0" VerticalAlignment="Center" FontSize="24" Width="180" Height="70" VerticalContentAlignment="Center"/>
+					<Label Content="Delete project" Grid.Column="1" HorizontalAlignment="Left" Margin="10,-5,0,0" VerticalAlignment="Center" FontSize="24" Width="180" Height="70" VerticalContentAlignment="Center" />
 				</Grid>
 			</Border>
 		</Border>
 
 		<!-- Update notifier-->
 		<Grid x:Name="updateGrid" HorizontalAlignment="Left" Height="0" VerticalAlignment="Bottom" Margin="-5,0,0,-5" Width="350" Background="#FFE67C11" Visibility="Hidden">
-			<TextBlock Text="An update to the Project Tracker is available!" TextWrapping="Wrap" HorizontalAlignment="Left" Foreground="White" FontSize="18" Margin="10,10,0,58" VerticalAlignment="Center" Width="234" Height="63"/>
-			<Button x:Name="updateButton" Content="Update" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="97" Height="33" FontSize="16" PreviewMouseDown="UpdateButtonPressed"/>
-			<Button x:Name="ignoreButton" Content="Ignore" HorizontalAlignment="Right" Margin="0,0,122,10" VerticalAlignment="Bottom" Width="97" Height="33" FontSize="16" PreviewMouseDown="IgnoreUpdate"/>
+			<TextBlock Text="An update to the Project Tracker is available!" TextWrapping="Wrap" HorizontalAlignment="Left" Foreground="White" FontSize="18" Margin="10,10,0,58" VerticalAlignment="Center" Width="234" Height="63" />
+			<Button x:Name="updateButton" Content="Update" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="97" Height="33" FontSize="16" PreviewMouseDown="UpdateButtonPressed" />
+			<Button x:Name="ignoreButton" Content="Ignore" HorizontalAlignment="Right" Margin="0,0,122,10" VerticalAlignment="Bottom" Width="97" Height="33" FontSize="16" PreviewMouseDown="IgnoreUpdate" />
 		</Grid>
 	</Grid>
 </uwp:Window>

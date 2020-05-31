@@ -70,37 +70,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AddNewItem.xaml.cs">
-      <DependentUpon>AddNewItem.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="EditProgram.xaml.cs">
-      <DependentUpon>EditProgram.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="EditProgramDetails.xaml.cs">
-      <DependentUpon>EditProgramDetails.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Passthrough.cs" />
     <Compile Include="SettingsManifest.cs" />
     <Compile Include="UpdateManifest.cs" />
     <Compile Include="UpdateWindow.xaml.cs">
       <DependentUpon>UpdateWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="AddNewItem.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="AddNewProgram.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="EditProgram.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="EditProgramDetails.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="style.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -109,9 +83,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="AddNewProgram.xaml.cs">
-      <DependentUpon>AddNewProgram.xaml</DependentUpon>
-    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
