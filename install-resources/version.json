@@ -1,10 +1,10 @@
 {
-  "Version": "1.6",
+  "Version": "2.0",
   "Updates": [
-    "Added the ability to resize the window!"
+    "Added a settings menu.",
+    "Added future release information.",
+    "Added a 'Check for update' button located in the settings.",
+    "Now you can rename projects!"
   ],
-  "Fixes": [
-    "Improved overall performance.",
-    "Fixed installer issues and added download progress bar."
-  ]
+  "Fixes": []
 }

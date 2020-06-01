@@ -518,7 +518,7 @@
 					</Grid>
 				</Border>
 				<!-- Third item -->
-				<Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+				<Border PreviewMouseDown="ProjectStatisticsMouseDown" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
 					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="50" />

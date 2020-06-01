@@ -22,7 +22,7 @@ namespace Project_Tracker {
 			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
 			+ "/Project Tracker";
 
-		private readonly string CURRENT_VERSION = "1.6";
+		private readonly string CURRENT_VERSION = "2.0";
 
 		private readonly string DATA_DIRECTORY =
 			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
@@ -35,6 +35,7 @@ namespace Project_Tracker {
 		private readonly Color itemColor = Color.FromRgb(60, 60, 60);
 
 		private readonly Color labelTextColor = Color.FromRgb(255, 255, 255);
+
 		private readonly string NEXT_VERSION_INFO = Environment.GetFolderPath
 			(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/next-version.json";
 
@@ -53,6 +54,7 @@ namespace Project_Tracker {
 
 		private readonly string VERSION_MANIFEST_URL =
 			"https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/version.json";
+
 		private int addingType = 0;
 		private string duration;
 		private string icon;
@@ -66,24 +68,29 @@ namespace Project_Tracker {
 		private bool isTypeSelecting = false;
 		private int itemIndex = 0;
 		private int itemsAdded = 0;
+
 		// The amount of items added to the scrollviewer
 		private string percent;
 
 		private int renameProjectClicks = 0;
+
 		// Keeps the user from double clicking the animation
 		private int selectedIndex = 0;
 
 		private List<string> taskData = new List<string>();
+
 		// When we click on the rename project button it activates the "you click the window so stop renaming" so we use an index to make sure that doesn't happen
 		// We need this to figure out the index of the item
 		// The type of item we're adding (0 = error, 1 = feature, 2 = comment)
 		private List<string> taskIdentifier = new List<string>();
 
 		private List<string> tasks = new List<string>();
+
 		// Each project's data - Used for saving
 		private string title;
 
 		private bool updateResponse = false;
+
 		public MainWindow() {
 			InitializeComponent();
 			Startup();
@@ -1162,6 +1169,13 @@ namespace Project_Tracker {
 			}
 		}
 
+		private void ProjectStatisticsMouseDown(object sender, MouseButtonEventArgs e) {
+			System.Windows.Forms.MessageBox.Show("This feature is not yet available.",
+				"Project Statistics Coming Soon",
+				System.Windows.Forms.MessageBoxButtons.OK,
+				System.Windows.Forms.MessageBoxIcon.Information);
+		}
+
 		private void RenameProjectButtonPressed(object sender, MouseButtonEventArgs e) {
 			isChangingTitle = true;
 			renameProjectClicks = 0;
@@ -1867,6 +1881,7 @@ namespace Project_Tracker {
 				updateResponse = true;
 			}
 		}
+
 		private void UpdateButtonMouseDown(object sender, MouseButtonEventArgs e) {
 			updateButton1.IsEnabled = false;
 
