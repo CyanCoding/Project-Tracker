@@ -81,7 +81,8 @@ namespace Project_Tracker_Installer {
 
             // Copies the current file to the Program Data folder. Code execution doesn't pass this if it's not already there
             if ((Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\Project Tracker Installer.exe") != INSTALLER_PATH) {
-                string currentLocation = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\Project Tracker Installer.exe";
+                Process process = Process.GetCurrentProcess();
+                string currentLocation = process.MainModule.FileName;
 
                 if (!File.Exists(INSTALLER_PATH)) { // An installer file exists
                     try {
@@ -91,6 +92,7 @@ namespace Project_Tracker_Installer {
 
                         // Copy this program over to the new location
                         File.Copy(currentLocation, INSTALLER_PATH);
+                        
                         File.SetAttributes(INSTALLER_PATH, FileAttributes.Normal);
                     }
                     catch (UnauthorizedAccessException) { // For some reason we can't take the file hmmf
