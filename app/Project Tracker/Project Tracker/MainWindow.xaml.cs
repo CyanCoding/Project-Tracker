@@ -23,7 +23,7 @@ namespace Project_Tracker {
 			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
 			+ "/Project Tracker";
 
-		private readonly string CURRENT_VERSION = "2.0";
+		private readonly string CURRENT_VERSION = "2.1";
 
 		private readonly string DATA_DIRECTORY =
 			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
@@ -1649,8 +1649,6 @@ namespace Project_Tracker {
 			thread.Start();
 
 			if (!File.Exists(SETTINGS_FILE)) { // Settings file doesn't exist. Create it
-				File.Create(SETTINGS_FILE);
-
 				StringBuilder sb = new StringBuilder();
 				StringWriter sw = new StringWriter(sb);
 
@@ -1674,24 +1672,23 @@ namespace Project_Tracker {
 				sb.Clear();
 				sw.Close();
 			}
-			else { // Settings file exists, read from it
-				string json = File.ReadAllText(SETTINGS_FILE);
-				SettingsManifest.Rootobject settings =
-					JsonConvert.DeserializeObject<SettingsManifest.Rootobject>(json);
 
-				if (settings.LastSelectedIndex != null) {
-					try {
-						selectedIndex = Int32.Parse(settings.LastSelectedIndex);
-					}
-					catch (FormatException) { // The index isn't a number for some reason, someone probably tampered with the file
-						selectedIndex = 1;
-					}
+			string json = File.ReadAllText(SETTINGS_FILE);
+			SettingsManifest.Rootobject settings =
+				JsonConvert.DeserializeObject<SettingsManifest.Rootobject>(json);
+
+			if (settings.LastSelectedIndex != null) {
+				try {
+					selectedIndex = Int32.Parse(settings.LastSelectedIndex);
 				}
-				if (settings.DisplayingCompleted != null) {
-					if (settings.DisplayingCompleted == "true") {
-						isCompletedTasksShown = true;
-						completedTaskSwitchLabel.Content = "Completed tasks";
-					}
+				catch (FormatException) { // The index isn't a number for some reason, someone probably tampered with the file
+					selectedIndex = 1;
+				}
+			}
+			if (settings.DisplayingCompleted != null) {
+				if (settings.DisplayingCompleted == "true") {
+					isCompletedTasksShown = true;
+					completedTaskSwitchLabel.Content = "Completed tasks";
 				}
 			}
 

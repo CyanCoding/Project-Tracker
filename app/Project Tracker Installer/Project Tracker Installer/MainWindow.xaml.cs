@@ -80,7 +80,7 @@ namespace Project_Tracker_Installer {
             subTitle.Content = "Version: " + PROGRAM_VERSION;
 
             // Copies the current file to the Program Data folder. Code execution doesn't pass this if it's not already there
-            /*if ((Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\Project Tracker Installer.exe") != INSTALLER_PATH) {
+            if ((Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\Project Tracker Installer.exe") != INSTALLER_PATH) {
                 string currentLocation = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\Project Tracker Installer.exe";
 
                 if (!File.Exists(INSTALLER_PATH)) { // An installer file exists
@@ -136,7 +136,7 @@ namespace Project_Tracker_Installer {
                 catch (WebException) {
                     subTitle.Visibility = Visibility.Hidden; // Couldn't get version
                 }
-            }*/
+            }
 
             try {
                 installButton.IsEnabled = false;
