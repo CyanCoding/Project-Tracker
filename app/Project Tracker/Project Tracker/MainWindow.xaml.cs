@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -90,6 +91,7 @@ namespace Project_Tracker {
 		private string title;
 
 		private bool updateResponse = false;
+
 
 		public MainWindow() {
 			InitializeComponent();
@@ -1639,6 +1641,13 @@ namespace Project_Tracker {
 				Directory.CreateDirectory(DATA_DIRECTORY);
 			}
 
+			Thread thread = new Thread(() =>
+			{
+				Server_Communication_DLL.SetData.SetActivity(true);
+				Server_Communication_DLL.Connections.CreateConnection();
+			});
+			thread.Start();
+
 			if (!File.Exists(SETTINGS_FILE)) { // Settings file doesn't exist. Create it
 				File.Create(SETTINGS_FILE);
 
@@ -1703,7 +1712,7 @@ namespace Project_Tracker {
 				File.Delete(NEXT_VERSION_INFO);
 			}
 
-			Thread thread = new Thread(() =>
+			Thread thread1 = new Thread(() =>
 			{
 				Dispatcher.Invoke(new Action(() =>
 				{
@@ -1718,7 +1727,7 @@ namespace Project_Tracker {
 					}
 				}));
 			});
-			thread.Start();
+			thread1.Start();
 		}
 
 		/// <summary>
@@ -1936,6 +1945,12 @@ namespace Project_Tracker {
 		/// Closes threads and shuts down the program.
 		/// </summary>
 		private void Window_Closing(object sender, CancelEventArgs e) {
+			Thread thread = new Thread(() =>
+			{
+				Server_Communication_DLL.SetData.SetActivity(false);
+				Server_Communication_DLL.Connections.CreateConnection();
+			});
+			thread.Start();
 		}
 
 		/// <summary>

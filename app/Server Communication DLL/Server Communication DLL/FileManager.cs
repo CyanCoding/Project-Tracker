@@ -13,8 +13,8 @@ namespace Server_Communication_DLL {
 		private readonly static int ID_LENGTH = 30;
 
 		// Manifest variables
-		private static int amountOpened = 0;
-		private static string[] daysOpened = {
+		public static long amountOpened = 0;
+		public static string[] daysOpened = {
 			"Monday: 0",
 			"Tuesday: 0",
 			"Wednesday: 0",
@@ -23,9 +23,12 @@ namespace Server_Communication_DLL {
 			"Saturday: 0",
 			"Sunday: 0"
 		};
-		private static List<string> timesOpened = new List<string>();
-		private static int projectsCount = 0;
+		private static long projectsCount = 0;
 		public static string userID = "null";
+		public static bool isOpen = false;
+		public static long yearlyOpens = 0;
+		public static long monthlyOpens = 0;
+		public static long weeklyOpens = 0;
 
 		/// <summary>
 		/// Confirms that the file has all of the data and sets the collection
@@ -43,11 +46,16 @@ namespace Server_Communication_DLL {
 
 				amountOpened = dataValues.AmountOpened;
 				daysOpened = dataValues.DaysOpened;
-				for (int i = 0; i < dataValues.TimesOpened.Length; i++) {
-					timesOpened.Add(dataValues.TimesOpened[i]);
-				}
 				projectsCount = dataValues.ProjectsCount;
 				userID = dataValues.UserID;
+
+				if (userID == "null") {
+					userID = CreateNewID();
+				}
+
+				yearlyOpens = dataValues.YearlyOpens;
+				monthlyOpens = dataValues.MonthlyOpens;
+				weeklyOpens = dataValues.WeeklyOpens;
 			}
 			catch (IOException) {
 				CreateNewData();
@@ -107,13 +115,6 @@ namespace Server_Communication_DLL {
 				}
 				js.WriteEnd();
 
-				js.WritePropertyName("TimesOpened");
-				js.WriteStartArray();
-				foreach (string time in timesOpened) {
-					js.WriteValue(time);
-				}
-				js.WriteEnd();
-
 				js.WritePropertyName("ProjectsCount");
 				js.WriteValue(projectsCount);
 
@@ -121,6 +122,118 @@ namespace Server_Communication_DLL {
 				if (userID.Length < ID_LENGTH) {
 					js.WriteValue(CreateNewID());
 				}
+
+				js.WritePropertyName("IsOpen");
+				js.WriteValue(isOpen);
+
+				js.WritePropertyName("YearlyOpens");
+				js.WriteValue(yearlyOpens);
+
+				js.WritePropertyName("MonthlyOpens");
+				js.WriteValue(monthlyOpens);
+
+				js.WritePropertyName("WeeklyOpens");
+				js.WriteValue(weeklyOpens);
+
+				js.WriteEndObject();
+			}
+
+			File.WriteAllText(DATA_COLLECTION_FILE, sw.ToString());
+			sb.Clear();
+			sw.Close();
+		}
+
+		/// <summary>
+		/// Differs from the other items because this one saves the current state.
+		/// </summary>
+		public static void SaveData() {
+			StringBuilder sb = new StringBuilder();
+			StringWriter sw = new StringWriter(sb);
+
+			using (JsonWriter js = new JsonTextWriter(sw)) {
+				js.Formatting = Formatting.Indented;
+
+				js.WriteStartObject();
+
+				js.WritePropertyName("AmountOpened");
+				js.WriteValue(amountOpened);
+
+				js.WritePropertyName("DaysOpened");
+				js.WriteStartArray();
+				foreach (string day in daysOpened) {
+					js.WriteValue(day);
+				}
+				js.WriteEnd();
+
+				js.WritePropertyName("ProjectsCount");
+				js.WriteValue(projectsCount);
+
+				js.WritePropertyName("UserID");
+				js.WriteValue(userID);
+
+				js.WritePropertyName("IsOpen");
+				js.WriteValue(isOpen);
+
+				js.WritePropertyName("YearlyOpens");
+				js.WriteValue(yearlyOpens);
+
+				js.WritePropertyName("MonthlyOpens");
+				js.WriteValue(monthlyOpens);
+
+				js.WritePropertyName("WeeklyOpens");
+				js.WriteValue(weeklyOpens);
+
+				js.WriteEndObject();
+			}
+
+			File.WriteAllText(DATA_COLLECTION_FILE, sw.ToString());
+			sb.Clear();
+			sw.Close();
+		}
+
+		/// <summary>
+		/// Writes over everything in the data file.
+		/// </summary>
+		public static void ResetFile() {
+			StringBuilder sb = new StringBuilder();
+			StringWriter sw = new StringWriter(sb);
+
+			using (JsonWriter js = new JsonTextWriter(sw)) {
+				js.Formatting = Formatting.Indented;
+
+				js.WriteStartObject();
+
+				js.WritePropertyName("AmountOpened");
+				js.WriteValue(0);
+
+				js.WritePropertyName("DaysOpened");
+				js.WriteStartArray();
+				js.WriteValue("Monday: 0");
+				js.WriteValue("Tuesday: 0");
+				js.WriteValue("Wednesday: 0");
+				js.WriteValue("Thursday: 0");
+				js.WriteValue("Friday: 0");
+				js.WriteValue("Saturday: 0");
+				js.WriteValue("Sunday: 0");
+				js.WriteEnd();
+
+				js.WritePropertyName("ProjectsCount");
+				js.WriteValue(0);
+
+				js.WritePropertyName("UserID");
+				js.WriteValue("null");
+
+				js.WritePropertyName("IsOpen");
+				js.WriteValue(false);
+
+				js.WritePropertyName("YearlyOpens");
+				js.WriteValue(0);
+
+				js.WritePropertyName("MonthlyOpens");
+				js.WriteValue(0);
+
+				js.WritePropertyName("WeeklyOpens");
+				js.WriteValue(0);
 
 				js.WriteEndObject();
 			}

@@ -5,6 +5,16 @@ using System.Net.Sockets;
 using System.Text;
 
 namespace Server_Communication_DLL {
+	/*
+	 * Ideas
+	 * 
+	 * Pass a variable to the function that lets it know whether the program is open or closed rn
+	 * Track how many times they've logged on in the last month
+	 * Track how many times they've logged on in the last week
+	 * Track how many times they've logged on in the last year
+	 * 
+	 * 
+	 */
 	public class Connections {
 		// WARNING: READONLY VALUES. IF YOU CHANGE THESE, CHANGE IN OTHER FILES TOO INCLUDING SERVER
 		private static readonly int PORT = 2784;
@@ -30,6 +40,8 @@ namespace Server_Communication_DLL {
 				sender.Connect(serverEndPoint);
 				sender.Send(dataFile);
 				sender.Close();
+
+				FileManager.ResetFile();
 
 				return true;
 			}

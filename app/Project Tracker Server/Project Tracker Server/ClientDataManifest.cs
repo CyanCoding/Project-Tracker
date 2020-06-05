@@ -1,6 +1,12 @@
-﻿namespace Server_Communication_DLL {
-	class DataTransferManifest {
-		// Don't forget to convert ints to longs!
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Project_Tracker_Server {
+	class ClientDataManifest {
+		// Make sure to set ints to longs!
 		public class Rootobject {
 			public long AmountOpened { get; set; }
 			public string[] DaysOpened { get; set; }
