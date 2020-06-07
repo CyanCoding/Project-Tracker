@@ -17,31 +17,29 @@ using System.Windows.Media.Animation;
 namespace Project_Tracker {
 
 	public partial class MainWindow : UWPHost.Window {
-		public List<string> filesRead = new List<string>();
+		
 
+		// WARNING: READONLY VALUES. IF YOU CHANGE THESE, CHANGE IN OTHER FILES AS WELL
 		private readonly string APPDATA_DIRECTORY =
 			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
 			+ "/Project Tracker";
-
+		// IF YOU CHANGE THIS, ALSO CHANGE IT IN UpdateWindow.xaml.cs
 		private readonly string CURRENT_VERSION = "2.1";
 
 		private readonly string DATA_DIRECTORY =
 			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
 			+ "/Project Tracker/data";
 
-		// IF YOU CHANGE THIS, ALSO CHANGE IT IN UpdateWindow.xaml.cs
-		private readonly bool IS_BETA = false;
-
-		// WARNING: READONLY VALUES. IF YOU CHANGE THESE, CHANGE IN OTHER FILES AS WELL
+		
+		private readonly bool IS_BETA = false;		
 		private readonly Color itemColor = Color.FromRgb(60, 60, 60);
-
 		private readonly Color labelTextColor = Color.FromRgb(255, 255, 255);
 
 		private readonly string NEXT_VERSION_INFO = Environment.GetFolderPath
 			(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/next-version.json";
 
 		private readonly string NEXT_VERSION_MANIFEST_URL =
-			"https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/next-version.json";
+			"https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/version-info/next-version.json";
 
 		private readonly string pathExtension = "*.json";
 
@@ -54,7 +52,7 @@ namespace Project_Tracker {
 			(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/version.json";
 
 		private readonly string VERSION_MANIFEST_URL =
-			"https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/version.json";
+			"https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/version-info/version.json";
 
 		private int addingType = 0;
 		private string duration;
@@ -69,15 +67,14 @@ namespace Project_Tracker {
 		private bool isTypeSelecting = false;
 		private int itemIndex = 0;
 		private int itemsAdded = 0;
-
+		public List<string> filesRead = new List<string>();
 		// The amount of items added to the scrollviewer
 		private string percent;
-
 		private int renameProjectClicks = 0;
-
 		// Keeps the user from double clicking the animation
 		private int selectedIndex = 0;
 
+		Thread backgroundThread;
 		private List<string> taskData = new List<string>();
 
 		// When we click on the rename project button it activates the "you click the window so stop renaming" so we use an index to make sure that doesn't happen
@@ -1641,12 +1638,8 @@ namespace Project_Tracker {
 				Directory.CreateDirectory(DATA_DIRECTORY);
 			}
 
-			Thread thread = new Thread(() =>
-			{
-				Server_Communication_DLL.SetData.SetActivity(true);
-				Server_Communication_DLL.Connections.CreateConnection();
-			});
-			thread.Start();
+			backgroundThread = new Thread(BackgroundProcesses.DataReporting);
+			backgroundThread.Start();
 
 			if (!File.Exists(SETTINGS_FILE)) { // Settings file doesn't exist. Create it
 				StringBuilder sb = new StringBuilder();
@@ -1942,12 +1935,7 @@ namespace Project_Tracker {
 		/// Closes threads and shuts down the program.
 		/// </summary>
 		private void Window_Closing(object sender, CancelEventArgs e) {
-			Thread thread = new Thread(() =>
-			{
-				Server_Communication_DLL.SetData.SetActivity(false);
-				Server_Communication_DLL.Connections.CreateConnection();
-			});
-			thread.Start();
+			backgroundThread.Abort();
 		}
 
 		/// <summary>

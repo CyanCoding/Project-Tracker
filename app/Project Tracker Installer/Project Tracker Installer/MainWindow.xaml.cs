@@ -28,7 +28,7 @@ namespace Project_Tracker_Installer {
         string PROGRAM_VERSION = "calculating version...";
         readonly string PROGRAM_PATH = @"C:\Program Files\Project Tracker\Project Tracker.exe";
         readonly string VERSION_PATH = @"C:\Program Files\Project Tracker\version.txt";
-        readonly string VERSION_DOWNLOAD_LINK = "https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/version.txt";
+        readonly string VERSION_DOWNLOAD_LINK = "https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/version-info/version.txt";
         readonly string DATA_DIRECTORY_PATH = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Project Tracker\data";
         readonly string INSTALLER_PATH = @"C:\Program Files\Project Tracker\Project Tracker Installer.exe";
         readonly string INSTALL_DIRECTORY = @"C:\Program Files\Project Tracker";

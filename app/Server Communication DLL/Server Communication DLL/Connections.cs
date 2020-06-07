@@ -18,12 +18,28 @@ namespace Server_Communication_DLL {
 	public class Connections {
 		// WARNING: READONLY VALUES. IF YOU CHANGE THESE, CHANGE IN OTHER FILES TOO INCLUDING SERVER
 		private static readonly int PORT = 2784;
-		private static readonly string SERVER_IP = "192.168.1.206";
+		private static string SERVER_IP = "192.168.1.206";
 		private readonly static string DATA_COLLECTION_FILE =
 			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
 			+ "/Project Tracker/data-collection.json";
+		private readonly static string SERVER_ADDRESS = Environment.GetFolderPath
+			(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/dll/server-address.txt";
+		private readonly static string SERVER_ADDRESS_URL =
+			"https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/server-address.txt";
 
 		public static bool CreateConnection() {
+			// Get the address to go to
+			try {
+				WebClient client = new WebClient();
+				client.DownloadFile(new Uri(SERVER_ADDRESS_URL), SERVER_ADDRESS);
+
+				SERVER_IP = File.ReadAllText(SERVER_ADDRESS);
+				File.Delete(SERVER_ADDRESS);
+			}
+			catch (WebException) {
+				return false;
+			}
+
 			// Get IP Address and create endpoint
 			IPAddress ip = IPAddress.Parse(SERVER_IP);
 			IPEndPoint serverEndPoint = new IPEndPoint(ip, PORT);

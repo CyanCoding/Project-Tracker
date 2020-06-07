@@ -99,9 +99,10 @@ namespace Server_Communication_DLL {
 			}
 
 			FileManager.SaveData();
+			Connections.CreateConnection();
 		}
 
-		public static void Refresh() {
+		public static void Refresh(int a) {
 			Connections.CreateConnection();
 			// Add something here about how long the user has been active
 		}
