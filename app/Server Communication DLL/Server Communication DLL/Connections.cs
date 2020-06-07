@@ -47,8 +47,6 @@ namespace Server_Communication_DLL {
 			Socket sender = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
 			try {
-				FileManager.PrepareDataTransfer();
-
 				// Does this get the file or the file title lmao
 				byte[] dataFile = File.ReadAllBytes(DATA_COLLECTION_FILE);
 				byte[] userIDByteArray = Encoding.ASCII.GetBytes(FileManager.userID);

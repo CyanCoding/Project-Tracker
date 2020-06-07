@@ -25,7 +25,7 @@ namespace Server_Communication_DLL {
 		};
 		private static long projectsCount = 0;
 		public static string userID = "null";
-		public static bool isOpen = false;
+		public static bool isOpen = true;
 		public static long yearlyOpens = 0;
 		public static long monthlyOpens = 0;
 		public static long weeklyOpens = 0;
