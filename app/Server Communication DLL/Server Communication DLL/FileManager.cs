@@ -221,10 +221,10 @@ namespace Server_Communication_DLL {
 				js.WriteValue(0);
 
 				js.WritePropertyName("UserID");
-				js.WriteValue("null");
+				js.WriteValue(userID);
 
 				js.WritePropertyName("IsOpen");
-				js.WriteValue(false);
+				js.WriteValue(isOpen);
 
 				js.WritePropertyName("YearlyOpens");
 				js.WriteValue(0);
