@@ -436,6 +436,9 @@ namespace Project_Tracker {
 					settingsBorder.BeginAnimation(HeightProperty, animation);
 				}));
 
+				addItemTextBox.Text = "Add something to the project";
+				Keyboard.ClearFocus();
+
 				File.Delete(filesRead[selectedIndex - 1]);
 
 				selectedIndex = 0;
@@ -579,6 +582,13 @@ namespace Project_Tracker {
 			else if (e.Key == Key.Return && addProjectTextBox.Text != "" &&
 				addProjectTextBox.Text != "Create a new project" &&
 				addProjectTextBox.IsFocused) {
+
+				Thread thread = new Thread(() => {
+					BackgroundProcesses.ReportProject();
+				});
+				thread.Start();
+					
+
 				StringBuilder sb = new StringBuilder();
 				StringWriter sw = new StringWriter(sb);
 

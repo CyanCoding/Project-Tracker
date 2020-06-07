@@ -121,6 +121,7 @@ namespace Project_Tracker {
 			MethodInfo[] methods = type.GetMethods();
 			// 0: SetActivity
 			// 1: Refresh
+			// 2: AddProject
 
 			methods[0].Invoke(instance, new object[] {true});			
 
@@ -129,6 +130,24 @@ namespace Project_Tracker {
 
 				methods[1].Invoke(instance, new object[] { 1 });				
 			}
+		}
+
+		public static void ReportProject() {
+			if (!File.Exists(SERVER_DLL_LOCATION)) {
+				return;
+			}
+
+			// Add Server Communication DLL
+			Assembly assembly = Assembly.LoadFrom(SERVER_DLL_LOCATION);
+			Type type = assembly.GetType("Server_Communication_DLL.SetData");
+			object instance = Activator.CreateInstance(type);
+
+			MethodInfo[] methods = type.GetMethods();
+			// 0: SetActivity
+			// 1: Refresh
+			// 2: AddProject
+
+			methods[2].Invoke(instance, new object[] { 1 });
 		}
 	}
 }

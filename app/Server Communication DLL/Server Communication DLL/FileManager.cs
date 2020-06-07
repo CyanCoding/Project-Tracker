@@ -23,7 +23,7 @@ namespace Server_Communication_DLL {
 			"Saturday: 0",
 			"Sunday: 0"
 		};
-		private static long projectsCount = 0;
+		public static long projectsCount = 0;
 		public static string userID = "null";
 		public static bool isOpen = true;
 		public static long yearlyOpens = 0;

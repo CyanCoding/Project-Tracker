@@ -93,11 +93,6 @@ namespace Project_Tracker_Server {
 			ClientDataManifest.Rootobject clientDataValues =
 				JsonConvert.DeserializeObject<ClientDataManifest.Rootobject>(clientJson);
 
-			if (onlineUsers.Contains(clientDataValues.UserID)) {
-				return;
-			}
-			onlineUsers.Add(clientDataValues.UserID);
-
 			string serverJson = File.ReadAllText(DATA_FILE);
 			ServerDataManifest.Rootobject serverDataValues =
 				JsonConvert.DeserializeObject<ServerDataManifest.Rootobject>(serverJson);
@@ -127,11 +122,9 @@ namespace Project_Tracker_Server {
 			serverDataValues.MonthlyOpens += clientDataValues.MonthlyOpens;
 			serverDataValues.WeeklyOpens += clientDataValues.WeeklyOpens;
 			
-			if (clientDataValues.IsOpen) {
+			if (clientDataValues.IsOpen && !onlineUsers.Contains(clientDataValues.UserID)) {
 				serverDataValues.CurrentlyOpenSessions++;
-			}
-			else {
-				serverDataValues.CurrentlyOpenSessions--;
+				onlineUsers.Add(clientDataValues.UserID);
 			}
 
 			// Write new values

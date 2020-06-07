@@ -109,5 +109,12 @@ namespace Server_Communication_DLL {
 			// throw new Exception("hiiii");
 			// Add something here about how long the user has been active
 		}
+
+		public static void AddProject(int a) {
+			FileManager.PrepareDataTransfer();
+			FileManager.projectsCount++;
+			FileManager.SaveData();
+			Connections.CreateConnection();
+		}
 	}
 }
