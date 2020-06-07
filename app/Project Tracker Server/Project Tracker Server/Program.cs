@@ -26,6 +26,7 @@ namespace Project_Tracker_Server {
 		private static bool viewConnectionDetails = false;
 		private static bool viewStatistics = false;
 		private static bool resetWeek = false;
+		private static bool speedUpStatistics = false;
 		private static string lastMonth = "";
 
 		private static string[] resetDaysOpened = {
@@ -297,6 +298,14 @@ namespace Project_Tracker_Server {
 						if (key.Key == ConsoleKey.E) {
 							viewStatistics = false;
 						}
+						else if (key.Key == ConsoleKey.S) {
+							if (speedUpStatistics) {
+								speedUpStatistics = false;
+							}
+							else {
+								speedUpStatistics = true;
+							}
+						}
 					}
 				}
 				else if (action == 3) {
@@ -354,7 +363,8 @@ namespace Project_Tracker_Server {
 				if (viewStatistics) {
 					Console.Clear();
 					Console.WriteLine("You're currently viewing statistics.");
-					Console.WriteLine("Press E to go back to the main console menu.\n");
+					Console.WriteLine("Press E to go back to the main console menu.");
+					Console.WriteLine("Press S to speed up/slow down statistics.");
 
 					int secondsUntilReset = resetTimer;
 					int minutesUntilReset = 0;
@@ -430,7 +440,13 @@ namespace Project_Tracker_Server {
 				if (resetTimer == 0) {
 					resetTimer = 600;
 				}
-				Thread.Sleep(5000);
+
+				if (speedUpStatistics) {
+					Thread.Sleep(1000);
+				}
+				else {
+					Thread.Sleep(5000);
+				}
 			}
 		}
 

@@ -103,6 +103,8 @@ namespace Server_Communication_DLL {
 		}
 
 		public static void Refresh(int a) {
+			FileManager.PrepareDataTransfer();
+			FileManager.isOpen = true;
 			Connections.CreateConnection();
 			// throw new Exception("hiiii");
 			// Add something here about how long the user has been active
