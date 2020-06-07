@@ -1,8 +1,9 @@
 {
-  "Version": "2.1",
-  "Updates": [],
+  "Version": "2.2",
+  "Updates": [
+      "Added the ability to update key components in the background."
+  ],
   "Fixes": [
-      "Fixed installation issues.",
-      "Fixed other small bugs in the program."
+      "Fixed small bugs in the program."
   ]
 }
