@@ -56,7 +56,7 @@ namespace Project_Tracker {
 		/// <param name="url">The url of the version download.</param>
 		/// <param name="dllUrl">The url of the dll we're checking.</param>
 		/// <param name="secondaryDllFile">The secondary file for the dll we're checking.</param>
-		private static void ReadVersion(string versionFile, string url, string dllUrl, string secondaryDllFile) {
+		private static void ReadVersion(string versionFile, string url, string dllUrl, string dllFile) {
 			if (!File.Exists(versionFile)) {
 				version = ServerVersion(url);
 				File.Move(TEMP_SERVER_VERSION_LOCATION, versionFile);
@@ -74,7 +74,7 @@ namespace Project_Tracker {
 					// Download the secondary file
 					try {
 						WebClient client = new WebClient();
-						client.DownloadFile(new Uri(dllUrl), secondaryDllFile);
+						client.DownloadFile(new Uri(dllUrl), dllFile);
 					}
 					catch (WebException) {
 
@@ -111,6 +111,8 @@ namespace Project_Tracker {
 				File.Move(SECONDARY_SERVER_DLL_LOCATION, SERVER_DLL_LOCATION);
 			}
 
+			ReadVersion(SERVER_DLL_VERSION_LOCATION, SERVER_DLL_VERSION_URL, SERVER_DLL_URL, SERVER_DLL_LOCATION);
+
 			// Add Server Communication DLL
 			Assembly assembly = Assembly.LoadFrom(SERVER_DLL_LOCATION);
 			Type type = assembly.GetType("Server_Communication_DLL.SetData");
@@ -120,10 +122,7 @@ namespace Project_Tracker {
 			// 0: SetActivity
 			// 1: Refresh
 
-			methods[0].Invoke(instance, new object[] {true});
-
-
-			ReadVersion(SERVER_DLL_VERSION_LOCATION, SERVER_DLL_VERSION_URL, SERVER_DLL_URL, SECONDARY_SERVER_DLL_LOCATION);
+			methods[0].Invoke(instance, new object[] {true});			
 
 			while (true) {
 				Thread.Sleep(60000);

@@ -53,6 +53,7 @@ namespace Server_Communication_DLL {
 					userID = CreateNewID();
 				}
 
+				isOpen = dataValues.IsOpen;
 				yearlyOpens = dataValues.YearlyOpens;
 				monthlyOpens = dataValues.MonthlyOpens;
 				weeklyOpens = dataValues.WeeklyOpens;
