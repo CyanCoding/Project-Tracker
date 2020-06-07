@@ -104,6 +104,7 @@ namespace Server_Communication_DLL {
 
 		public static void Refresh(int a) {
 			Connections.CreateConnection();
+			// throw new Exception("hiiii");
 			// Add something here about how long the user has been active
 		}
 	}

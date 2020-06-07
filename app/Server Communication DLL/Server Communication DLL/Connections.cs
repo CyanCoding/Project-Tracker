@@ -18,7 +18,7 @@ namespace Server_Communication_DLL {
 	public class Connections {
 		// WARNING: READONLY VALUES. IF YOU CHANGE THESE, CHANGE IN OTHER FILES TOO INCLUDING SERVER
 		private static readonly int PORT = 2784;
-		private static string SERVER_IP = "192.168.1.206";
+		private static string SERVER_IP = "192.168.1.158";
 		private readonly static string DATA_COLLECTION_FILE =
 			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
 			+ "/Project Tracker/data-collection.json";
@@ -33,7 +33,7 @@ namespace Server_Communication_DLL {
 				WebClient client = new WebClient();
 				client.DownloadFile(new Uri(SERVER_ADDRESS_URL), SERVER_ADDRESS);
 
-				SERVER_IP = File.ReadAllText(SERVER_ADDRESS);
+				// SERVER_IP = File.ReadAllText(SERVER_ADDRESS);
 				File.Delete(SERVER_ADDRESS);
 			}
 			catch (WebException) {

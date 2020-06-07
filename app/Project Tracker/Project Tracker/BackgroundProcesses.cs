@@ -45,9 +45,8 @@ namespace Project_Tracker {
 			}
 
 			string fileVersionText = File.ReadAllText(TEMP_SERVER_VERSION_LOCATION);
-			version = Convert.ToDouble(fileVersionText);
 
-			return 0.0;
+			return Convert.ToDouble(fileVersionText);
 		}
 
 		/// <summary>
@@ -127,9 +126,9 @@ namespace Project_Tracker {
 			ReadVersion(SERVER_DLL_VERSION_LOCATION, SERVER_DLL_VERSION_URL, SERVER_DLL_URL, SECONDARY_SERVER_DLL_LOCATION);
 
 			while (true) {
-				methods[1].Invoke(instance, new object[] { 1 });
-
 				Thread.Sleep(60000);
+
+				methods[1].Invoke(instance, new object[] { 1 });				
 			}
 		}
 	}
