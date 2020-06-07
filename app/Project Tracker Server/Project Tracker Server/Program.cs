@@ -21,6 +21,9 @@ namespace Project_Tracker_Server {
 		private static readonly string DATA_FILE =
 			Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
 			+ "/Project Tracker Data/data.json";
+		private static readonly string CONNECTION_DEATILS_FILE =
+			Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+			+ "/Project Tracker Data/connection-details.json";
 		private readonly static int ID_LENGTH = 30;
 
 		private static bool viewConnectionDetails = false;
@@ -28,6 +31,8 @@ namespace Project_Tracker_Server {
 		private static bool resetWeek = false;
 		private static bool speedUpStatistics = false;
 		private static string lastMonth = "";
+
+		private static List<string> onlineUsers = new List<string>();
 
 		private static string[] resetDaysOpened = {
 			"Monday: 0",
@@ -87,6 +92,11 @@ namespace Project_Tracker_Server {
 			string clientJson = File.ReadAllText(origin);
 			ClientDataManifest.Rootobject clientDataValues =
 				JsonConvert.DeserializeObject<ClientDataManifest.Rootobject>(clientJson);
+
+			if (onlineUsers.Contains(clientDataValues.UserID)) {
+				return;
+			}
+			onlineUsers.Add(clientDataValues.UserID);
 
 			string serverJson = File.ReadAllText(DATA_FILE);
 			ServerDataManifest.Rootobject serverDataValues =
@@ -177,12 +187,32 @@ namespace Project_Tracker_Server {
 			server.Bind(localEndPoint);
 			server.Listen(100);
 
+			if (File.Exists(CONNECTION_DEATILS_FILE)) {
+				File.Delete(CONNECTION_DEATILS_FILE);
+			}
+			DateTime date;
 			while (true) {
+				
+				if (!File.Exists(CONNECTION_DEATILS_FILE)) {
+					File.Create(CONNECTION_DEATILS_FILE);
+				}
+
+				string connectionDetailsList = "";
+
+
+				string timestamp;
 				try {
+					connectionDetailsList = File.ReadAllText(CONNECTION_DEATILS_FILE);
+
+					date =  DateTime.Now;
+					timestamp = "[" + date.Hour + ":" + date.Minute + ":" + date.Second + "]";
 					if (viewConnectionDetails) {
-						Console.WriteLine("Waiting for a connection...");
+						Console.WriteLine(timestamp + " Waiting for a connection...");
 					}
-					
+					connectionDetailsList += timestamp + " Waiting for a connection...\n";
+					File.WriteAllText(CONNECTION_DEATILS_FILE, connectionDetailsList);
+
+
 					Socket client = server.Accept();
 
 					// Take up to 5mb of file. Should only be a few kb though
@@ -198,9 +228,14 @@ namespace Project_Tracker_Server {
 					string fileData = new string(chars);
 
 					string username = GetUserID(fileData);
+
+					date = DateTime.Now;
+					timestamp = "[" + date.Hour + ":" + date.Minute + ":" + date.Second + "]";
 					if (viewConnectionDetails) {
-						Console.WriteLine("Received info from " + username);
+						Console.WriteLine(timestamp + " Received info from " + username);
 					}
+					connectionDetailsList += timestamp + " Received info from " + username + "\n";
+					File.WriteAllText(CONNECTION_DEATILS_FILE, connectionDetailsList);
 
 					if (username.Length < ID_LENGTH) {
 						username = CreateNewID();
@@ -212,13 +247,29 @@ namespace Project_Tracker_Server {
 					CopyData(savePath);
 					File.Delete(savePath);
 
+					date = DateTime.Now;
+					timestamp = "[" + date.Hour + ":" + date.Minute + ":" + date.Second + "]";
 					if (viewConnectionDetails) {
-						Console.WriteLine("Closed the server");
+						Console.WriteLine(timestamp + " Closed the server");
 					}
+					connectionDetailsList += timestamp + " Closed the server\n";
+					File.WriteAllText(CONNECTION_DEATILS_FILE, connectionDetailsList);
+				}
+				catch (IOException) {
+
 				}
 				catch (Exception e) {
+					date = DateTime.Now;
+					timestamp = "[" + date.Hour + ":" + date.Minute + ":" + date.Second + "]";
 					if (viewConnectionDetails) {
-						Console.WriteLine("We had the following error: " + e);
+						Console.WriteLine(timestamp + " We had the following error: " + e);
+					}
+					connectionDetailsList += timestamp + " We had the following error: " + e + "\n";
+					try {
+						File.WriteAllText(CONNECTION_DEATILS_FILE, connectionDetailsList);
+					}
+					catch (IOException) {
+
 					}
 				}
 			}
@@ -278,6 +329,13 @@ namespace Project_Tracker_Server {
 					Console.WriteLine("Press E to go back to the main console menu.\n");
 					viewConnectionDetails = true;
 
+					try {
+						Console.WriteLine(File.ReadAllText(CONNECTION_DEATILS_FILE));
+					}
+					catch (IOException) {
+
+					}
+
 					while (viewConnectionDetails) {
 						ConsoleKeyInfo key = Console.ReadKey();
 						if (key.Key == ConsoleKey.E) {
@@ -290,7 +348,8 @@ namespace Project_Tracker_Server {
 					Console.Clear();
 					Console.ForegroundColor = blue;
 					Console.WriteLine("You're currently viewing statistics.");
-					Console.WriteLine("Press E to go back to the main console menu.\n");
+					Console.WriteLine("Press E to go back to the main console menu.");
+					Console.WriteLine("Press S to speed up/slow down statistics.\n");
 					viewStatistics = true;
 
 					while (viewStatistics) {
@@ -354,6 +413,7 @@ namespace Project_Tracker_Server {
 				if (resetTimer == 0) {
 					lastMinuteSessions = serverDataValues.CurrentlyOpenSessions;
 					serverDataValues.CurrentlyOpenSessions = 0;
+					onlineUsers.Clear();
 				}
 
 				if (serverDataValues.CurrentlyOpenSessions < 0) {
@@ -364,7 +424,7 @@ namespace Project_Tracker_Server {
 					Console.Clear();
 					Console.WriteLine("You're currently viewing statistics.");
 					Console.WriteLine("Press E to go back to the main console menu.");
-					Console.WriteLine("Press S to speed up/slow down statistics.");
+					Console.WriteLine("Press S to speed up/slow down statistics.\n");
 
 					int secondsUntilReset = resetTimer;
 					int minutesUntilReset = 0;
