@@ -235,7 +235,8 @@ namespace Project_Tracker_Server {
 
 				Console.ForegroundColor = green;
 				Console.Clear();
-				Console.WriteLine("Welcome to the Project Tracker server console!");
+				Console.WriteLine("Server's IP address: " + GetLocalIP());
+				Console.WriteLine("\nWelcome to the Project Tracker server console!");
 				Console.WriteLine("Available actions: ");
 				
 				Console.ForegroundColor = yellow;
@@ -306,7 +307,11 @@ namespace Project_Tracker_Server {
 		}
 
 		private static void BackgroundStatistics() {
+			int resetTimer = 600;
+			long lastMinuteSessions = -1;
 			while (true) {
+				resetTimer -= 5;
+
 				string serverJson = File.ReadAllText(DATA_FILE);
 				ServerDataManifest.Rootobject serverDataValues =
 					JsonConvert.DeserializeObject<ServerDataManifest.Rootobject>(serverJson);
@@ -314,6 +319,7 @@ namespace Project_Tracker_Server {
 				DayOfWeek weekDay = DateTime.Today.DayOfWeek;
 				DateTime date = DateTime.Now;
 
+				// Reset weekly statistics
 				if (weekDay.ToString() == "Monday" && resetWeek == false) {
 					resetWeek = true;
 
@@ -324,13 +330,25 @@ namespace Project_Tracker_Server {
 					resetWeek = false;
 				}
 
+				// Reset monthly statistics
 				if (date.Month.ToString() != lastMonth) {
 					lastMonth = date.Month.ToString();
 					serverDataValues.MonthlyOpens = 0;
 				}
 
+				// Reset yearly statistics
 				if (date.DayOfYear == 1) {
 					serverDataValues.YearlyOpens = 0;
+				}
+
+				// Reset active statistics
+				if (resetTimer == 0) {
+					lastMinuteSessions = serverDataValues.CurrentlyOpenSessions;
+					serverDataValues.CurrentlyOpenSessions = 0;
+				}
+
+				if (serverDataValues.CurrentlyOpenSessions < 0) {
+					serverDataValues.CurrentlyOpenSessions = 0;
 				}
 
 				if (viewStatistics) {
@@ -338,12 +356,29 @@ namespace Project_Tracker_Server {
 					Console.WriteLine("You're currently viewing statistics.");
 					Console.WriteLine("Press E to go back to the main console menu.\n");
 
-					Console.WriteLine("Total opens: " + serverDataValues.AmountOpened);
+					int secondsUntilReset = resetTimer;
+					int minutesUntilReset = 0;
+
+					while (secondsUntilReset > 59) {
+						minutesUntilReset++;
+						secondsUntilReset -= 60;
+					}
+
+					Console.WriteLine("Time until open sessions reset: {0}m {1}s\n", minutesUntilReset, secondsUntilReset);
+					Console.WriteLine("Currently open sessions: " + serverDataValues.CurrentlyOpenSessions);
+					if (lastMinuteSessions == -1) {
+						Console.WriteLine("Last 10m open sessions: waiting for data...");
+					}
+					else {
+						Console.WriteLine("Last 10m open sessions: " + lastMinuteSessions);
+					}
+					
+
+					Console.WriteLine("\nTotal opens: " + serverDataValues.AmountOpened);
 					Console.WriteLine("Total projects: " + serverDataValues.ProjectsCount);
 					Console.WriteLine("Opens this year: " + serverDataValues.YearlyOpens);
 					Console.WriteLine("Opens this month: " + serverDataValues.MonthlyOpens);
 					Console.WriteLine("Opens this week: " + serverDataValues.WeeklyOpens);
-					Console.WriteLine("Currently open sessions: " + serverDataValues.CurrentlyOpenSessions);
 
 					Console.WriteLine("-----------------");
 					foreach (string day in serverDataValues.DaysOpened) {
@@ -391,6 +426,10 @@ namespace Project_Tracker_Server {
 				File.WriteAllText(DATA_FILE, sw.ToString());
 				sb.Clear();
 				sw.Close();
+
+				if (resetTimer == 0) {
+					resetTimer = 600;
+				}
 				Thread.Sleep(5000);
 			}
 		}
