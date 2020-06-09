@@ -1240,4 +1240,24 @@
 			</DrawingGroup>
 		</DrawingImage.Drawing>
 	</DrawingImage>
+
+	<DrawingImage x:Key="folderDrawingImage">
+		<DrawingImage.Drawing>
+			<DrawingGroup ClipGeometry="M0,0 V378 H378 V0 H0 Z">
+				<GeometryDrawing Brush="#FFE2E0D0" Geometry="F1 M378,378z M0,0z M354,20.815L354,81.185 248,81.185C238.06,81.185 230,89.235 230,99.185 230,109.125 221.94,117.185 212,117.185L68,117.185C58.06,117.185,50,125.235,50,135.185L50,305.975 0,305.975 0,20.815 354,20.815z" />
+				<GeometryDrawing Brush="#FFB6CCE0" Geometry="F1 M378,378z M0,0z M378,149.185L378,339.185C378,349.125,369.94,357.185,360,357.185L68,357.185C58.06,357.185,50,349.125,50,339.185L50,305.975 50,135.185C50,125.235,58.06,117.185,68,117.185L212,117.185C221.94,117.185 230,109.125 230,99.185 230,89.235 238.06,81.185 248,81.185L354,81.185 360,81.185C369.94,81.185,378,89.235,378,99.185L378,117.185 378,149.185z" />
+				<GeometryDrawing Brush="#FF4D4D4D">
+					<GeometryDrawing.Geometry>
+						<RectangleGeometry RadiusX="0" RadiusY="0" Rect="86,157.185,112,20" />
+					</GeometryDrawing.Geometry>
+				</GeometryDrawing>
+				<GeometryDrawing Brush="#FF4D4D4D">
+					<GeometryDrawing.Geometry>
+						<RectangleGeometry RadiusX="0" RadiusY="0" Rect="86,191.185,112,20" />
+					</GeometryDrawing.Geometry>
+				</GeometryDrawing>
+				<GeometryDrawing Brush="#FF9FBDD3" Geometry="F1 M378,378z M0,0z M360,81.185L354,81.185 299.067,81.185 132.087,357.185 360,357.185C369.94,357.185,378,349.125,378,339.185L378,149.185 378,117.185 378,99.185C378,89.235,369.94,81.185,360,81.185z" />
+			</DrawingGroup>
+		</DrawingImage.Drawing>
+	</DrawingImage>
 </ResourceDictionary>

@@ -34,7 +34,11 @@ namespace Project_Tracker {
 
 		private static double version = 0.1;
 
-
+		/// <summary>
+		/// Downloads the latest version from the server.
+		/// </summary>
+		/// <param name="url">The url of the server version file.</param>
+		/// <returns>Returns the server version.</returns>
 		private static double ServerVersion(string url) {
 			try {
 				WebClient client = new WebClient();
@@ -85,6 +89,9 @@ namespace Project_Tracker {
 			File.Delete(TEMP_SERVER_VERSION_LOCATION);
 		}
 
+		/// <summary>
+		/// Runs in the background telling the server that we're active.
+		/// </summary>
 		public static void DataReporting() {
 			if (!Directory.Exists(DLL_APPDATA_LOCATION)) {
 				Directory.CreateDirectory(DLL_APPDATA_LOCATION);
@@ -132,6 +139,9 @@ namespace Project_Tracker {
 			}
 		}
 
+		/// <summary>
+		/// Runs when the user adds a project.
+		/// </summary>
 		public static void ReportProject() {
 			if (!File.Exists(SERVER_DLL_LOCATION)) {
 				return;
