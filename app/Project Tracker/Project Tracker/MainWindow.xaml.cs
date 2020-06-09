@@ -55,39 +55,42 @@ namespace Project_Tracker {
 			"https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/version-info/version.json";
 
 		private int addingType = 0;
-		private string duration;
-		private string icon;
 		private bool isChangingTitle = false;
 		private bool isCompletedTasksShown = false;
 		private bool isIconSelecting = false;
 		private bool isOverallSettingsOpen = false;
 		private bool isSettingsOpen = false;
 		private bool isSettingsWindowDisplaying = false;
+		// Keeps the user from double clicking the animation
 		private bool isSwitchingAnimationRunning = false;
 		private bool isTypeSelecting = false;
+		// We need this to figure out the index of the item
 		private int itemIndex = 0;
+		// The amount of items added to the scrollviewer
 		private int itemsAdded = 0;
 		public List<string> filesRead = new List<string>();
-		// The amount of items added to the scrollviewer
-		private string percent;
-		private int renameProjectClicks = 0;
-		// Keeps the user from double clicking the animation
 		private int selectedIndex = 0;
+		// When we click on the rename project button it activates the "you click the window so stop renaming" so we use an index to make sure that doesn't happen
+		private int renameProjectClicks = 0;
+		private bool updateResponse = false;
 
 		Thread backgroundThread;
-		private List<string> taskData = new List<string>();
-
-		// When we click on the rename project button it activates the "you click the window so stop renaming" so we use an index to make sure that doesn't happen
-		// We need this to figure out the index of the item
-		// The type of item we're adding (0 = error, 1 = feature, 2 = comment)
-		private List<string> taskIdentifier = new List<string>();
-
-		private List<string> tasks = new List<string>();
 
 		// Each project's data - Used for saving
+		private string percent;
+		private List<string> taskData = new List<string>();
+		// The type of item we're adding (0 = error, 1 = feature, 2 = comment)
+		private List<string> taskIdentifier = new List<string>();
+		private List<string> tasks = new List<string>();
+		private List<string> linesOfCodeFiles = new List<string>();
+		private string folderLocation;
+		private string dateCreated;
+		private long tasksMade;
+		private long tasksCompleted;
 		private string title;
+		private string duration;
+		private string icon;
 
-		private bool updateResponse = false;
 
 
 		public MainWindow() {
@@ -392,18 +395,36 @@ namespace Project_Tracker {
 				taskData[Int32.Parse(name) - 1] = "1";
 			}
 
+			tasksCompleted++;
+
 			CalculatePercentage();
 		}
 
 		/// <summary>
-		/// Checks each file value for null values.
+		/// Checks each value for null values.
 		/// </summary>
-		/// <returns>True if no null values, otherwise false.</returns>
+		/// <param name="projectTitle">The project title.</param>
+		/// <param name="projectTasks">The project tasks array.</param>
+		/// <param name="projectData">The project tasksData array.</param>
+		/// <param name="projectIdentifier">The project taskIdentifier array.</param>
+		/// <param name="projectLinesOfCodeFiles">The project lines of code file array.</param>
+		/// <param name="projectFolderLocation">The project's folder location.</param>
+		/// <param name="projectDuration">The project's duration.</param>
+		/// <param name="projectDateCreated">The project's date created.</param>
+		/// <param name="projectIcon">The project's icon.</param>
+		/// <param name="projectPercent">The project's percent.</param>
+		/// <returns></returns>
 		private bool CheckValues(string projectTitle, string[] projectTasks,
-			string[] projectData, string[] projectIdentifier, string projectDuration,
-			string projectIcon, string projectPercent) {
-			if (projectTitle == null || projectTasks == null || projectData == null ||
-				projectIdentifier == null || projectDuration == null || projectIcon == null ||
+			string[] projectTaskData, string[] projectIdentifier, 
+			string[] projectLinesOfCodeFiles, string projectFolderLocation,
+			string projectDuration, string projectDateCreated, long projectTasksMade,
+			long projectTasksCompleted, string projectIcon, string projectPercent) {
+
+			if (projectTitle == null || projectTasks == null || projectTaskData == null ||
+				projectIdentifier == null || projectLinesOfCodeFiles == null ||
+				projectFolderLocation == null || projectDuration == null || 
+				projectDateCreated == null || projectTasksMade == null ||
+				projectTasksCompleted == null || projectIcon == null || 
 				projectPercent == null) {
 				// Check all strings for null values
 				return false;
@@ -576,6 +597,9 @@ namespace Project_Tracker {
 				}
 
 				addItemTextBox.Text = "";
+
+				tasksMade++;
+
 				CalculatePercentage();
 			}
 			// Add a new project
@@ -616,9 +640,30 @@ namespace Project_Tracker {
 					js.WriteStartArray();
 					js.WriteEnd();
 
+					// The lines of code files
+					js.WritePropertyName("LinesOfCodeFiles");
+					js.WriteStartArray();
+					js.WriteEnd();
+
+					// The folder location for the project
+					js.WritePropertyName("FolderLocation");
+					js.WriteValue("");
+
 					// Duration
 					js.WritePropertyName("Duration");
 					js.WriteValue("00:00:00");
+
+					// Date Created
+					js.WritePropertyName("DateCreated");
+					js.WriteValue(Statistics.CreationDate());
+
+					// Tasks made
+					js.WritePropertyName("TasksMade");
+					js.WriteValue(0);
+
+					// Tasks completed
+					js.WritePropertyName("TasksCompleted");
+					js.WriteValue(0);
 
 					// Icon
 					js.WritePropertyName("Icon");
@@ -757,10 +802,10 @@ namespace Project_Tracker {
 						MainTableManifest.Rootobject mainTable =
 							JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
 
-						bool fileHasAllValues = CheckValues(
-							mainTable.Title, mainTable.Tasks, mainTable.TaskData,
-							mainTable.TaskIdentifier, mainTable.Duration,
-							mainTable.Icon, mainTable.Percent);
+						bool fileHasAllValues = CheckValues(mainTable.Title, mainTable.Tasks,
+							mainTable.TaskData, mainTable.TaskIdentifier, mainTable.LinesOfCodeFiles,
+							mainTable.FolderLocation, mainTable.Duration, mainTable.DateCreated,
+							mainTable.TasksMade, mainTable.TasksCompleted, mainTable.Icon, mainTable.Percent);
 
 						if (!fileHasAllValues) {
 							// This is an older file with improper values
@@ -822,6 +867,11 @@ namespace Project_Tracker {
 											js.WriteValue(comment);
 										}
 									}
+									if (mainTable.Tasks != null) {
+										foreach (string task in mainTable.Tasks) {
+											js.WriteValue(task);
+										}
+									}
 									js.WriteEnd();
 
 									// The data for each task (0 = incomplete, 1 = complete)
@@ -839,6 +889,11 @@ namespace Project_Tracker {
 									}
 									if (mainTable.CommentsData != null) {
 										foreach (string data in mainTable.CommentsData) {
+											js.WriteValue(data);
+										}
+									}
+									if (mainTable.TaskData != null) {
+										foreach (string data in mainTable.TaskData) {
 											js.WriteValue(data);
 										}
 									}
@@ -862,7 +917,31 @@ namespace Project_Tracker {
 											js.WriteValue("2");
 										}
 									}
+									if (mainTable.TaskIdentifier != null) {
+										foreach (string identifier in mainTable.TaskIdentifier) {
+											js.WriteValue(identifier);
+										}
+									}
 									js.WriteEnd();
+
+									// Lines of code files
+									js.WritePropertyName("LinesOfCodeFiles");
+									js.WriteStartArray();
+									if (mainTable.LinesOfCodeFiles != null) {
+										foreach (string file in mainTable.LinesOfCodeFiles) {
+											js.WriteValue(file);
+										}
+									}
+									js.WriteEnd();
+
+									// Folder location
+									js.WritePropertyName("FolderLocation");
+									if (mainTable.FolderLocation != null) {
+										js.WriteValue(mainTable.FolderLocation);
+									}
+									else {
+										js.WriteValue("");
+									}
 
 									// Duration
 									js.WritePropertyName("Duration");
@@ -871,6 +950,33 @@ namespace Project_Tracker {
 									}
 									else {
 										js.WriteValue("00:00:00");
+									}
+
+									// Date created
+									js.WritePropertyName("DateCreated");
+									if (mainTable.DateCreated != null) {
+										js.WriteValue(mainTable.DateCreated);
+									}
+									else {
+										js.WriteValue(Statistics.CreationDate());
+									}
+
+									// Tasks made
+									js.WritePropertyName("TasksMade");
+									if (mainTable.TasksMade != null && mainTable.TasksMade != 0) {
+										js.WriteValue(mainTable.TasksMade);
+									}
+									else {
+										js.WriteValue(0);
+									}
+
+									// Tasks completed
+									js.WritePropertyName("TasksCompleted");
+									if (mainTable.TasksCompleted != null && mainTable.TasksMade != 0) {
+										js.WriteValue(mainTable.TasksCompleted);
+									}
+									else {
+										js.WriteValue(0);
 									}
 
 									// Icon
@@ -1183,6 +1289,14 @@ namespace Project_Tracker {
 			displayingImage.Source = (ImageSource)TryFindResource("graphDrawingImage");
 
 			addItemBorder.Visibility = Visibility.Hidden;
+			settingsImage.Visibility = Visibility.Hidden;
+			folderImage.Visibility = Visibility.Hidden;
+
+			creationDateLabel.Content = "Date created: " + dateCreated;
+			tasksMadeLabel.Content = "Tasks created: " + tasksMade;
+			tasksCompletedLabel.Content = "Tasks completed: " + tasksCompleted;
+			statisticsDurationLabel.Content = "Duration: coming soon...";
+			linesOfCodeLabel.Content = "Lines of code: " + Statistics.CountLines(linesOfCodeFiles.ToArray());
 		}
 
 		private void RenameProjectButtonPressed(object sender, MouseButtonEventArgs e) {
@@ -1231,8 +1345,28 @@ namespace Project_Tracker {
 				}
 				js.WriteEnd();
 
+				js.WritePropertyName("LinesOfCodeFiles");
+				js.WriteStartArray();
+				foreach (string file in linesOfCodeFiles) {
+					js.WriteValue(file);
+				}
+				js.WriteEnd();
+
+				js.WritePropertyName("FolderLocation");
+				js.WriteValue(folderLocation);
+
 				js.WritePropertyName("Duration");
 				js.WriteValue(duration);
+
+				js.WritePropertyName("DateCreated");
+				js.WriteValue(dateCreated);
+
+				js.WritePropertyName("TasksMade");
+				js.WriteValue(tasksMade);
+
+				js.WritePropertyName("TasksCompleted");
+				js.WriteValue(tasksCompleted);
+
 				js.WritePropertyName("Icon");
 				js.WriteValue(icon);
 				js.WritePropertyName("Percent");
@@ -1339,19 +1473,27 @@ namespace Project_Tracker {
 			}));
 		}
 
+
 		/// <summary>
 		/// Sets the variables for the project to allow easy saving.
 		/// </summary>
 		/// <param name="projectTitle">The project title.</param>
-		/// <param name="projectTasks">The project's tasks array.</param>
+		/// <param name="projectTasks">The project tasks array.</param>
 		/// <param name="projectTasksData">The project's task data array.</param>
-		/// <param name="projectTasksIdentifier">The project's task identifier array.</param>
+		/// <param name="projectTasksIdentifier">The projet's task identification array.</param>
+		/// <param name="projectLinesOfCodeFiles">The project's lines of code files array.</param>
+		/// <param name="projectFolderLocation">The project's folder location.</param>
 		/// <param name="projectDuration">The project's duration.</param>
+		/// <param name="projectDateCreated">The project's creation date.</param>
+		/// <param name="projectTasksMade">The project's amount of created tasks.</param>
+		/// <param name="projectTasksCompleted">The project's amount of completed tasks.</param>
 		/// <param name="projectIcon">The project's icon.</param>
-		/// <param name="projectPercent">The project's percent.</param>
+		/// <param name="projectPercent">The project's percent complete.</param>
 		private void SetProjectValues(string projectTitle, string[] projectTasks,
 			string[] projectTasksData, string[] projectTasksIdentifier,
-			string projectDuration, string projectIcon, string projectPercent) {
+			string[] projectLinesOfCodeFiles, string projectFolderLocation,
+			string projectDuration, string projectDateCreated, long projectTasksMade,
+			long projectTasksCompleted, string projectIcon, string projectPercent) {
 			title = projectTitle;
 
 			tasks.Clear();
@@ -1367,7 +1509,15 @@ namespace Project_Tracker {
 				taskIdentifier.Add(identifier);
 			}
 
+			foreach (string file in projectLinesOfCodeFiles) {
+				linesOfCodeFiles.Add(file);
+			}
+
+			folderLocation = projectFolderLocation;
 			duration = projectDuration;
+			dateCreated = projectDateCreated;
+			tasksMade = projectTasksMade;
+			tasksCompleted = projectTasksCompleted;
 			icon = projectIcon;
 			percent = projectPercent;
 		}
@@ -1447,7 +1597,9 @@ namespace Project_Tracker {
 					JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
 
 				SetProjectValues(projectInfo.Title, projectInfo.Tasks, projectInfo.TaskData,
-					projectInfo.TaskIdentifier, projectInfo.Duration, projectInfo.Icon,
+					projectInfo.TaskIdentifier, projectInfo.LinesOfCodeFiles,
+					projectInfo.FolderLocation, projectInfo.Duration, projectInfo.DateCreated,
+					projectInfo.TasksMade, projectInfo.TasksCompleted, projectInfo.Icon,
 					projectInfo.Percent);
 
 				// Set values

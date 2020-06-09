@@ -17,6 +17,10 @@ namespace Project_Tracker {
 			return linesOfCode;
 		}
 
-		
+		public static string CreationDate() {
+			DateTime today = DateTime.Now;
+
+			return today.ToString("MM/dd/yyyy");
+		}
 	}
 }
