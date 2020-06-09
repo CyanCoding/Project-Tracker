@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -23,7 +24,7 @@ namespace Project_Tracker {
 			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
 			+ "/Project Tracker";
 		// IF YOU CHANGE THIS, ALSO CHANGE IT IN UpdateWindow.xaml.cs
-		private readonly string CURRENT_VERSION = "2.2";
+		private readonly string CURRENT_VERSION = "2.4";
 
 		private readonly string DATA_DIRECTORY =
 			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
@@ -91,7 +92,7 @@ namespace Project_Tracker {
 		private string icon;
 
 
-
+		#pragma warning disable CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
 		public MainWindow() {
 			InitializeComponent();
 			Startup();
@@ -387,14 +388,16 @@ namespace Project_Tracker {
 			string name = callingImage.Name;
 			name = name.Remove(0, 1); // Removes the t from the name (e.g. t5 -> 5)
 
-			if (taskData[Int32.Parse(name) - 1] == "1") {
+			if (taskData[Int32.Parse(name) - 1] == "1") { // It's already checked
 				taskData[Int32.Parse(name) - 1] = "0";
+				tasksCompleted--;
 			}
-			else {
+			else { // It's not checked
 				taskData[Int32.Parse(name) - 1] = "1";
+				tasksCompleted++;
 			}
 
-			tasksCompleted++;
+			
 
 			CalculatePercentage();
 		}
@@ -1312,7 +1315,17 @@ namespace Project_Tracker {
 			tasksMadeLabel.Content = "Tasks created: " + tasksMade;
 			tasksCompletedLabel.Content = "Tasks completed: " + tasksCompleted;
 			statisticsDurationLabel.Content = "Duration: coming soon...";
-			linesOfCodeLabel.Content = "Lines of code: " + Statistics.CountLines(linesOfCodeFiles.ToArray());
+			linesOfCodeLabel.Content = "Lines of code: " + String.Format("{0:#,###0}", Statistics.CountLines(linesOfCodeFiles.ToArray()));
+
+
+			if (folderLocation != "" && Directory.Exists(folderLocation)) {
+				folderLocationResetButton.Content = "Reset folder location";
+				folderLocationLabel.Content = "Folder location: " + folderLocation;
+			}
+			else {
+				folderLocationLabel.Content = "Folder location: not set";
+				folderLocationResetButton.Content = "Set folder location";
+			}
 		}
 
 		private void RenameProjectButtonPressed(object sender, MouseButtonEventArgs e) {
@@ -1609,6 +1622,7 @@ namespace Project_Tracker {
 				completeGrid.Visibility = Visibility.Visible;
 				addItemBorder.Visibility = Visibility.Visible;
 				settingsImage.Visibility = Visibility.Visible;
+				folderImage.Visibility = Visibility.Visible;
 
 				string json = File.ReadAllText(filesRead[selectedIndex - 1]);
 				MainTableManifest.Rootobject projectInfo =
@@ -2077,7 +2091,10 @@ namespace Project_Tracker {
 				File.Delete(NEXT_VERSION_INFO);
 			}
 
+			#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 			DisableUpdateButton();
+			#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
 			// Download latest version information
 			try {
 				updateButton1.IsEnabled = false;
@@ -2215,6 +2232,7 @@ namespace Project_Tracker {
 			blackRectangle.Height = this.Height + 5;
 			addItemBorder.Width = this.Width - 450;
 			changeTitleBorder.Width = this.Width - 700;
+			folderLocationLabel.Width = this.Width - 420;
 
 			scrollviewerGrid.Width = this.Width - 450;
 
@@ -2411,7 +2429,14 @@ namespace Project_Tracker {
 		#endregion Item selection presses
 
 		private void folderImage_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
+			if (folderLocation == "" || !Directory.Exists(folderLocation)) {
+				folderLocation = Folder.SelectFolder();
 
+				Save(filesRead[selectedIndex - 1]);
+			}
+			else {
+				Process.Start(folderLocation);
+			}
 		}
 
 		private void setCodeCountingButton_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
@@ -2423,7 +2448,18 @@ namespace Project_Tracker {
 
 			Save(filesRead[selectedIndex - 1]);
 
-			linesOfCodeLabel.Content = "Lines of code: " + Statistics.CountLines(linesOfCodeFiles.ToArray());
+			linesOfCodeLabel.Content = "Lines of code: " + String.Format("{0:#,###0}", Statistics.CountLines(linesOfCodeFiles.ToArray()));
+		}
+
+		private void folderLocationResetButton_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
+			folderLocation = Folder.SelectFolder();
+			Save(filesRead[selectedIndex - 1]);
+
+			folderLocationLabel.Content = "Folder location: " + folderLocation;
+
+			if (folderLocation != "" && Directory.Exists(folderLocation)) {
+				folderLocationResetButton.Content = "Reset folder location";
+			}
 		}
 	}
 }

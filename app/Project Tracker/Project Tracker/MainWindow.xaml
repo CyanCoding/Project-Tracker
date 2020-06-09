@@ -323,8 +323,10 @@
 			<Label x:Name="tasksMadeLabel" Content="Tasks created: 0" HorizontalAlignment="Left" Margin="20,90,0,0" VerticalAlignment="Top" FontSize="24"/>
 			<Label x:Name="tasksCompletedLabel" Content="Tasks completed: 0" HorizontalAlignment="Left" Margin="20,125,0,0" VerticalAlignment="Top" FontSize="24"/>
 			<Label x:Name="statisticsDurationLabel" Content="Duration: coming soon..." HorizontalAlignment="Left" Margin="20,195,0,0" VerticalAlignment="Top" FontSize="24"/>
-			<Label x:Name="linesOfCodeLabel" Content="Lines of code: 0" HorizontalAlignment="Left" Margin="20,265,0,0" VerticalAlignment="Top" FontSize="24"/>
+			<Label x:Name="linesOfCodeLabel" Content="Lines of code: 0" HorizontalAlignment="Left" Margin="20,270,0,0" VerticalAlignment="Top" FontSize="24"/>
 			<Button x:Name="setCodeCountingButton" Content="Set up code counting" HorizontalAlignment="Left" Margin="20,312,0,0" VerticalAlignment="Top" Width="202" Height="52" FontSize="18" Cursor="Hand" PreviewMouseDown="setCodeCountingButton_PreviewMouseDown"/>
+			<Label x:Name="folderLocationLabel" Content="Folder location: " HorizontalAlignment="Left" Margin="20,0,0,92" VerticalAlignment="Bottom" FontSize="24" Width="780"/>
+			<Button x:Name="folderLocationResetButton" Content="Set folder location" HorizontalAlignment="Left" Margin="20,0,0,40" VerticalAlignment="Bottom" Width="202" Height="52" FontSize="18" Cursor="Hand" PreviewMouseDown="folderLocationResetButton_PreviewMouseDown"/>
 
 		</Grid>
 
