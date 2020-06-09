@@ -1315,9 +1315,9 @@ namespace Project_Tracker {
 			tasksMadeLabel.Content = "Tasks created: " + tasksMade;
 			tasksCompletedLabel.Content = "Tasks completed: " + tasksCompleted;
 			statisticsDurationLabel.Content = "Duration: coming soon...";
-			linesOfCodeLabel.Content = "Lines of code: " + Statistics.CountLines(linesOfCodeFiles.ToArray());
+			linesOfCodeLabel.Content = "Lines of code: " + String.Format("{0:#,###0}", Statistics.CountLines(linesOfCodeFiles.ToArray()));
 
-			
+
 			if (folderLocation != "" && Directory.Exists(folderLocation)) {
 				folderLocationResetButton.Content = "Reset folder location";
 				folderLocationLabel.Content = "Folder location: " + folderLocation;
@@ -2445,7 +2445,7 @@ namespace Project_Tracker {
 
 			Save(filesRead[selectedIndex - 1]);
 
-			linesOfCodeLabel.Content = "Lines of code: " + Statistics.CountLines(linesOfCodeFiles.ToArray());
+			linesOfCodeLabel.Content = "Lines of code: " + String.Format("{0:#,###0}", Statistics.CountLines(linesOfCodeFiles.ToArray()));
 		}
 
 		private void folderLocationResetButton_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
