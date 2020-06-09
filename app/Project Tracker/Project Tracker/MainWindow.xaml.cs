@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Net;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -1285,12 +1284,17 @@ namespace Project_Tracker {
 		}
 
 		private void ProjectStatisticsMouseDown(object sender, MouseButtonEventArgs e) {
+			statisticsGrid.Visibility = Visibility.Visible;
+
 			displayingTitle.Content = title += " Statistics";
 			displayingImage.Source = (ImageSource)TryFindResource("graphDrawingImage");
 
 			addItemBorder.Visibility = Visibility.Hidden;
 			settingsImage.Visibility = Visibility.Hidden;
 			folderImage.Visibility = Visibility.Hidden;
+			scrollviewerGrid.Visibility = Visibility.Hidden;
+			completeGrid.Visibility = Visibility.Hidden;
+			noProjectsGrid.Visibility = Visibility.Hidden;
 
 			creationDateLabel.Content = "Date created: " + dateCreated;
 			tasksMadeLabel.Content = "Tasks created: " + tasksMade;
@@ -1531,6 +1535,7 @@ namespace Project_Tracker {
 			}
 
 			settingsGrid.Visibility = Visibility.Hidden;
+			statisticsGrid.Visibility = Visibility.Hidden;
 
 			border1.Style = (Style)TryFindResource("hoverOver");
 			border2.Style = (Style)TryFindResource("hoverOver");

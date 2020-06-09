@@ -248,7 +248,7 @@
 
 		<!-- Display window content -->
 		<!-- The default view if there's no projects made yet -->
-		<Grid x:Name="noProjectsGrid" Margin="345,115,0,209" Visibility="Hidden">
+		<Grid x:Name="noProjectsGrid" Margin="345,115,0,209" Visibility="Visible">
 			<Canvas x:Name="errorCanvas" HorizontalAlignment="Center" VerticalAlignment="Center" Height="45" Width="45" Margin="0,0,120,140">
 				<Image Source="{StaticResource errorDrawingImage}" Height="45" Width="45" />
 			</Canvas>
@@ -268,7 +268,7 @@
 		<!-- The view if there is projects made -->
 		<Grid Margin="345,0,0,0">
 			<Canvas HorizontalAlignment="Left" VerticalAlignment="Top" Height="45" Width="45" Margin="75,31,0,0">
-				<Image x:Name="displayingImage"  Source="{StaticResource graphDrawingImage}" Height="45" Width="45" Visibility="Visible" PreviewMouseDown="displayingImage_PreviewMouseDown" Cursor="Hand" />
+				<Image x:Name="displayingImage"  Source="{StaticResource noIcon}" Height="45" Width="45" Visibility="Visible" PreviewMouseDown="displayingImage_PreviewMouseDown" Cursor="Hand" />
 			</Canvas>
 			<Canvas HorizontalAlignment="Right" VerticalAlignment="Top" Height="40" Width="40" Margin="0,45,45,0">
 				<Image x:Name="settingsImage"  Source="{StaticResource settingsDrawingImage}" Height="40" Width="40" Visibility="Hidden" PreviewMouseDown="settingsImage_PreviewMouseDown" Cursor="Hand" />
@@ -277,7 +277,7 @@
 				<Image x:Name="folderImage"  Source="{StaticResource folderDrawingImage}" Height="40" Width="40" Visibility="Hidden" PreviewMouseDown="folderImage_PreviewMouseDown" Cursor="Hand" />
 			</Canvas>
 
-			<Label x:Name="displayingTitle" VerticalContentAlignment="Top" HorizontalAlignment="Left" Content="Project Tracker Statistics" FontSize="40" Margin="135,21,0,7" FontWeight="Medium" Visibility="Visible" />
+			<Label x:Name="displayingTitle" VerticalContentAlignment="Top" HorizontalAlignment="Left" Content="" FontSize="40" Margin="135,21,0,7" FontWeight="Medium" Visibility="Visible" />
 			<Border x:Name="changeTitleBorder" BorderBrush="#FF919191" BorderThickness="2" HorizontalAlignment="Left" Height="64" Margin="135,21,0,0" VerticalAlignment="Top" Width="500" Visibility="Hidden">
 				<TextBox x:Name="changeTitleTextBox" TextWrapping="Wrap" Text="Project Tracker" FontSize="40" LostFocus="changeTitleTextBox_LostFocus" />
 			</Border>
@@ -318,7 +318,7 @@
 		</Grid>
 
 		<!-- The statistics menu -->
-		<Grid x:Name="statisticsGrid" Margin="350,100,0,0">
+		<Grid x:Name="statisticsGrid" Margin="350,100,0,0" Visibility="Hidden">
 			<Label x:Name="creationDateLabel" Content="Date created: 6/9/2020" HorizontalAlignment="Left" Margin="20,20,0,0" VerticalAlignment="Top" FontSize="28"/>
 			<Label x:Name="tasksMadeLabel" Content="Tasks created: 0" HorizontalAlignment="Left" Margin="20,90,0,0" VerticalAlignment="Top" FontSize="24"/>
 			<Label x:Name="tasksCompletedLabel" Content="Tasks completed: 0" HorizontalAlignment="Left" Margin="20,125,0,0" VerticalAlignment="Top" FontSize="24"/>
