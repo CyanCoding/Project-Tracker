@@ -725,7 +725,12 @@ namespace Project_Tracker {
 				changeTitleBorder.Visibility = Visibility.Hidden;
 				displayingTitle.Visibility = Visibility.Visible;
 
-				displayingTitle.Content = title;
+				if (title.Length > 25) {
+					displayingTitle.Content = title.Substring(0, 22) + "...";
+				}
+				else {
+					displayingTitle.Content = title;
+				}
 
 				Save(filesRead[selectedIndex - 1]);
 				LoadFiles();
@@ -1286,7 +1291,14 @@ namespace Project_Tracker {
 		private void ProjectStatisticsMouseDown(object sender, MouseButtonEventArgs e) {
 			statisticsGrid.Visibility = Visibility.Visible;
 
-			displayingTitle.Content = title += " Statistics";
+			if (title.Length > 14) {
+				displayingTitle.Content = title.Substring(0, 14) + "... Statistics";
+			}
+			else {
+				displayingTitle.Content = title + " Statistics";
+			}
+
+
 			displayingImage.Source = (ImageSource)TryFindResource("graphDrawingImage");
 
 			addItemBorder.Visibility = Visibility.Hidden;
@@ -1513,6 +1525,7 @@ namespace Project_Tracker {
 				taskIdentifier.Add(identifier);
 			}
 
+			linesOfCodeFiles.Clear();
 			foreach (string file in projectLinesOfCodeFiles) {
 				linesOfCodeFiles.Add(file);
 			}
@@ -1608,7 +1621,13 @@ namespace Project_Tracker {
 					projectInfo.Percent);
 
 				// Set values
-				displayingTitle.Content = projectInfo.Title;
+				if (projectInfo.Title.Length > 25) {
+					displayingTitle.Content = projectInfo.Title.Substring(0, 22) + "...";
+				}
+				else {
+					displayingTitle.Content = projectInfo.Title;
+				}
+				
 
 				if (projectInfo.Icon == "rustIcon") {
 					// Our default rust icon is white so we need to use the
@@ -2393,6 +2412,18 @@ namespace Project_Tracker {
 
 		private void folderImage_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
 
+		}
+
+		private void setCodeCountingButton_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
+			linesOfCodeFiles.Clear();
+
+			foreach (string file in Statistics.GetFiles()) {
+				linesOfCodeFiles.Add(file);
+			}
+
+			Save(filesRead[selectedIndex - 1]);
+
+			linesOfCodeLabel.Content = "Lines of code: " + Statistics.CountLines(linesOfCodeFiles.ToArray());
 		}
 	}
 }
