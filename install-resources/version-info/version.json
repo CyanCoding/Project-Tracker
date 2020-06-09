@@ -1,9 +1,11 @@
 {
-  "Version": "2.2",
+  "Version": "2.4",
   "Updates": [
-      "Added the ability to update key components in the background."
+      "Added automatic code counting.",
+      "Added folder integration.",
+      "Created the statistics page."
   ],
   "Fixes": [
-      "Fixed small bugs in the program."
+      "Fixed an issue where the title would overlap other elements."
   ]
 }

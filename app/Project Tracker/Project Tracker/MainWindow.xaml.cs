@@ -24,7 +24,7 @@ namespace Project_Tracker {
 			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
 			+ "/Project Tracker";
 		// IF YOU CHANGE THIS, ALSO CHANGE IT IN UpdateWindow.xaml.cs
-		private readonly string CURRENT_VERSION = "2.2";
+		private readonly string CURRENT_VERSION = "2.4";
 
 		private readonly string DATA_DIRECTORY =
 			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
