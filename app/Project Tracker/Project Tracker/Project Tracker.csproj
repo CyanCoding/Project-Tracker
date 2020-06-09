@@ -76,6 +76,7 @@
     <Compile Include="BackgroundProcesses.cs" />
     <Compile Include="NextVersionManifest.cs" />
     <Compile Include="SettingsManifest.cs" />
+    <Compile Include="Statistics.cs" />
     <Compile Include="UpdateManifest.cs" />
     <Compile Include="UpdateWindow.xaml.cs">
       <DependentUpon>UpdateWindow.xaml</DependentUpon>

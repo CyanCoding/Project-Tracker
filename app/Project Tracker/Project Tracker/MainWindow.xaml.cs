@@ -1179,10 +1179,10 @@ namespace Project_Tracker {
 		}
 
 		private void ProjectStatisticsMouseDown(object sender, MouseButtonEventArgs e) {
-			System.Windows.Forms.MessageBox.Show("This feature is not yet available.",
-				"Project Statistics Coming Soon",
-				System.Windows.Forms.MessageBoxButtons.OK,
-				System.Windows.Forms.MessageBoxIcon.Information);
+			displayingTitle.Content = title += " Statistics";
+			displayingImage.Source = (ImageSource)TryFindResource("graphDrawingImage");
+
+			addItemBorder.Visibility = Visibility.Hidden;
 		}
 
 		private void RenameProjectButtonPressed(object sender, MouseButtonEventArgs e) {
@@ -2233,5 +2233,9 @@ namespace Project_Tracker {
 		}
 
 		#endregion Item selection presses
+
+		private void folderImage_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
+
+		}
 	}
 }
