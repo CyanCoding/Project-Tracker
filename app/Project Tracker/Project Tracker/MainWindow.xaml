@@ -308,13 +308,6 @@
 			<Button x:Name="updateButton1" Content="Check for an update" HorizontalAlignment="Left" Margin="20,25,0,0" VerticalAlignment="Top" Width="210" Height="48" Cursor="Hand" FontSize="20" PreviewMouseDown="UpdateButtonMouseDown" />
 			<Label x:Name="currentVersionLabel" Content="Installed version: " HorizontalAlignment="Left" Margin="20,78,0,0" VerticalAlignment="Top" FontSize="16" />
 			<Label x:Name="latestVersionLabel" Content="Latest version: unavailable" HorizontalAlignment="Left" Margin="20,109,0,0" VerticalAlignment="Top" FontSize="16" />
-			<Label Content="Next version details" HorizontalAlignment="Left" Margin="20,300,0,0" VerticalAlignment="Top" FontSize="36" />
-			<Label x:Name="nextVersionLabel" Content="Downloading next version information..." HorizontalAlignment="Left" Margin="20,358,0,0" VerticalAlignment="Top" FontSize="24" />
-			<Label x:Name="nextVersionReleaseLabel" Visibility="Hidden" Content="Release date: " HorizontalAlignment="Left" Margin="20,400,0,0" VerticalAlignment="Top" FontSize="24" />
-			<Label x:Name="nextVersionFeaturesLabel" Visibility="Hidden" Content="Features:" HorizontalAlignment="Left" Margin="20,460,0,0" VerticalAlignment="Top" FontSize="30" />
-			<Label x:Name="nextVersionUpdateOneLabel" Visibility="Hidden" Content="1. " HorizontalAlignment="Left" Margin="20,510,0,0" VerticalAlignment="Top" FontSize="24" />
-			<Label x:Name="nextVersionUpdateTwoLabel" Visibility="Hidden" Content="2. " HorizontalAlignment="Left" Margin="20,552,0,0" VerticalAlignment="Top" FontSize="24" />
-			<Label x:Name="nextVersionUpdateThreeLabel" Visibility="Hidden" Content="3. " HorizontalAlignment="Left" Margin="20,594,0,0" VerticalAlignment="Top" FontSize="24" />
 		</Grid>
 
 		<!-- The statistics menu -->

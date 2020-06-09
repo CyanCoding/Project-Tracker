@@ -20,7 +20,6 @@ When updating, this is the procedure you need to follow:
 4. Zip the folder. Make sure you zip the contents and not the folder so that it ends up as Project Tracker/ and not Project Tracker/Project Tracker.
 5. Update `version.json`.
 6. Change the `version.txt` version.
-7. Change `next-version.json`.
 
 After that the files are ready to be installed on the user's system and you can create a 
 new release!

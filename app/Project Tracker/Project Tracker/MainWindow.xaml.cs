@@ -1174,72 +1174,6 @@ namespace Project_Tracker {
 			itemsAdded++;
 		}
 
-		/// <summary>
-		/// Runs when the next version file has been downloaded.
-		/// Sets the next update info in the settings.
-		/// </summary>
-		private void NextVersionDownloadComplete(object sender, AsyncCompletedEventArgs e) {
-			string json = File.ReadAllText(NEXT_VERSION_INFO);
-
-			if (json == "" && isSettingsWindowDisplaying) { // Didn't download the entire file properly
-															// Couldn't download update file. Possible their wifi isn't working
-				nextVersionLabel.Content = "Couldn't get next release data.";
-				latestVersionLabel.Content = "Latest version: unavailable";
-				nextVersionReleaseLabel.Visibility = Visibility.Hidden;
-				nextVersionFeaturesLabel.Visibility = Visibility.Hidden;
-				nextVersionUpdateOneLabel.Visibility = Visibility.Hidden;
-				nextVersionUpdateTwoLabel.Visibility = Visibility.Hidden;
-				nextVersionUpdateThreeLabel.Visibility = Visibility.Hidden;
-				updateResponse = true;
-				return;
-			}
-			else if (json == "") {
-				updateResponse = true;
-				return;
-			}
-
-			NextVersionManifest.Rootobject nextVersionInfo =
-				JsonConvert.DeserializeObject<NextVersionManifest.Rootobject>(json);
-			nextVersionLabel.Visibility = Visibility.Visible;
-			nextVersionLabel.Content = "Version: " + nextVersionInfo.Version;
-
-			nextVersionReleaseLabel.Visibility = Visibility.Visible;
-			if (nextVersionInfo.ReleaseDateConfirmed == "false") {
-				nextVersionReleaseLabel.Content = "Estimated release date: " + nextVersionInfo.EstimatedRelease;
-			}
-			else {
-				nextVersionReleaseLabel.Content = "Release date: " + nextVersionInfo.EstimatedRelease;
-			}
-
-			nextVersionUpdateOneLabel.Visibility = Visibility.Visible;
-			nextVersionUpdateTwoLabel.Visibility = Visibility.Hidden;
-			nextVersionUpdateThreeLabel.Visibility = Visibility.Hidden;
-			nextVersionFeaturesLabel.Visibility = Visibility.Visible;
-
-			try {
-				if (nextVersionInfo.NewFeatures[0] == "") {
-					nextVersionUpdateOneLabel.Content = "A feature list is not yet available for this version.";
-				}
-				else {
-					nextVersionUpdateOneLabel.Content = "1. " + nextVersionInfo.NewFeatures[0];
-				}
-
-				if (nextVersionInfo.NewFeatures[1] != "") {
-					nextVersionUpdateTwoLabel.Visibility = Visibility.Visible;
-					nextVersionUpdateTwoLabel.Content = "2. " + nextVersionInfo.NewFeatures[1];
-				}
-
-				if (nextVersionInfo.NewFeatures[2] != "") {
-					nextVersionUpdateThreeLabel.Visibility = Visibility.Visible;
-					nextVersionUpdateThreeLabel.Content = "3. " + nextVersionInfo.NewFeatures[2];
-				}
-			}
-			catch (IndexOutOfRangeException) {
-				nextVersionUpdateOneLabel.Content = "A feature list is not yet available for this version.";
-			}
-			updateResponse = true;
-		}
-
 		private void overallSettingsBorder_LostFocus(object sender, RoutedEventArgs e) {
 			if (isOverallSettingsOpen) { // Hide the icon selector window if they click out
 				Dispatcher.Invoke(new Action(() =>
@@ -2014,24 +1948,6 @@ namespace Project_Tracker {
 		/// Notifies the user of an update if one is available.
 		/// </summary>
 		private void Update(object sender, AsyncCompletedEventArgs e) {
-			// Download future version information
-			try {
-				WebClient client = new WebClient();
-				client.DownloadFileCompleted += new AsyncCompletedEventHandler(NextVersionDownloadComplete);
-				client.DownloadFileAsync(new Uri(NEXT_VERSION_MANIFEST_URL), NEXT_VERSION_INFO);
-			}
-			catch (WebException) {
-				// Couldn't download update file. Possible their wifi isn't working
-				nextVersionLabel.Content = "Couldn't get next release data.";
-				latestVersionLabel.Content = "Latest version: unavailable";
-				nextVersionReleaseLabel.Visibility = Visibility.Hidden;
-				nextVersionFeaturesLabel.Visibility = Visibility.Hidden;
-				nextVersionUpdateOneLabel.Visibility = Visibility.Hidden;
-				nextVersionUpdateTwoLabel.Visibility = Visibility.Hidden;
-				nextVersionUpdateThreeLabel.Visibility = Visibility.Hidden;
-				updateResponse = true;
-			}
-
 			string json = File.ReadAllText(VERSION_INFO);
 
 			if (json == "" && isSettingsWindowDisplaying) { // Didn't download the entire file properly
@@ -2044,7 +1960,7 @@ namespace Project_Tracker {
 				return;
 			}
 			else if (json == "") {
-				nextVersionLabel.Content = "Couldn't get next release data.";
+				latestVersionLabel.Content = "Latest version: unavailable";
 				updateResponse = true;
 				return;
 			}
