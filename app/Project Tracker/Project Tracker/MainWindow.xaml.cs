@@ -1787,6 +1787,7 @@ namespace Project_Tracker {
 			selectedIndex = 0;
 			SetSelectedProject();
 			settingsGrid.Visibility = Visibility.Visible;
+			folderImage.Visibility = Visibility.Hidden;
 		}
 
 		/// <summary>
