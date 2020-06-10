@@ -1,123 +1,15 @@
 ---
 layout: default
 ---
+# About
 
-Text can be **bold**, _italic_, or ~~strikethrough~~.
+The Project Tracker is a productivity and organizational software application aimed towards empowering developers and helping them efficiently manage all of their projects. Quickly start a new project, set the project language, and get coding! The Project Tracker will handle all of your tasks in a to-do fashion categorized by error, feature, and comment categories.
 
-[Link to another page](./another-page.html).
+However, the Project Tracker brings more to the table than just a to-do list. Set the project language, see project progress, automatically count lines of code, or even give you a built-in shortcut to your project's directory! The Project Tracker simplifies development life, enabling you to do what you do best, code, faster and more efficiently than ever.
 
-There should be whitespace between paragraphs.
+![Project Tracker](https://i.imgur.com/ujRfXdm.png)
+###### A project created with the Project Tracker
 
-There should be whitespace between paragraphs. We recommend including a README, or a file with information about your project.
+# Download
 
-# Header 1
-
-This is a normal paragraph following a header. GitHub is a code hosting platform for version control and collaboration. It lets you and others work together on projects from anywhere.
-
-## Header 2
-
-> This is a blockquote following a header.
->
-> When something is important enough, you do it even if the odds are not in your favor.
-
-### Header 3
-
-```js
-// Javascript code with syntax highlighting.
-var fun = function lang(l) {
-  dateformat.i18n = require('./lang/' + l)
-  return true;
-}
-```
-
-```ruby
-# Ruby code with syntax highlighting
-GitHubPages::Dependencies.gems.each do |gem, version|
-  s.add_dependency(gem, "= #{version}")
-end
-```
-
-#### Header 4
-
-*   This is an unordered list following a header.
-*   This is an unordered list following a header.
-*   This is an unordered list following a header.
-
-##### Header 5
-
-1.  This is an ordered list following a header.
-2.  This is an ordered list following a header.
-3.  This is an ordered list following a header.
-
-###### Header 6
-
-| head1        | head two          | three |
-|:-------------|:------------------|:------|
-| ok           | good swedish fish | nice  |
-| out of stock | good and plenty   | nice  |
-| ok           | good `oreos`      | hmm   |
-| ok           | good `zoute` drop | yumm  |
-
-### There's a horizontal rule below this.
-
-* * *
-
-### Here is an unordered list:
-
-*   Item foo
-*   Item bar
-*   Item baz
-*   Item zip
-
-### And an ordered list:
-
-1.  Item one
-1.  Item two
-1.  Item three
-1.  Item four
-
-### And a nested list:
-
-- level 1 item
-  - level 2 item
-  - level 2 item
-    - level 3 item
-    - level 3 item
-- level 1 item
-  - level 2 item
-  - level 2 item
-  - level 2 item
-- level 1 item
-  - level 2 item
-  - level 2 item
-- level 1 item
-
-### Small image
-
-![Octocat](https://github.githubassets.com/images/icons/emoji/octocat.png)
-
-### Large image
-
-![Branching](https://guides.github.com/activities/hello-world/branching.png)
-
-
-### Definition lists can be used with HTML syntax.
-
-<dl>
-<dt>Name</dt>
-<dd>Godzilla</dd>
-<dt>Born</dt>
-<dd>1952</dd>
-<dt>Birthplace</dt>
-<dd>Japan</dd>
-<dt>Color</dt>
-<dd>Green</dd>
-</dl>
-
-```
-Long, single-line code blocks should not wrap. They should horizontally scroll if they are too long. This line should be long enough to demonstrate this.
-```
-
-```
-The final element.
-```
+To download the latest version of the Project Tracker, head over to the [releases](https://github.com/CyanCoding/Project-Tracker/releases) section on GitHub and download the Windows installer. New releases are shipped automatically on a regular basis and you will notified of the latest feature updates.
