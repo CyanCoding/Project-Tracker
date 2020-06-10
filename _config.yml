@@ -6,5 +6,5 @@ description: > # this means to ignore newlines until "baseurl:"
   Easily keep track of all of your coding projects and their progress with the Project Tracker
 # social links
 github_username:  CyanCoding # DO NOT include the @ character, or else the build will fail!
-
+show_downloads: true
 show_excerpts: true # set to false to remove excerpts on the homepage
