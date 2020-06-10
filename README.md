@@ -14,4 +14,4 @@ looking for your project! With the click of a button, navigate to your project's
 Coming soon are more features designed to help you develop faster and more efficiently like
 offline GitHub project integration, project searching, and more!
 
-![Project Tracker](https://i.imgur.com/iWFPgGg.png)
+![Project Tracker](https://i.imgur.com/ujRfXdm.png)
