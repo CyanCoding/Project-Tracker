@@ -3,7 +3,7 @@ author: CyanCoding
 email: skyecam21@gmail.com
 theme: jekyll-theme-cayman
 description: > # this means to ignore newlines until "baseurl:"
-  Easily **create**, **manage**, **track**, and **develop** all of your programming projects.
+  Easily create, manage, track, and develop all of your programming projects.
 # social links
 github_username:  CyanCoding # DO NOT include the @ character, or else the build will fail!
 show_downloads: true
