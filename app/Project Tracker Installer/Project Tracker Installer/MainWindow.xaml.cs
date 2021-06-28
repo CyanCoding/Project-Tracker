@@ -20,20 +20,26 @@ namespace Project_Tracker_Installer {
     /// </summary>
     public partial class MainWindow : Window {
 
+        bool finishedDownloading = false;
         bool uninstall = false; // This is true if the program is already installed on the device
         bool retrying = false; // Used to determine whether the install button is actually being used as a retry button
-        bool finishedDownloading = false;
        
         readonly string PROGRAM_TITLE = "Project Tracker";
-        string PROGRAM_VERSION = "calculating version...";
+        string PROGRAM_VERSION = "2.4";
         readonly string PROGRAM_PATH = Environment.GetFolderPath
 			(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/install/Project Tracker.exe";
+        
         readonly string VERSION_PATH = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/version.txt";
         readonly string VERSION_DOWNLOAD_LINK = "https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/version-info/version.txt";
+        readonly string VERSION_FILE = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Project Tracker\update.txt";
+
         readonly string DATA_DIRECTORY_PATH = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Project Tracker\data";
+
+        readonly string BASE_DIRECTORY = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Project Tracker";
+
         readonly string INSTALLER_PATH = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/install/Project Tracker Installer.exe";
         readonly string INSTALL_DIRECTORY = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/install";
-        readonly string VERSION_FILE = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Project Tracker\update.txt";
+
         readonly string REGISTRY = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Project Tracker";
         readonly string ONLINE_PROGRAM_LINK = "https://github.com/CyanCoding/Project-Tracker/raw/master/install-resources/Project%20Tracker.zip";
         readonly string ZIP_PATH = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/install/Project Tracker.zip";
@@ -48,30 +54,18 @@ namespace Project_Tracker_Installer {
         /// <summary>
         /// Retrieves the latest available version from the server.
         /// </summary>
-        private void GetVersion(object sender, AsyncCompletedEventArgs e) {
+        private void GetVersionFromDownload(object sender, AsyncCompletedEventArgs e) {
             try {
                 PROGRAM_VERSION = File.ReadAllText(VERSION_PATH);
             }
             catch (Exception eg) {
-                return;
+
             }
 
             File.Delete(VERSION_PATH);
             Dispatcher.Invoke(new Action(() => {
-                if (!uninstall) {
-                    if (subTitle.Content.ToString() != "Couldn't install at this time" && subTitle.Content.ToString() != ("Please close every " + PROGRAM_TITLE + " Installer before continuing.")) {
-                        subTitle.Content = "Version: " + PROGRAM_VERSION;
-                    }
-                    
-                }
-                
+                subTitle.Content = "Version: " + PROGRAM_VERSION;
             }));
-            installButton.IsEnabled = true;
-            reinstallButton.IsEnabled = true;
-
-            if (subTitle.Content.ToString()== "Version: ") {
-                FinalResult("An error occured while installing");
-            }
         }
 
         /// <summary>
@@ -79,10 +73,8 @@ namespace Project_Tracker_Installer {
         /// </summary>
         private void GetOnlineVersion() {
             try {
-                installButton.IsEnabled = false;
-                reinstallButton.IsEnabled = false;
                 WebClient client = new WebClient();
-                client.DownloadFileCompleted += new AsyncCompletedEventHandler(GetVersion);
+                client.DownloadFileCompleted += new AsyncCompletedEventHandler(GetVersionFromDownload);
                 client.DownloadFileAsync(new Uri(VERSION_DOWNLOAD_LINK), VERSION_PATH);
             }
             catch (WebException) {
@@ -96,95 +88,52 @@ namespace Project_Tracker_Installer {
         void startup() {
             subTitle.Content = "Version: " + PROGRAM_VERSION;
 
-            // Copies the current file to the Program Data folder. Code execution doesn't pass this if it's not already there
-            if ((Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\Project Tracker Installer.exe") != INSTALLER_PATH) {
-                Process process = Process.GetCurrentProcess();
-                string currentLocation = process.MainModule.FileName;
+            Process process = Process.GetCurrentProcess();
+            string currentLocation = process.MainModule.FileName;
 
-                if (!File.Exists(INSTALLER_PATH)) { // An installer file doesn't exist
-                    try {
-                        if (!Directory.Exists(INSTALL_DIRECTORY)) {
-                            Directory.CreateDirectory(INSTALL_DIRECTORY);
-                        }
+            // When the user first opens the program, we duplicate this program
+            // to the install directory and run that program.
+            // The user's program ends execution here.
+            if (currentLocation != INSTALLER_PATH) {
+                try {
+                    // Create the install directories
+                    Directory.CreateDirectory(INSTALL_DIRECTORY);
 
-                        // Copy this program over to the new location
-                        File.Copy(currentLocation, INSTALLER_PATH);
-                        
-                        File.SetAttributes(INSTALLER_PATH, FileAttributes.Normal);
-                    }
-                    catch (UnauthorizedAccessException) { // For some reason we can't copy the file hmmf
-                        FinalResult("Installer failed when copying (034)");
-                        return;
-                    }
+                    // Copy the installer
+                    File.Copy(currentLocation, INSTALLER_PATH);
+
+                    // Start the new program, since we need to install from
+                    // the uninstall location.
+                    ProcessStartInfo start = new ProcessStartInfo {
+                        FileName = INSTALLER_PATH,
+                        WindowStyle = ProcessWindowStyle.Normal,
+                        CreateNoWindow = true // No console window
+                    };
+                    Process.Start(start);
+
+                    this.Close();
                 }
-                //else { // Installer file exists
-                //    try {
-                //        // Delete older installer and copy this one there
-                //        File.SetAttributes(INSTALLER_PATH, FileAttributes.Normal);
-                //        File.Delete(INSTALLER_PATH);
-
-                //        File.Copy(currentLocation, INSTALLER_PATH);
-                //        File.SetAttributes(INSTALLER_PATH, FileAttributes.Normal);
-                //    }
-                //    catch (UnauthorizedAccessException) {
-                //        FinalResult("Installer failed when copying (042)");
-                //        return;
-                //    }
-                //}
-                //// Start the new installer
-                //ProcessStartInfo start = new ProcessStartInfo {
-                //    // Enter the executable to run, including the complete path
-                //    FileName = INSTALLER_PATH,
-                //    // Do you want to show a console window?
-                //    WindowStyle = ProcessWindowStyle.Normal,
-                //    CreateNoWindow = true
-                //};
-                //Process.Start(start);
-                this.Close();
-
-                return;
-
+                catch (Exception) {
+                    Console.WriteLine("Encountered an error while copying (304)");
+                }
             }
 
+            // ================================================================
+            // EVERYTHING FROM HERE BELOW IS RUN IN THE LOCAL INSTALL DIRECTORY
+            // ================================================================
             GetOnlineVersion(); // Attempts to retrieve online version or hides subtitle if not available
 
-            if (!File.Exists(VERSION_FILE)) { // It's not an update
-                subTitle.Content = "Version: " + PROGRAM_VERSION;
+            if (File.Exists(PROGRAM_PATH)) { // Program exists, so we uninstall
+                uninstall = true;
+                installButton.Content = "Uninstall";
+                subTitle.Content = "Project Tracker is already installed on your device";
+                subTitle.Visibility = Visibility.Visible;
+                reinstallButton.Visibility = Visibility.Visible;
 
-                if (File.Exists(PROGRAM_PATH)) { // Program exists, so we uninstall
-                    uninstall = true;
-                    installButton.Content = "Uninstall";
-                    subTitle.Content = "Project Tracker is already installed on your device";
-                    subTitle.Visibility = Visibility.Visible;
-                    reinstallButton.Visibility = Visibility.Visible;
-
-                    installButton.Margin = new Thickness(152, 0, 0, 30);
-                    reinstallButton.Margin = new Thickness(288, 0, 0, 30);
-                    installButton.HorizontalAlignment = HorizontalAlignment.Left;
-                    reinstallButton.HorizontalAlignment = HorizontalAlignment.Left;
-                }
-                else { // Program doesn't exist, so we install
-                    try {
-                        installButton.IsEnabled = false;
-                        WebClient client = new WebClient();
-                        client.DownloadFileCompleted += new AsyncCompletedEventHandler(GetVersion);
-                        client.DownloadFileAsync(new Uri(VERSION_DOWNLOAD_LINK), VERSION_PATH);
-                    }
-                    catch (WebException) {
-                        subTitle.Visibility = Visibility.Hidden; // Couldn't get version
-                    }
-                }
-            }
-            else { // It is an update
-                string[] updateLines = File.ReadAllLines(VERSION_FILE);
-                PROGRAM_VERSION = updateLines[0];
-
-                subTitle.Content = "Version: " + PROGRAM_VERSION;
-
-                installButton.Content = "Update";
-                mainTitle.Content = "Update Project Tracker";
-
-                File.Delete(VERSION_FILE);
+                installButton.Margin = new Thickness(152, 0, 0, 30);
+                reinstallButton.Margin = new Thickness(288, 0, 0, 30);
+                installButton.HorizontalAlignment = HorizontalAlignment.Left;
+                reinstallButton.HorizontalAlignment = HorizontalAlignment.Left;
             }
         }
 
@@ -193,9 +142,7 @@ namespace Project_Tracker_Installer {
         /// </summary>
         private void LaunchButtonClick(object sender, RoutedEventArgs e) {
             ProcessStartInfo start = new ProcessStartInfo {
-                // Enter the executable to run, including the complete path
                 FileName = PROGRAM_PATH,
-                // Do you want to show a console window?
                 WindowStyle = ProcessWindowStyle.Normal,
                 CreateNoWindow = true
             };
@@ -236,40 +183,15 @@ namespace Project_Tracker_Installer {
                 subTitle.Content = "";
             }
 
-            if (!uninstall) {
-                if (installButton.Content.ToString() == "Click to Install") {
-                    // Hide/show components
-                    copyright.Visibility = Visibility.Hidden;
-                    installButton.Visibility = Visibility.Hidden;
-                    subTitle.Visibility = Visibility.Visible;
+            if (!uninstall) { // We're installing the program normally
+                // Hide/show components
+                copyright.Visibility = Visibility.Hidden;
+                installButton.Visibility = Visibility.Hidden;
+                subTitle.Visibility = Visibility.Visible;
 
-                    mainTitle.Content = "Installing program...";
+                mainTitle.Content = "Installing program...";
 
-                    Installer installer = new Installer();
-                    InstallProgram(PROGRAM_PATH, INSTALL_DIRECTORY, ONLINE_PROGRAM_LINK, ZIP_PATH);         
-                }
-                else { // Update
-                    // Hide/show components
-                    copyright.Visibility = Visibility.Hidden;
-                    installButton.Visibility = Visibility.Hidden;
-                    subTitle.Visibility = Visibility.Visible;
-
-                    mainTitle.Content = "Updating program...";
-
-                    foreach (string f in Directory.GetFiles(INSTALL_DIRECTORY)) { // Delete old files
-                        if (f != INSTALLER_PATH) {
-                            File.Delete(f);
-                        }
-                    }
-
-                    InstallProgram(PROGRAM_PATH, INSTALL_DIRECTORY, ONLINE_PROGRAM_LINK, ZIP_PATH);
-                    try {
-                        Registry.CurrentUser.DeleteSubKey(REGISTRY);
-                    }
-                    catch (ArgumentException) { // Registry doesn't exist
-
-                    }
-                }
+                InstallProgram(PROGRAM_PATH, INSTALL_DIRECTORY, ONLINE_PROGRAM_LINK, ZIP_PATH);
             }
             else { // Uninstall == true
                 Dispatcher.Invoke(new Action(() => {
@@ -280,9 +202,9 @@ namespace Project_Tracker_Installer {
                     installBar.Visibility = Visibility.Hidden;
 
                     Uninstaller uninstaller = new Uninstaller();
-                    uninstaller.Uninstall(DATA_DIRECTORY_PATH, INSTALLER_PATH, INSTALL_DIRECTORY, REGISTRY, SHORTCUT_LOCATION);
+                    uninstaller.Uninstall(DATA_DIRECTORY_PATH, INSTALLER_PATH, BASE_DIRECTORY, INSTALL_DIRECTORY, REGISTRY, SHORTCUT_LOCATION);
 
-                    FinalResult("Successfully uninstalled!");
+                    FinalResult("Successfully uninstalled!", "You can close this uninstaller whenever.");
                 }));
             }
 
@@ -426,6 +348,7 @@ namespace Project_Tracker_Installer {
         /// </summary>
         private void DownloadComplete(object sender, AsyncCompletedEventArgs e) {
             if (finishedDownloading) {
+                // We create a cool thread to extract the program and unzip file contents
                 Thread thread = new Thread(() => {
                     Dispatcher.Invoke(new Action(() => {
                         mainTitle.Content = "Installing program...";
@@ -441,8 +364,9 @@ namespace Project_Tracker_Installer {
                         installer.CreateUninstaller(REGISTRY, PROGRAM_TITLE, PROGRAM_VERSION, ICON_PATH, PROGRAM_PATH, INSTALL_DIRECTORY, SHORTCUT_LOCATION);
 
 
-                        if (File.Exists(ZIP_PATH)) {
-                            mainTitle.Content = "Couldn't update at this time";
+                        if (File.Exists(ZIP_PATH)) { // An issue occurred while unzipping
+                            FinalResult("Couldn't install at this time", "Please close every " + PROGRAM_TITLE + " Installer before continuing.");
+                            mainTitle.Content = "Couldn't install at this time";
                             subTitle.Content = "Please close every " + PROGRAM_TITLE + " Installer before continuing.";
                             subTitle.Visibility = Visibility.Visible;
 
@@ -452,14 +376,10 @@ namespace Project_Tracker_Installer {
                             installButton.Content = "Retry";
 
                             installBar.Visibility = Visibility.Hidden;
-                        }
-                        else {
-                            if (mainTitle.Content.ToString() == "Updating program...") {
-                                FinalResult("Project Tracker has been updated!");
-                            }
+                            return;
                         }
 
-                        FinalResult("Project Tracker has been installed!");
+                        FinalResult("Project Tracker has been installed!", "You can close this installer whenever.");
                     }));
                 });
                 thread.Start();
@@ -471,10 +391,10 @@ namespace Project_Tracker_Installer {
         /// Used to display the success or failure of the installation.
         /// </summary>
         /// <param name="main">The main title text.</param>
-        public void FinalResult(string main) {
+        public void FinalResult(string main, string subtitle) {
             Dispatcher.Invoke(new Action(() => {
                 installBar.Visibility = Visibility.Hidden;
-                subTitle.Content = "You may close this at any time.";
+                subTitle.Content = subtitle;
                 subTitle.Visibility = Visibility.Visible;
                 mainTitle.Content = main;
                 copyright.Visibility = Visibility.Visible;
@@ -488,26 +408,11 @@ namespace Project_Tracker_Installer {
                     installButton.Content = "Retry";
 
                 }
-                else if (main == "Project Tracker has been installed!" || main == "Project Tracker has been updated!") {
+                else if (main == "Project Tracker has been installed!") {
                     launchButton.Visibility = Visibility.Visible;
-                }
-                else if (main == "Administer priveleges are required") {
-                    subTitle.Content = "Please launch the program again with the necessary priveleges to install.";
-                    installButton.Visibility = Visibility.Hidden;
-                }
-                else if (main == "Couldn't install at this time (034)" || main == "Couldn't install at this time (042)" || main == "Couldn't install at this time (092)") {
-                    subTitle.Content = "Please close every " + PROGRAM_TITLE + " Installer before continuing.";
-                    installButton.Visibility = Visibility.Hidden;
                 }
 
             }));
-        }
-
-        /// <summary>
-        /// Runs before window is closed after the user closes the program.
-        /// </summary>
-        private void Window_Closing(object sender, CancelEventArgs e) {
-            Environment.Exit(0);
         }
     }
 }

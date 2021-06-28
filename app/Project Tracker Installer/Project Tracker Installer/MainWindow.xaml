@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Project_Tracker_Installer"
         mc:Ignorable="d"
-        Title="Project Tracker Installer" Height="200.208" Width="559.563" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Closing="Window_Closing">
+        Title="Project Tracker Installer" Height="200.208" Width="559.563" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
 	<Grid>
 		<Label x:Name="mainTitle" Content="Project Tracker Installer" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="Microsoft Sans Serif" FontSize="24"/>
 		<Label x:Name="subTitle" Content="Version: ---" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="Microsoft Sans Serif" FontSize="14" Margin="0,35,0,0" Visibility="Visible"/>

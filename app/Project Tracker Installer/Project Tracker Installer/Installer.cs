@@ -48,7 +48,6 @@ namespace Project_Tracker_Installer {
             IWshShortcut shortcut = wsh.CreateShortcut(SHORTCUT_LOCATION) as IWshShortcut;
             shortcut.Arguments = "";
             shortcut.TargetPath = PROGRAM_PATH;
-            // not sure about what this is for
             shortcut.WindowStyle = 1;
             shortcut.Description = "Shortcut to Project Tracker";
             shortcut.WorkingDirectory = INSTALL_DIRECTORY;
