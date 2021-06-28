@@ -26,17 +26,18 @@ namespace Project_Tracker_Installer {
        
         readonly string PROGRAM_TITLE = "Project Tracker";
         string PROGRAM_VERSION = "calculating version...";
-        readonly string PROGRAM_PATH = @"C:\Program Files\Project Tracker\Project Tracker.exe";
-        readonly string VERSION_PATH = @"C:\Program Files\Project Tracker\version.txt";
+        readonly string PROGRAM_PATH = Environment.GetFolderPath
+			(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/install/Project Tracker.exe";
+        readonly string VERSION_PATH = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/version.txt";
         readonly string VERSION_DOWNLOAD_LINK = "https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/version-info/version.txt";
         readonly string DATA_DIRECTORY_PATH = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Project Tracker\data";
-        readonly string INSTALLER_PATH = @"C:\Program Files\Project Tracker\Project Tracker Installer.exe";
-        readonly string INSTALL_DIRECTORY = @"C:\Program Files\Project Tracker";
+        readonly string INSTALLER_PATH = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/install/Project Tracker Installer.exe";
+        readonly string INSTALL_DIRECTORY = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/install";
         readonly string VERSION_FILE = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Project Tracker\update.txt";
         readonly string REGISTRY = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Project Tracker";
         readonly string ONLINE_PROGRAM_LINK = "https://github.com/CyanCoding/Project-Tracker/raw/master/install-resources/Project%20Tracker.zip";
-        readonly string ZIP_PATH = @"C:\Program Files\Project Tracker\Project Tracker.zip";
-        readonly string ICON_PATH = @"C:\Program Files\Project Tracker\logo.ico";
+        readonly string ZIP_PATH = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/install/Project Tracker.zip";
+        readonly string ICON_PATH = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/install/logo.ico";
         readonly string SHORTCUT_LOCATION = @"C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Project Tracker.lnk";
 
         public MainWindow() {
@@ -74,72 +75,9 @@ namespace Project_Tracker_Installer {
         }
 
         /// <summary>
-        /// Startup method, runs when code execution begins.
+        /// Attempts to contact the server to retrieve the version file.
         /// </summary>
-        void startup() {
-            subTitle.Content = "Version: " + PROGRAM_VERSION;
-
-            // Copies the current file to the Program Data folder. Code execution doesn't pass this if it's not already there
-            if ((Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\Project Tracker Installer.exe") != INSTALLER_PATH) {
-                Process process = Process.GetCurrentProcess();
-                string currentLocation = process.MainModule.FileName;
-
-                if (!File.Exists(INSTALLER_PATH)) { // An installer file exists
-                    try {
-                        if (!Directory.Exists(INSTALL_DIRECTORY)) {
-                            Directory.CreateDirectory(INSTALL_DIRECTORY);
-                        }
-
-                        // Copy this program over to the new location
-                        File.Copy(currentLocation, INSTALLER_PATH);
-                        
-                        File.SetAttributes(INSTALLER_PATH, FileAttributes.Normal);
-                    }
-                    catch (UnauthorizedAccessException) { // For some reason we can't take the file hmmf
-                        FinalResult("Couldn't install at this time (034)");
-                        return;
-                    }
-                }
-                else { // No installer file exists
-                    try {
-                        // Delete older installer and copy this one there
-                        File.SetAttributes(INSTALLER_PATH, FileAttributes.Normal);
-                        File.Delete(INSTALLER_PATH);
-                        File.Copy(currentLocation, INSTALLER_PATH);
-                        File.SetAttributes(INSTALLER_PATH, FileAttributes.Normal);
-                    }
-                    catch (UnauthorizedAccessException) {
-                        FinalResult("Couldn't install at this time (042)");
-                        return;
-                    }
-                }
-                // Start the new installer
-                ProcessStartInfo start = new ProcessStartInfo {
-                    // Enter the executable to run, including the complete path
-                    FileName = INSTALLER_PATH,
-                    // Do you want to show a console window?
-                    WindowStyle = ProcessWindowStyle.Normal,
-                    CreateNoWindow = true
-                };
-                Process.Start(start);
-                this.Close();
-
-                return;
-
-            }
-            else { // We're in the right installation location but we need the version first for registry.
-                try {
-                    installButton.IsEnabled = false;
-                    reinstallButton.IsEnabled = false;
-                    WebClient client = new WebClient();
-                    client.DownloadFileCompleted += new AsyncCompletedEventHandler(GetVersion);
-                    client.DownloadFileAsync(new Uri(VERSION_DOWNLOAD_LINK), VERSION_PATH);
-                }
-                catch (WebException) {
-                    subTitle.Visibility = Visibility.Hidden; // Couldn't get version
-                }
-            }
-
+        private void GetOnlineVersion() {
             try {
                 installButton.IsEnabled = false;
                 reinstallButton.IsEnabled = false;
@@ -150,11 +88,70 @@ namespace Project_Tracker_Installer {
             catch (WebException) {
                 subTitle.Visibility = Visibility.Hidden; // Couldn't get version
             }
+        }
+
+        /// <summary>
+        /// Startup method, runs when code execution begins.
+        /// </summary>
+        void startup() {
+            subTitle.Content = "Version: " + PROGRAM_VERSION;
+
+            // Copies the current file to the Program Data folder. Code execution doesn't pass this if it's not already there
+            if ((Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\Project Tracker Installer.exe") != INSTALLER_PATH) {
+                Process process = Process.GetCurrentProcess();
+                string currentLocation = process.MainModule.FileName;
+
+                if (!File.Exists(INSTALLER_PATH)) { // An installer file doesn't exist
+                    try {
+                        if (!Directory.Exists(INSTALL_DIRECTORY)) {
+                            Directory.CreateDirectory(INSTALL_DIRECTORY);
+                        }
+
+                        // Copy this program over to the new location
+                        File.Copy(currentLocation, INSTALLER_PATH);
+                        
+                        File.SetAttributes(INSTALLER_PATH, FileAttributes.Normal);
+                    }
+                    catch (UnauthorizedAccessException) { // For some reason we can't copy the file hmmf
+                        FinalResult("Installer failed when copying (034)");
+                        return;
+                    }
+                }
+                //else { // Installer file exists
+                //    try {
+                //        // Delete older installer and copy this one there
+                //        File.SetAttributes(INSTALLER_PATH, FileAttributes.Normal);
+                //        File.Delete(INSTALLER_PATH);
+
+                //        File.Copy(currentLocation, INSTALLER_PATH);
+                //        File.SetAttributes(INSTALLER_PATH, FileAttributes.Normal);
+                //    }
+                //    catch (UnauthorizedAccessException) {
+                //        FinalResult("Installer failed when copying (042)");
+                //        return;
+                //    }
+                //}
+                //// Start the new installer
+                //ProcessStartInfo start = new ProcessStartInfo {
+                //    // Enter the executable to run, including the complete path
+                //    FileName = INSTALLER_PATH,
+                //    // Do you want to show a console window?
+                //    WindowStyle = ProcessWindowStyle.Normal,
+                //    CreateNoWindow = true
+                //};
+                //Process.Start(start);
+                this.Close();
+
+                return;
+
+            }
+
+            GetOnlineVersion(); // Attempts to retrieve online version or hides subtitle if not available
 
             if (!File.Exists(VERSION_FILE)) { // It's not an update
                 subTitle.Content = "Version: " + PROGRAM_VERSION;
 
-                if (File.Exists(PROGRAM_PATH)) { // This if statement decides whether we're installing or uninstalling the program
+                if (File.Exists(PROGRAM_PATH)) { // Program exists, so we uninstall
                     uninstall = true;
                     installButton.Content = "Uninstall";
                     subTitle.Content = "Project Tracker is already installed on your device";
@@ -166,7 +163,7 @@ namespace Project_Tracker_Installer {
                     installButton.HorizontalAlignment = HorizontalAlignment.Left;
                     reinstallButton.HorizontalAlignment = HorizontalAlignment.Left;
                 }
-                else { // We're just installing. Keep everything as normal
+                else { // Program doesn't exist, so we install
                     try {
                         installButton.IsEnabled = false;
                         WebClient client = new WebClient();
@@ -191,9 +188,9 @@ namespace Project_Tracker_Installer {
             }
         }
 
-         /// <summary>
-         /// Launches the program from PROGRAM_PATH.
-         /// </summary>
+        /// <summary>
+        /// Launches the program from PROGRAM_PATH.
+        /// </summary>
         private void LaunchButtonClick(object sender, RoutedEventArgs e) {
             ProcessStartInfo start = new ProcessStartInfo {
                 // Enter the executable to run, including the complete path
