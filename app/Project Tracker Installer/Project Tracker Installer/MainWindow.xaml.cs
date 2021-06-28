@@ -1,4 +1,4 @@
-﻿using Microsoft.Win32;
+using Microsoft.Win32;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -11,8 +11,6 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Shell;
 
-#pragma warning disable CS0168
-
 
 namespace Project_Tracker_Installer {
     /// <summary>
@@ -23,6 +21,8 @@ namespace Project_Tracker_Installer {
         bool finishedDownloading = false;
         bool uninstall = false; // This is true if the program is already installed on the device
         bool retrying = false; // Used to determine whether the install button is actually being used as a retry button
+
+        int oldMegabyteSize = 0; // Used for logging purpose on the download. We only want to log when the MB changes, since bytes change like a million times.
        
         readonly string PROGRAM_TITLE = "Project Tracker";
         string PROGRAM_VERSION = "2.4";
@@ -46,9 +46,16 @@ namespace Project_Tracker_Installer {
         readonly string ICON_PATH = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/install/logo.ico";
         readonly string SHORTCUT_LOCATION = @"C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Project Tracker.lnk";
 
+        readonly string LOG_PATH = Environment.GetFolderPath
+            (Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/install-log.txt";
+
         public MainWindow() {
             InitializeComponent();
             startup();
+        }
+
+        private void LogData(string data) {
+            File.AppendAllText(LOG_PATH, data + "\n");
         }
 
         /// <summary>
@@ -59,25 +66,30 @@ namespace Project_Tracker_Installer {
                 PROGRAM_VERSION = File.ReadAllText(VERSION_PATH);
             }
             catch (Exception eg) {
-
+                LogData("[Main]: FAILED TO READ VERSION FILE");
+                return;
             }
 
             File.Delete(VERSION_PATH);
             Dispatcher.Invoke(new Action(() => {
                 subTitle.Content = "Version: " + PROGRAM_VERSION;
             }));
+
+            LogData("[Main]: Received version info: " + PROGRAM_VERSION);
         }
 
         /// <summary>
         /// Attempts to contact the server to retrieve the version file.
         /// </summary>
         private void GetOnlineVersion() {
+            LogData("[Main]: Getting online version...");
             try {
                 WebClient client = new WebClient();
                 client.DownloadFileCompleted += new AsyncCompletedEventHandler(GetVersionFromDownload);
                 client.DownloadFileAsync(new Uri(VERSION_DOWNLOAD_LINK), VERSION_PATH);
             }
             catch (WebException) {
+                LogData("[Main]: FAILED TO RECEIVE ONLINE VERSION");
                 subTitle.Visibility = Visibility.Hidden; // Couldn't get version
             }
         }
@@ -86,6 +98,8 @@ namespace Project_Tracker_Installer {
         /// Startup method, runs when code execution begins.
         /// </summary>
         void startup() {
+            Directory.CreateDirectory(INSTALL_DIRECTORY);
+            LogData("[Main]: Started the installer");
             subTitle.Content = "Version: " + PROGRAM_VERSION;
 
             Process process = Process.GetCurrentProcess();
@@ -98,9 +112,11 @@ namespace Project_Tracker_Installer {
                 try {
                     // Create the install directories
                     Directory.CreateDirectory(INSTALL_DIRECTORY);
+                    LogData("[Main]: Created the install directory");
 
                     // Copy the installer
                     File.Copy(currentLocation, INSTALLER_PATH);
+                    LogData("[Main]: Copied the installer to the install location");
 
                     // Start the new program, since we need to install from
                     // the uninstall location.
@@ -110,10 +126,13 @@ namespace Project_Tracker_Installer {
                         CreateNoWindow = true // No console window
                     };
                     Process.Start(start);
+                    LogData("[Main]: Started the remote installer, closing this one.");
 
                     this.Close();
+                    Environment.Exit(0);
                 }
                 catch (Exception) {
+                    // This occurs if the file already exists, which is a non-issue
                     Console.WriteLine("Encountered an error while copying (304)");
                 }
             }
@@ -124,6 +143,7 @@ namespace Project_Tracker_Installer {
             GetOnlineVersion(); // Attempts to retrieve online version or hides subtitle if not available
 
             if (File.Exists(PROGRAM_PATH)) { // Program exists, so we uninstall
+                LogData("[Main]: The program file already exists, so we're uninstalling");
                 uninstall = true;
                 installButton.Content = "Uninstall";
                 subTitle.Content = "Project Tracker is already installed on your device";
@@ -141,6 +161,7 @@ namespace Project_Tracker_Installer {
         /// Launches the program from PROGRAM_PATH.
         /// </summary>
         private void LaunchButtonClick(object sender, RoutedEventArgs e) {
+            LogData("[Main]: Launch button pressed. Aborting installer and launching app.");
             ProcessStartInfo start = new ProcessStartInfo {
                 FileName = PROGRAM_PATH,
                 WindowStyle = ProcessWindowStyle.Normal,
@@ -155,21 +176,26 @@ namespace Project_Tracker_Installer {
         /// Uninstalls and then installs the program.
         /// </summary>
         private void ReinstallButtonClick(object sender, RoutedEventArgs e) {
+            LogData("[Main]: Reinstall button pressed.");
             reinstallButton.Visibility = Visibility.Hidden;
             installButton.Visibility = Visibility.Hidden;
             subTitle.Content = "Installing program...";
 
+            LogData("[Main]: Uninstalling program...");
             Uninstaller uninstaller = new Uninstaller();
-            uninstaller.Uninstall(DATA_DIRECTORY_PATH, INSTALLER_PATH, INSTALL_DIRECTORY, REGISTRY, SHORTCUT_LOCATION);
+            uninstaller.Uninstall(DATA_DIRECTORY_PATH, INSTALLER_PATH, BASE_DIRECTORY, LOG_PATH, REGISTRY, SHORTCUT_LOCATION);
 
+            LogData("[Main]: Uninstalled program! Installing...");
             InstallProgram(PROGRAM_PATH, INSTALL_DIRECTORY, ONLINE_PROGRAM_LINK, ZIP_PATH);
+            LogData("[Main]: Reinstalled program!");
 
-            try {
-                Registry.CurrentUser.DeleteSubKey(REGISTRY);
-            }
-            catch (ArgumentException) { // Registry doesn't exist
-
-			}
+            //try {
+            //    Registry.CurrentUser.DeleteSubKey(REGISTRY);
+            //    LogData("[Main]: Deleted the old registry");
+            //}
+            //catch (ArgumentException) { // Registry doesn't exist
+            //    LogData("[Main]: ERROR: Tried to remove a registry that doesn't exist!");
+            //}
         }
 
          /// <summary>
@@ -177,6 +203,7 @@ namespace Project_Tracker_Installer {
          /// If the program is already installed, it becomes an uninstall button.
          /// </summary>
         private void InstallButtonClick(object sender, RoutedEventArgs e) {
+            LogData("[Main]: Install/uninstall button pressed");
             if (retrying == true) {
                 installButton.Content = "Install";
                 retrying = false;
@@ -190,8 +217,9 @@ namespace Project_Tracker_Installer {
                 subTitle.Visibility = Visibility.Visible;
 
                 mainTitle.Content = "Installing program...";
-
+                LogData("[Main]: Installing program...");
                 InstallProgram(PROGRAM_PATH, INSTALL_DIRECTORY, ONLINE_PROGRAM_LINK, ZIP_PATH);
+                LogData("[Main]: Finished installing!");
             }
             else { // Uninstall == true
                 Dispatcher.Invoke(new Action(() => {
@@ -201,9 +229,11 @@ namespace Project_Tracker_Installer {
                     mainTitle.Content = "Uninstalling";
                     installBar.Visibility = Visibility.Hidden;
 
+                    LogData("[Main]: Uninstalling program...");
                     Uninstaller uninstaller = new Uninstaller();
-                    uninstaller.Uninstall(DATA_DIRECTORY_PATH, INSTALLER_PATH, BASE_DIRECTORY, INSTALL_DIRECTORY, REGISTRY, SHORTCUT_LOCATION);
+                    uninstaller.Uninstall(DATA_DIRECTORY_PATH, INSTALLER_PATH, BASE_DIRECTORY, LOG_PATH, REGISTRY, SHORTCUT_LOCATION);
 
+                    LogData("[Main]: Successfully uninstalled!");
                     FinalResult("Successfully uninstalled!", "You can close this uninstaller whenever.");
                 }));
             }
@@ -227,6 +257,7 @@ namespace Project_Tracker_Installer {
             }
 
             try {
+                LogData("[Main]: Downloading ZIP program file.");
                 WebClient client = new WebClient();
                 client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(CurrentlyDownloading);
                 client.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadComplete);
@@ -235,6 +266,7 @@ namespace Project_Tracker_Installer {
                 subTitle.Content = "Starting download...";
             }
             catch (WebException) {
+                LogData("[Main]: FAILED to download ZIP program file (most likely an internet issue)");
                 Dispatcher.Invoke(new Action(() => {
                     mainTitle.Content = "Unable to connect to the internet";
                     subTitle.Visibility = Visibility.Hidden;
@@ -326,6 +358,13 @@ namespace Project_Tracker_Installer {
                 stringTotalBytes += ".00";
             }
 
+            // Only update log every megabyte
+            if (Double.Parse(stringBytesReceived) - 1 > oldMegabyteSize && suffixA == "mb") {
+                LogData("[Main]: Downloading: " + stringBytesReceived + suffixA + " / " + stringTotalBytes + suffixB);
+                oldMegabyteSize = (int)Double.Parse(stringBytesReceived);
+            }
+            
+
             Dispatcher.Invoke(new Action(() => {
                 mainTitle.Content = "Downloading program...";
                 installBar.Visibility = Visibility.Visible;
@@ -348,23 +387,29 @@ namespace Project_Tracker_Installer {
         /// </summary>
         private void DownloadComplete(object sender, AsyncCompletedEventArgs e) {
             if (finishedDownloading) {
+                LogData("[Main]: Finished downloading!");
                 // We create a cool thread to extract the program and unzip file contents
                 Thread thread = new Thread(() => {
                     Dispatcher.Invoke(new Action(() => {
+                        LogData("[Main]: Beginning installation...");
                         mainTitle.Content = "Installing program...";
                         subTitle.Content = "";
 
                         installBar.Visibility = Visibility.Visible;
                         installBar.IsIndeterminate = true;
 
+                        LogData("[Main]: Unzipping ZIP file");
                         ZipFile.ExtractToDirectory(ZIP_PATH, INSTALL_DIRECTORY);
                         File.Delete(ZIP_PATH);
+                        LogData("[Main]: Unzipped ZIP file. Installing...");
 
                         Installer installer = new Installer();
                         installer.CreateUninstaller(REGISTRY, PROGRAM_TITLE, PROGRAM_VERSION, ICON_PATH, PROGRAM_PATH, INSTALL_DIRECTORY, SHORTCUT_LOCATION);
+                        LogData("[Main]: Successfully installed!");
 
 
                         if (File.Exists(ZIP_PATH)) { // An issue occurred while unzipping
+                            LogData("[Main]: FAILED while unzipping!");
                             FinalResult("Couldn't install at this time", "Please close every " + PROGRAM_TITLE + " Installer before continuing.");
                             mainTitle.Content = "Couldn't install at this time";
                             subTitle.Content = "Please close every " + PROGRAM_TITLE + " Installer before continuing.";
@@ -392,6 +437,7 @@ namespace Project_Tracker_Installer {
         /// </summary>
         /// <param name="main">The main title text.</param>
         public void FinalResult(string main, string subtitle) {
+            LogData("[Main]: Installer has finished.");
             Dispatcher.Invoke(new Action(() => {
                 installBar.Visibility = Visibility.Hidden;
                 subTitle.Content = subtitle;
