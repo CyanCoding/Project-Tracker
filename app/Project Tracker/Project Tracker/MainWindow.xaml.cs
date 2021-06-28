@@ -459,6 +459,8 @@ namespace Project_Tracker {
 					settingsBorder.BeginAnimation(HeightProperty, animation);
 				}));
 
+				folderImage.Visibility = Visibility.Hidden;
+
 				addItemTextBox.Text = "Add something to the project";
 				Keyboard.ClearFocus();
 
