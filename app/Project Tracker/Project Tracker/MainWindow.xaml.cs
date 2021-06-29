@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -832,7 +832,7 @@ namespace Project_Tracker {
                                 notice = "The " + mainTable.Title + " project is missing data that" +
                                     " is necessary to load it. This is likely due to having upgraded" +
                                     " recently to a new version of the Project Tracker. Do you want the" +
-                                    " Project Tracker to atempt to automatically fix the project?";
+                                    " Project Tracker to attempt to automatically fix the project?";
                             }
                             else {
                                 notice = "The " + path + " project file is missing data that is" +
