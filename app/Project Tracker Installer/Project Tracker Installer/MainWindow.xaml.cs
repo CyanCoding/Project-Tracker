@@ -183,7 +183,7 @@ namespace Project_Tracker_Installer {
 
             LogData("[Main]: Uninstalling program...");
             Uninstaller uninstaller = new Uninstaller();
-            uninstaller.Uninstall(DATA_DIRECTORY_PATH, INSTALLER_PATH, BASE_DIRECTORY, LOG_PATH, REGISTRY, SHORTCUT_LOCATION);
+            uninstaller.Uninstall(DATA_DIRECTORY_PATH, INSTALL_DIRECTORY, BASE_DIRECTORY, REGISTRY, SHORTCUT_LOCATION);
 
             LogData("[Main]: Uninstalled program! Installing...");
             InstallProgram(PROGRAM_PATH, INSTALL_DIRECTORY, ONLINE_PROGRAM_LINK, ZIP_PATH);
@@ -231,7 +231,7 @@ namespace Project_Tracker_Installer {
 
                     LogData("[Main]: Uninstalling program...");
                     Uninstaller uninstaller = new Uninstaller();
-                    uninstaller.Uninstall(DATA_DIRECTORY_PATH, INSTALLER_PATH, BASE_DIRECTORY, LOG_PATH, REGISTRY, SHORTCUT_LOCATION);
+                    uninstaller.Uninstall(DATA_DIRECTORY_PATH, INSTALL_DIRECTORY, BASE_DIRECTORY, REGISTRY, SHORTCUT_LOCATION);
 
                     LogData("[Main]: Successfully uninstalled!");
                     FinalResult("Successfully uninstalled!", "You can close this uninstaller whenever.");

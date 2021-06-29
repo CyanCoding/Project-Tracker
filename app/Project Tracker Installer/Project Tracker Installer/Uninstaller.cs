@@ -1,4 +1,4 @@
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using System;
 using System.IO;
 using System.Windows.Forms;
@@ -21,17 +21,17 @@ namespace Project_Tracker_Installer {
         /// <param name="INSTALL_DIRECTORY">The path of the install program directory.</param>
         /// <param name="REGISTRY">The title of the registry entry to remove.</param>
         /// <param name="SHORTCUT_LOCATION">The path of the shortcut to delete.</param>
-		public void Uninstall(string DATA_DIRECTORY_PATH, string INSTALLER_PATH, string BASE_DIRECTORY, string LOG_PATH, string REGISTRY = "", string SHORTCUT_LOCATION = "") {
+		public void Uninstall(string DATA_DIRECTORY, string INSTALLER_DIRECTORY, string BASE_DIRECTORY, string REGISTRY = "", string SHORTCUT_LOCATION = "") {
             try {
                 LogData("[Uninstaller]: Running...");
-                if (Directory.Exists(DATA_DIRECTORY_PATH)) {
+                if (Directory.Exists(DATA_DIRECTORY)) {
                     LogData("[Uninstaller]: Asking user if they want to delete project data");
                     var deleteData = MessageBox.Show("Do you wish to delete your projects data?", "Project Tracker Installer", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                     if (deleteData == DialogResult.Yes) {
-                        LogData("[Uninstaller]: Deleting project data in " + DATA_DIRECTORY_PATH);
+                        LogData("[Uninstaller]: Deleting project data in " + DATA_DIRECTORY);
                         try {
-                            Directory.Delete(DATA_DIRECTORY_PATH, true);
+                            Directory.Delete(DATA_DIRECTORY, true);
                         }
                         catch (Exception e) { // Probably couldn't delete the directory for some reason
                             LogData("[Uninstaller ERROR]: Error while deleting directory data: " + e);
@@ -39,18 +39,30 @@ namespace Project_Tracker_Installer {
                     }
                 }
 
-                DirectoryInfo di = new DirectoryInfo(BASE_DIRECTORY);
+                // Removes the files inside the install folder except for the installer
+                DirectoryInfo installerDir = new DirectoryInfo(INSTALLER_DIRECTORY);
 
-                foreach (FileInfo file in di.GetFiles()) {
-                    string hi = file.FullName; // TODO: This doesn't match either because file.FullName returns a different appdata folder than the on we're using.
-                    if (file.FullName != INSTALLER_PATH && file.FullName != LOG_PATH) {
+                foreach (FileInfo file in installerDir.GetFiles()) {
+                    if (file.Name != "Project Tracker Installer.exe") {
                         file.Delete();
                         LogData("[Uninstaller]: Deleting file " + file);
                     }
                 }
-                foreach (DirectoryInfo dir in di.GetDirectories()) {
-                    if (dir.FullName != DATA_DIRECTORY_PATH) {
-                        dir.Delete(true);
+
+                DirectoryInfo dir = new DirectoryInfo(BASE_DIRECTORY);
+
+                // Removes all the base files
+                foreach (FileInfo file in dir.GetFiles()) {
+                    if (file.Name != "install-log.txt") {
+                        file.Delete();
+                        LogData("[Uninstaller]: Deleting file " + file);
+                    }
+                }
+
+                // Removes every folder except the install folder and data folder (which should've already been removed)
+                foreach (DirectoryInfo i in dir.GetDirectories()) {
+                    if (i.Name != "data" && i.Name != "install") {
+                        i.Delete(true);
                         LogData("[Uninstaller]: Deleting directory " + dir);
                     }
                 }
