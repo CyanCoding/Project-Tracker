@@ -1,6 +1,8 @@
 ﻿using Microsoft.Win32;
+using Project_Tracker;
 using System;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 
 namespace Project_Tracker_Installer {
@@ -11,6 +13,57 @@ namespace Project_Tracker_Installer {
         private void LogData(string data) {
             File.AppendAllText(LOG_PATH, data + "\n");
         }
+
+        //This is used to force shutdown the program
+        // Not really necessary since we have the Server DLL disabled at the moment
+        // It's meant to force stop the DLL, but that functionality hasn't been added
+        // to the DLL or the program at the moment (and isn't currently needed).
+        // Uncomment this code when you need to force shutdown. Note that you can't
+        // use Newtonsoft.JSON because of dependencies haha
+
+        //public void RequestProgramShutdown(string SETTINGS_PATH) {
+        //    LogData("[Uninstaller]: Requesting program shutdown...");
+
+        //    try {
+        //        string json = File.ReadAllText(SETTINGS_PATH);
+        //        SettingsManifest.Rootobject settings =
+        //            JsonConvert.DeserializeObject<SettingsManifest.Rootobject>(json);
+
+        //        if (File.Exists(SETTINGS_PATH)) {
+        //            StringBuilder sb = new StringBuilder();
+        //            StringWriter sw = new StringWriter(sb);
+
+        //            using (JsonWriter js = new JsonTextWriter(sw)) {
+        //                js.Formatting = Formatting.Indented;
+
+        //                js.WriteStartObject();
+
+        //                // LastSelectedIndex
+        //                js.WritePropertyName("LastSelectedIndex");
+        //                js.WriteValue(settings.LastSelectedIndex);
+
+        //                // DisplayingCompleted
+        //                js.WritePropertyName("DisplayingCompleted");
+        //                js.WriteValue(settings.DisplayingCompleted);
+
+        //                // ForceClose
+        //                js.WritePropertyName("ForceClose");
+        //                js.WriteValue(true);
+
+        //                js.WriteEndObject();
+        //            }
+
+        //            File.WriteAllText(SETTINGS_PATH, sw.ToString());
+        //            sb.Clear();
+        //            sw.Close();
+
+        //            LogData("[Uninstaller]: Sent request to force shutdown application!");
+        //        }
+        //    }
+        //    catch (Exception e) {
+        //        LogData("[Uninstaller ERROR]: Encountered an issue while force stopping the application: " + e);
+        //    }
+        //}
 
         /// <summary>
         /// Main uninstall function.

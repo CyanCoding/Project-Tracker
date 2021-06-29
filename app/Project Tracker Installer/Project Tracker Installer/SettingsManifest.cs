@@ -1,8 +1,8 @@
 ﻿namespace Project_Tracker {
-    class SettingsManifest {
+	class SettingsManifest {
 
-        /*
-         * Note: there is a duplicate of this file in the installer. Make sure you change that one too.
+		/*
+         * Note: there is a duplicate of this file in the program. Make sure you change that one too.
          * 
 		 * Here's a list of what each setting means:
 		 * 
@@ -17,11 +17,11 @@
 		 * 3. ForceClose: This should be false unless the program needs to exit immediately,
 		 * like in the event of uninstallation.
 		 */
-        public class Rootobject {
-            public int LastSelectedIndex { get; set; }
-            public bool DisplayingCompleted { get; set; }
+		public class Rootobject {
+			public int LastSelectedIndex { get; set; }
+			public bool DisplayingCompleted { get; set; }
 			public bool ForceClose { get; set; }
 		}
 
-    }
+	}
 }

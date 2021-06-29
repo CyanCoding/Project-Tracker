@@ -31,7 +31,8 @@ namespace Project_Tracker_Installer {
         
         readonly string VERSION_PATH = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/version.txt";
         readonly string VERSION_DOWNLOAD_LINK = "https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/version-info/version.txt";
-        readonly string VERSION_FILE = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Project Tracker\update.txt";
+
+        readonly string SETTINGS_PATH = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Project Tracker\settings.json";
 
         readonly string DATA_DIRECTORY_PATH = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Project Tracker\data";
 
@@ -183,6 +184,7 @@ namespace Project_Tracker_Installer {
 
             LogData("[Main]: Uninstalling program...");
             Uninstaller uninstaller = new Uninstaller();
+            //uninstaller.RequestProgramShutdown(SETTINGS_PATH);
             uninstaller.Uninstall(DATA_DIRECTORY_PATH, INSTALL_DIRECTORY, BASE_DIRECTORY, REGISTRY, SHORTCUT_LOCATION);
 
             LogData("[Main]: Uninstalled program! Installing...");
@@ -229,8 +231,11 @@ namespace Project_Tracker_Installer {
                     mainTitle.Content = "Uninstalling";
                     installBar.Visibility = Visibility.Hidden;
 
+
+
                     LogData("[Main]: Uninstalling program...");
                     Uninstaller uninstaller = new Uninstaller();
+                    //uninstaller.RequestProgramShutdown(SETTINGS_PATH);
                     uninstaller.Uninstall(DATA_DIRECTORY_PATH, INSTALL_DIRECTORY, BASE_DIRECTORY, REGISTRY, SHORTCUT_LOCATION);
 
                     LogData("[Main]: Successfully uninstalled!");
