@@ -73,6 +73,7 @@ namespace Project_Tracker_Installer {
                 }
             }
             catch (Exception e) {
+                // TODO: We're having issues uninstalling because the other program is still running
                 LogData("[Uninstaller ERROR]: " + e);
             }
         }
