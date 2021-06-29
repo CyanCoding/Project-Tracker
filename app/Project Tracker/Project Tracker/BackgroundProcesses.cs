@@ -1,21 +1,18 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Project_Tracker {
-    class BackgroundProcesses {
+
+    internal class BackgroundProcesses {
+
         // WARNING: READONLY VALUES. IF YOU CHANGE THESE CHANGE IN OTHER FILES AS WELL
         private readonly static string DLL_APPDATA_LOCATION = Environment.GetFolderPath
             (Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/dll";
+
         private readonly static string TEMP_SERVER_VERSION_LOCATION = Environment.GetFolderPath
             (Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/dll/temp-server-version.dll";
 
@@ -25,14 +22,19 @@ namespace Project_Tracker {
 
         // Server Communcation DLL
         private readonly static string USUAL_SERVER_DLL_LOCATION = @"C:\Program Files\Project Tracker\Server Communcation DLL.dll";
+
         private readonly static string SERVER_DLL_LOCATION = Environment.GetFolderPath
             (Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/dll/Server Communication DLL.dll";
+
         private readonly static string SECONDARY_SERVER_DLL_LOCATION = Environment.GetFolderPath
             (Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/dll/Secondary Server Communication DLL.dll";
+
         private readonly static string SERVER_DLL_VERSION_LOCATION = Environment.GetFolderPath
             (Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/dll/server-communication-dll-version.txt";
+
         private readonly static string SERVER_DLL_VERSION_URL =
             "https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/version-info/server-communication-dll-version.txt";
+
         private readonly static string SERVER_DLL_URL =
             "https://github.com/CyanCoding/Project-Tracker/raw/master/install-resources/Project%20Tracker/Server%20Communication%20DLL.dll";
 
@@ -85,7 +87,6 @@ namespace Project_Tracker {
                         client.DownloadFile(new Uri(dllUrl), dllFile);
                     }
                     catch (WebException) {
-
                     }
                 }
             }
@@ -111,7 +112,6 @@ namespace Project_Tracker {
                         client.DownloadFile(new Uri(SERVER_DLL_URL), SERVER_DLL_LOCATION);
                     }
                     catch (WebException) {
-
                     }
                 }
             }

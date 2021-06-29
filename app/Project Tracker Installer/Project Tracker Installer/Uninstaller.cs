@@ -1,13 +1,13 @@
 ﻿using Microsoft.Win32;
-using Project_Tracker;
 using System;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Project_Tracker_Installer {
-	class Uninstaller {
-        readonly string LOG_PATH = Environment.GetFolderPath
+
+    internal class Uninstaller {
+
+        private readonly string LOG_PATH = Environment.GetFolderPath
             (Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/install-log.txt";
 
         private void LogData(string data) {
@@ -145,5 +145,5 @@ namespace Project_Tracker_Installer {
                 LogData("[Uninstaller(Registry) ERROR]: " + e);
             }
         }
-	}
+    }
 }

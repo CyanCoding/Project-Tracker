@@ -1,15 +1,13 @@
-﻿using Microsoft.Win32;
+﻿using IWshRuntimeLibrary;
+using Microsoft.Win32;
 using System;
-using System.IO.Compression;
-using System.Diagnostics;
-using System.IO;
-using System.Net;
 using System.Reflection;
-using IWshRuntimeLibrary;
 
 namespace Project_Tracker_Installer {
-	class Installer {
-        readonly string LOG_PATH = Environment.GetFolderPath
+
+    internal class Installer {
+
+        private readonly string LOG_PATH = Environment.GetFolderPath
             (Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/install-log.txt";
 
         private void LogData(string data) {
@@ -43,7 +41,7 @@ namespace Project_Tracker_Installer {
                 Assembly asm = GetType().Assembly;
                 string exe = "\"" + asm.CodeBase.Substring(8).Replace("/", "\\\\") + "\"";
 
-                //storing the values  
+                //storing the values
                 key.SetValue("DisplayName", PROGRAM_TITLE);
                 key.SetValue("DisplayVersion", "" + PROGRAM_VERSION);
                 key.SetValue("Version", "" + PROGRAM_VERSION);
@@ -72,5 +70,5 @@ namespace Project_Tracker_Installer {
                 LogData("[Installer ERROR]: " + e);
             }
         }
-	}
+    }
 }

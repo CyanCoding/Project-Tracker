@@ -1,53 +1,49 @@
-using Microsoft.Win32;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
-using System.Reflection;
-using System.Security.Principal;
 using System.Threading;
 using System.Windows;
-using System.Windows.Shell;
-
 
 namespace Project_Tracker_Installer {
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
+        private bool finishedDownloading = false;
+        private bool uninstall = false; // This is true if the program is already installed on the device
+        private bool retrying = false; // Used to determine whether the install button is actually being used as a retry button
 
-        bool finishedDownloading = false;
-        bool uninstall = false; // This is true if the program is already installed on the device
-        bool retrying = false; // Used to determine whether the install button is actually being used as a retry button
+        private int oldMegabyteSize = 0; // Used for logging purpose on the download. We only want to log when the MB changes, since bytes change like a million times.
 
-        int oldMegabyteSize = 0; // Used for logging purpose on the download. We only want to log when the MB changes, since bytes change like a million times.
-       
-        readonly string PROGRAM_TITLE = "Project Tracker";
-        string PROGRAM_VERSION = "2.4";
-        readonly string PROGRAM_PATH = Environment.GetFolderPath
-			(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/install/Project Tracker.exe";
-        
-        readonly string VERSION_PATH = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/version.txt";
-        readonly string VERSION_DOWNLOAD_LINK = "https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/version-info/version.txt";
+        private readonly string PROGRAM_TITLE = "Project Tracker";
+        private string PROGRAM_VERSION = "2.4";
 
-        readonly string SETTINGS_PATH = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Project Tracker\settings.json";
+        private readonly string PROGRAM_PATH = Environment.GetFolderPath
+            (Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/install/Project Tracker.exe";
 
-        readonly string DATA_DIRECTORY_PATH = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Project Tracker\data";
+        private readonly string VERSION_PATH = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/version.txt";
+        private readonly string VERSION_DOWNLOAD_LINK = "https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/version-info/version.txt";
 
-        readonly string BASE_DIRECTORY = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Project Tracker";
+        private readonly string SETTINGS_PATH = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Project Tracker\settings.json";
 
-        readonly string INSTALLER_PATH = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/install/Project Tracker Installer.exe";
-        readonly string INSTALL_DIRECTORY = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/install";
+        private readonly string DATA_DIRECTORY_PATH = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Project Tracker\data";
 
-        readonly string REGISTRY = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Project Tracker";
-        readonly string ONLINE_PROGRAM_LINK = "https://github.com/CyanCoding/Project-Tracker/raw/master/install-resources/Project%20Tracker.zip";
-        readonly string ZIP_PATH = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/install/Project Tracker.zip";
-        readonly string ICON_PATH = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/install/logo.ico";
-        readonly string SHORTCUT_LOCATION = @"C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Project Tracker.lnk";
+        private readonly string BASE_DIRECTORY = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Project Tracker";
 
-        readonly string LOG_PATH = Environment.GetFolderPath
+        private readonly string INSTALLER_PATH = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/install/Project Tracker Installer.exe";
+        private readonly string INSTALL_DIRECTORY = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/install";
+
+        private readonly string REGISTRY = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Project Tracker";
+        private readonly string ONLINE_PROGRAM_LINK = "https://github.com/CyanCoding/Project-Tracker/raw/master/install-resources/Project%20Tracker.zip";
+        private readonly string ZIP_PATH = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/install/Project Tracker.zip";
+        private readonly string ICON_PATH = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/install/logo.ico";
+        private readonly string SHORTCUT_LOCATION = @"C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Project Tracker.lnk";
+
+        private readonly string LOG_PATH = Environment.GetFolderPath
             (Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/install-log.txt";
 
         public MainWindow() {
@@ -98,7 +94,7 @@ namespace Project_Tracker_Installer {
         /// <summary>
         /// Startup method, runs when code execution begins.
         /// </summary>
-        void startup() {
+        private void startup() {
             Directory.CreateDirectory(INSTALL_DIRECTORY);
             LogData("[Main]: Started the installer");
             subTitle.Content = "Version: " + PROGRAM_VERSION;
@@ -200,10 +196,10 @@ namespace Project_Tracker_Installer {
             //}
         }
 
-         /// <summary>
-         /// Runs when the user clicks on the install button.
-         /// If the program is already installed, it becomes an uninstall button.
-         /// </summary>
+        /// <summary>
+        /// Runs when the user clicks on the install button.
+        /// If the program is already installed, it becomes an uninstall button.
+        /// </summary>
         private void InstallButtonClick(object sender, RoutedEventArgs e) {
             LogData("[Main]: Install/uninstall button pressed");
             if (retrying == true) {
@@ -231,8 +227,6 @@ namespace Project_Tracker_Installer {
                     mainTitle.Content = "Uninstalling";
                     installBar.Visibility = Visibility.Hidden;
 
-
-
                     LogData("[Main]: Uninstalling program...");
                     Uninstaller uninstaller = new Uninstaller();
                     //uninstaller.RequestProgramShutdown(SETTINGS_PATH);
@@ -242,7 +236,6 @@ namespace Project_Tracker_Installer {
                     FinalResult("Successfully uninstalled!", "You can close this uninstaller whenever.");
                 }));
             }
-
         }
 
         /// <summary>
@@ -349,7 +342,6 @@ namespace Project_Tracker_Installer {
                 stringBytesReceived += ".00";
             }
 
-
             string[] splitTotalBytes = stringTotalBytes.Split('.');
             try {
                 if (splitTotalBytes[1].Length == 0) {
@@ -368,7 +360,6 @@ namespace Project_Tracker_Installer {
                 LogData("[Main]: Downloading: " + stringBytesReceived + suffixA + " / " + stringTotalBytes + suffixB);
                 oldMegabyteSize = (int)Double.Parse(stringBytesReceived);
             }
-            
 
             Dispatcher.Invoke(new Action(() => {
                 mainTitle.Content = "Downloading program...";
@@ -383,9 +374,8 @@ namespace Project_Tracker_Installer {
 
             if (e.BytesReceived == e.TotalBytesToReceive) {
                 finishedDownloading = true;
-			}
+            }
         }
-
 
         /// <summary>
         /// Runs after the download has finished.
@@ -411,7 +401,6 @@ namespace Project_Tracker_Installer {
                         Installer installer = new Installer();
                         installer.CreateUninstaller(REGISTRY, PROGRAM_TITLE, PROGRAM_VERSION, ICON_PATH, PROGRAM_PATH, INSTALL_DIRECTORY, SHORTCUT_LOCATION);
                         LogData("[Main]: Successfully installed!");
-
 
                         if (File.Exists(ZIP_PATH)) { // An issue occurred while unzipping
                             LogData("[Main]: FAILED while unzipping!");
@@ -457,12 +446,10 @@ namespace Project_Tracker_Installer {
                     installButton.Visibility = Visibility.Visible;
                     installButton.Margin = new Thickness(0, 0, 0, 30);
                     installButton.Content = "Retry";
-
                 }
                 else if (main == "Project Tracker has been installed!") {
                     launchButton.Visibility = Visibility.Visible;
                 }
-
             }));
         }
     }

@@ -18,18 +18,17 @@ namespace Project_Tracker {
 
     public partial class MainWindow : UWPHost.Window {
 
-
         // WARNING: READONLY VALUES. IF YOU CHANGE THESE, CHANGE IN OTHER FILES AS WELL
         private readonly string APPDATA_DIRECTORY =
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
             + "/Project Tracker";
+
         // IF YOU CHANGE THIS, ALSO CHANGE IT IN UpdateWindow.xaml.cs
         private readonly string CURRENT_VERSION = "2.4";
 
         private readonly string DATA_DIRECTORY =
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
             + "/Project Tracker/data";
-
 
         private readonly bool IS_BETA = false;
         private readonly Color itemColor = Color.FromRgb(60, 60, 60);
@@ -61,26 +60,36 @@ namespace Project_Tracker {
         private bool isOverallSettingsOpen = false;
         private bool isSettingsOpen = false;
         private bool isSettingsWindowDisplaying = false;
+
         // Keeps the user from double clicking the animation
         private bool isSwitchingAnimationRunning = false;
+
         private bool isTypeSelecting = false;
+
         // We need this to figure out the index of the item
         private int itemIndex = 0;
+
         // The amount of items added to the scrollviewer
         private int itemsAdded = 0;
+
         public List<string> filesRead = new List<string>();
         private int selectedIndex = 0;
+
         // When we click on the rename project button it activates the "you click the window so stop renaming" so we use an index to make sure that doesn't happen
         private int renameProjectClicks = 0;
+
         private bool updateResponse = false;
 
-        Thread backgroundThread;
+        private Thread backgroundThread;
 
         // Each project's data - Used for saving
         private string percent;
+
         private List<string> taskData = new List<string>();
+
         // The type of item we're adding (0 = error, 1 = feature, 2 = comment)
         private List<string> taskIdentifier = new List<string>();
+
         private List<string> tasks = new List<string>();
         private List<string> linesOfCodeFiles = new List<string>();
         private string folderLocation;
@@ -91,8 +100,8 @@ namespace Project_Tracker {
         private string duration;
         private string icon;
 
-
 #pragma warning disable CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
+
         public MainWindow() {
             InitializeComponent();
             Startup();
@@ -395,8 +404,6 @@ namespace Project_Tracker {
                 tasksCompleted++;
             }
 
-
-
             CalculatePercentage();
         }
 
@@ -419,7 +426,6 @@ namespace Project_Tracker {
             string[] projectLinesOfCodeFiles, string projectFolderLocation,
             string projectDuration, string projectDateCreated, long projectTasksMade,
             long projectTasksCompleted, string projectIcon, string projectPercent) {
-
             if (projectTitle == null || projectTasks == null || projectTaskData == null ||
                 projectIdentifier == null || projectLinesOfCodeFiles == null ||
                 projectFolderLocation == null || projectDuration == null ||
@@ -601,12 +607,10 @@ namespace Project_Tracker {
             else if (e.Key == Key.Return && addProjectTextBox.Text != "" &&
                 addProjectTextBox.Text != "Create a new project" &&
                 addProjectTextBox.IsFocused) {
-
                 Thread thread = new Thread(() => {
                     BackgroundProcesses.ReportProject();
                 });
                 thread.Start();
-
 
                 StringBuilder sb = new StringBuilder();
                 StringWriter sw = new StringWriter(sb);
@@ -1224,7 +1228,6 @@ namespace Project_Tracker {
                 displayingTitle.Content = title + " Statistics";
             }
 
-
             displayingImage.Source = (ImageSource)TryFindResource("graphDrawingImage");
 
             addItemBorder.Visibility = Visibility.Hidden;
@@ -1239,7 +1242,6 @@ namespace Project_Tracker {
             tasksCompletedLabel.Content = "Tasks completed: " + tasksCompleted;
             statisticsDurationLabel.Content = "Duration: coming soon...";
             linesOfCodeLabel.Content = "Lines of code: " + String.Format("{0:#,###0}", Statistics.CountLines(linesOfCodeFiles.ToArray()));
-
 
             if (folderLocation != "" && Directory.Exists(folderLocation)) {
                 folderLocationResetButton.Content = "Reset folder location";
@@ -1428,7 +1430,6 @@ namespace Project_Tracker {
             }));
         }
 
-
         /// <summary>
         /// Sets the variables for the project to allow easy saving.
         /// </summary>
@@ -1567,7 +1568,6 @@ namespace Project_Tracker {
                 else {
                     displayingTitle.Content = projectInfo.Title;
                 }
-
 
                 if (projectInfo.Icon == "rustIcon") {
                     // Our default rust icon is white so we need to use the
