@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,7 +16,7 @@ using System.Windows.Media.Animation;
 
 namespace Project_Tracker {
 
-    public partial class MainWindow : UWPHost.Window {
+    public partial class MainWindow : Window {
 
         // WARNING: READONLY VALUES. IF YOU CHANGE THESE, CHANGE IN OTHER FILES AS WELL
         private readonly string APPDATA_DIRECTORY =

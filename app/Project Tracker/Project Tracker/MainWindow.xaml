@@ -1,17 +1,15 @@
-﻿<uwp:Window x:Class="Project_Tracker.MainWindow"
+<Window x:Class="Project_Tracker.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:uwp="clr-namespace:UWPHost;assembly=UWPHost"
 		xmlns:local="clr-namespace:Project_Tracker"
         mc:Ignorable="d"
-		ShowTitlebar="True"
-		Theme="Dark"
         Title="Project Tracker" Height="800" Width="1200" Icon="icon.ico" PreviewKeyDown="KeyPress" Closing="Window_Closing" SizeChanged="Window_SizeChanged" MouseDown="Window_MouseDown" WindowState="Normal" MinHeight="700" MinWidth="1175">
 	<!-- If you ever change the logo, it must be 16x, 32x, 48x, 64x, 128x, and 256x. Pack it all into an ico file look up how to do it if you forgot -->
 
-	<uwp:Window.Resources>
+    
+	<Window.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
 				<ResourceDictionary Source="style.xaml" />
@@ -64,7 +62,7 @@
 				<Setter Property="Border.Cursor" Value="Hand" />
 			</Style>
 		</ResourceDictionary>
-	</uwp:Window.Resources>
+	</Window.Resources>
 
 	<Grid Background="White">
 		<Rectangle x:Name="blackRectangle" Fill="#FF212121" HorizontalAlignment="Left" Height="776" VerticalAlignment="Top" Width="350" Margin="-5,-5,-5,-5" />
@@ -572,10 +570,10 @@
 			</Grid>
 		</Border>
 		<!-- Update notifier-->
-		<Grid x:Name="updateGrid" HorizontalAlignment="Left" Height="0" VerticalAlignment="Bottom" Margin="-5,0,0,-5" Width="350" Background="#FFE67C11" Visibility="Hidden">
-			<TextBlock Text="An update to the Project Tracker is available!" TextWrapping="Wrap" HorizontalAlignment="Left" Foreground="White" FontSize="18" Margin="10,10,0,58" VerticalAlignment="Center" Width="234" Height="63" />
-			<Button x:Name="updateButton" Content="Update" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="97" Height="33" FontSize="16" PreviewMouseDown="UpdateButtonPressed" />
-			<Button x:Name="ignoreButton" Content="Ignore" HorizontalAlignment="Right" Margin="0,0,122,10" VerticalAlignment="Bottom" Width="97" Height="33" FontSize="16" PreviewMouseDown="IgnoreUpdate" />
-		</Grid>
-	</Grid>
-</uwp:Window>
+        <Grid x:Name="updateGrid" HorizontalAlignment="Left" Height="0" VerticalAlignment="Bottom" Margin="-5,0,0,-5" Width="350" Background="#FFE67C11" Visibility="Hidden">
+            <TextBlock Text="An update to the Project Tracker is available!" TextWrapping="Wrap" HorizontalAlignment="Left" Foreground="White" FontSize="18" Margin="10,10,0,58" VerticalAlignment="Center" Width="234" Height="63" />
+            <Button x:Name="updateButton" Content="Update" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="97" Height="33" FontSize="16" PreviewMouseDown="UpdateButtonPressed" />
+            <Button x:Name="ignoreButton" Content="Ignore" HorizontalAlignment="Right" Margin="0,0,122,10" VerticalAlignment="Bottom" Width="97" Height="33" FontSize="16" PreviewMouseDown="IgnoreUpdate" />
+        </Grid>
+    </Grid>
+</Window>
