@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Project_Tracker"
         mc:Ignorable="d"
+        Icon="../Resources/icon.ico"
         Title="An update to the Project Tracker is available!" Height="480" Width="600" ResizeMode="NoResize">
 	<Grid>
 		<TextBlock x:Name="versionTitle" HorizontalAlignment="Center" Margin="0,30,0,0" TextWrapping="Wrap" Text="Version --- → ---" VerticalAlignment="Top" FontSize="22" />
