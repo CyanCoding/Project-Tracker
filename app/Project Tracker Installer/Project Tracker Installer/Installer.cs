@@ -9,10 +9,11 @@ using IWshRuntimeLibrary;
 
 namespace Project_Tracker_Installer {
 	class Installer {
+        readonly string LOG_PATH = Environment.GetFolderPath
+            (Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/install-log.txt";
 
         private void LogData(string data) {
-            string path = "install-log.txt";
-            System.IO.File.AppendAllText(path, data + "\n");
+            System.IO.File.AppendAllText(LOG_PATH, data + "\n");
         }
 
         /// <summary>

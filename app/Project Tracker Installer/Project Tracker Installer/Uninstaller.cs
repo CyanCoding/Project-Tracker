@@ -1,14 +1,15 @@
-﻿using Microsoft.Win32;
+using Microsoft.Win32;
 using System;
 using System.IO;
 using System.Windows.Forms;
 
 namespace Project_Tracker_Installer {
 	class Uninstaller {
+        readonly string LOG_PATH = Environment.GetFolderPath
+            (Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/install-log.txt";
 
         private void LogData(string data) {
-            string path = "install-log.txt";
-            File.AppendAllText(path, data + "\n");
+            File.AppendAllText(LOG_PATH, data + "\n");
         }
 
         /// <summary>
