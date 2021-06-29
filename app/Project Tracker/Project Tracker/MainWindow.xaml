@@ -5,14 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:Project_Tracker"
         mc:Ignorable="d"
-        Title="Project Tracker" Height="800" Width="1200" Icon="icon.ico" PreviewKeyDown="KeyPress" Closing="Window_Closing" SizeChanged="Window_SizeChanged" MouseDown="Window_MouseDown" WindowState="Normal" MinHeight="700" MinWidth="1175">
+        Title="Project Tracker" Height="800" Width="1200" Icon="Resources/icon.ico" PreviewKeyDown="KeyPress" Closing="Window_Closing" SizeChanged="Window_SizeChanged" MouseDown="Window_MouseDown" WindowState="Normal" MinHeight="700" MinWidth="1175">
 	<!-- If you ever change the logo, it must be 16x, 32x, 48x, 64x, 128x, and 256x. Pack it all into an ico file look up how to do it if you forgot -->
 
     
 	<Window.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="style.xaml" />
+                <ResourceDictionary Source="../Resources/style.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
 			<Style TargetType="{x:Type TextBox}">
