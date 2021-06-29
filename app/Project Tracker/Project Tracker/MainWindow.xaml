@@ -12,9 +12,8 @@
 	<Window.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="style.xaml" />
-				<ResourceDictionary Source="pack://application:,,,/UWPHost;component/Themes/Generic.xaml" />
-			</ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="style.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
 			<Style TargetType="{x:Type TextBox}">
 				<Setter Property="SnapsToDevicePixels" Value="True" />
