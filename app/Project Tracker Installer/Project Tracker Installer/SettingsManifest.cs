@@ -2,7 +2,7 @@
 
     internal class SettingsManifest {
         /*
-         * Note: there is a duplicate of this file in the installer. Make sure you change that one too.
+         * Note: there is a duplicate of this file in the program. Make sure you change that one too.
          *
 		 * Here's a list of what each setting means:
 		 *

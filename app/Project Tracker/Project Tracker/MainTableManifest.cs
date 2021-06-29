@@ -1,7 +1,7 @@
 ﻿namespace Project_Tracker {
 
-	internal class MainTableManifest {
-		/*
+    internal class MainTableManifest {
+        /*
 		 * Hey this is the manifest class file for reading each variable
 		 * From the individual json files for each project the user creates.
 		 *
@@ -21,29 +21,29 @@
 
 
 
-		public class Rootobject {
-			// Leave these first ones, they're for when the user is using an old version and needs to migrate
-			public string[] Errors { get; set; }
-			public string[] ErrorsData { get; set; }
-			public string[] Features { get; set; }
-			public string[] FeaturesData { get; set; }
-			public string[] Comments { get; set; }
-			public string[] CommentsData { get; set; }
+        public class Rootobject {
+            // Leave these first ones, they're for when the user is using an old version and needs to migrate
+            public string[] Errors { get; set; }
+            public string[] ErrorsData { get; set; }
+            public string[] Features { get; set; }
+            public string[] FeaturesData { get; set; }
+            public string[] Comments { get; set; }
+            public string[] CommentsData { get; set; }
 
-			// The new data
-			public string Title { get; set; }
-			public string[] Tasks { get; set; }
-			public string[] TaskData { get; set; }
-			public string[] TaskIdentifier { get; set; }
-			public string[] LinesOfCodeFiles { get; set; }
-			public string FolderLocation { get; set; }
-			public string Duration { get; set; }
-			public string DateCreated { get; set; }
-			public long TasksMade { get; set; }
-			public long TasksCompleted { get; set; }
-			public string Icon { get; set; }
-			public string Percent { get; set; }
-		}
+            // The new data
+            public string Title { get; set; }
+            public string[] Tasks { get; set; }
+            public string[] TaskData { get; set; }
+            public string[] TaskIdentifier { get; set; }
+            public string[] LinesOfCodeFiles { get; set; }
+            public string FolderLocation { get; set; }
+            public string Duration { get; set; }
+            public string DateCreated { get; set; }
+            public long TasksMade { get; set; }
+            public long TasksCompleted { get; set; }
+            public string Icon { get; set; }
+            public string Percent { get; set; }
+        }
 
-	}
+    }
 }
