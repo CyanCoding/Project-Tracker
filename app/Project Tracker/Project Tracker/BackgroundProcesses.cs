@@ -144,14 +144,19 @@ namespace Project_Tracker {
             while (true) {
                 // This "force close" thing doesn't actually work at the moment
                 // it's set to false when running and set to true when uninstalling
-                for (int i = 0; i < 600; i++) {
-                    Thread.Sleep(10);
-                    string json = File.ReadAllText(SETTINGS_FILE);
-                    SettingsManifest.Rootobject settings =
-                        JsonConvert.DeserializeObject<SettingsManifest.Rootobject>(json);
+                for (int i = 0; i < 60; i++) {
+                    Thread.Sleep(100);
+                    try {
+                        string json = File.ReadAllText(SETTINGS_FILE);
+                        SettingsManifest.Rootobject settings =
+                            JsonConvert.DeserializeObject<SettingsManifest.Rootobject>(json);
 
-                    if (settings.ForceClose == true) {
-                        return; // Force shutdown was requested (most likely by uninstaller)
+                        if (settings.ForceClose == true) {
+                            return; // Force shutdown was requested (most likely by uninstaller)
+                        }
+                    }
+                    catch (IOException) {
+                        // The file is probably being written to, so just skip this read
                     }
                 }
 
