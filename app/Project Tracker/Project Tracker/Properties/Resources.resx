@@ -117,4 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ENCRYPTION_GUID" xml:space="preserve">
+    <value>FCABA3D4-E5A6-4F14-A41B-4DEEF5AA60B2</value>
+    <comment>The passcode used for encryption and decryption</comment>
+  </data>
 </root>

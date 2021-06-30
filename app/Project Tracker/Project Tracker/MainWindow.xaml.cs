@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Project_Tracker.Source;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -116,111 +117,12 @@ namespace Project_Tracker {
             });
             thread.Start();
 
-            StringBuilder sb = new StringBuilder();
-            StringWriter sw = new StringWriter(sb);
-
-            using (JsonWriter js = new JsonTextWriter(sw)) {
-                js.Formatting = Formatting.Indented;
-
-                js.WriteStartObject();
-
-                // Title
-                js.WritePropertyName("Title");
-                // Allows us to set the title from when a project is created by menu item press
-                if (title != "") {
-                    js.WriteValue(title);
-                }
-                else {
-                    js.WriteValue(addProjectTextBox.Text);
-                }
-
-                // The name of each task
-                js.WritePropertyName("Tasks");
-                js.WriteStartArray();
-                js.WriteEnd();
-
-                // The data for each task (0 = incomplete, 1 = complete)
-                js.WritePropertyName("TaskData");
-                js.WriteStartArray();
-                js.WriteEnd();
-
-                // The identifer for each task (0 = error, 1 = feature, 2 = comment)
-                js.WritePropertyName("TaskIdentifier");
-                js.WriteStartArray();
-                js.WriteEnd();
-
-                // The lines of code files
-                js.WritePropertyName("LinesOfCodeFiles");
-                js.WriteStartArray();
-                js.WriteEnd();
-
-                // The folder location for the project
-                js.WritePropertyName("FolderLocation");
-                js.WriteValue("");
-
-                // Duration
-                js.WritePropertyName("Duration");
-                js.WriteValue("00:00:00");
-
-                // Date Created
-                js.WritePropertyName("DateCreated");
-                js.WriteValue(Statistics.CreationDate());
-
-                // Tasks made
-                js.WritePropertyName("TasksMade");
-                js.WriteValue(0);
-
-                // Tasks completed
-                js.WritePropertyName("TasksCompleted");
-                js.WriteValue(0);
-
-                // Icon
-                js.WritePropertyName("Icon");
-                js.WriteValue("noIcon");
-
-                // Percent
-                js.WritePropertyName("Percent");
-                js.WriteValue("00");
-
-                js.WriteEndObject();
+            string projectTitle = title;
+            if (projectTitle == "") {
+                projectTitle = addProjectTextBox.Text;
             }
 
-            try {
-                if (!File.Exists(DATA_DIRECTORY + "/" + addProjectTextBox.Text + ".json")) {
-                    File.WriteAllText(DATA_DIRECTORY + "/" + addProjectTextBox.Text + ".json",
-                        sw.ToString());
-                }
-                else {
-                    int index = 0;
-                    while (true) {
-                        if (!File.Exists(DATA_DIRECTORY + "/" + addProjectTextBox.Text + " (" + index + ").json")) {
-                            File.WriteAllText(DATA_DIRECTORY + "/" + addProjectTextBox.Text + " (" + index + ").json",
-                                sw.ToString());
-                            break;
-                        }
-                        else {
-                            index++;
-                            continue;
-                        }
-                    }
-                }
-            }
-            catch (ArgumentException) { // Path is an invalid name
-                int index = 0;
-                while (true) {
-                    if (!File.Exists("project " + index + ".json")) {
-                        File.WriteAllText("project " + index + ".json", sw.ToString());
-                        break;
-                    }
-                    else {
-                        index++;
-                        continue;
-                    }
-                }
-            }
-
-            sb.Clear();
-            sw.Close();
+            IO.CreateNewProject(projectTitle, DATA_DIRECTORY);
 
             addProjectTextBox.Text = "Create a new project";
             Keyboard.ClearFocus();
@@ -815,7 +717,7 @@ namespace Project_Tracker {
                 foreach (string path in files) {
                     if (!filesRead.Contains(path)) {
                         // Convert each json file to a table row
-                        string json = File.ReadAllText(path);
+                        string json = IO.ReadEncryptedFile(path);
                         MainTableManifest.Rootobject mainTable =
                             JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
 
@@ -1564,7 +1466,7 @@ namespace Project_Tracker {
                 settingsImage.Visibility = Visibility.Visible;
                 folderImage.Visibility = Visibility.Visible;
 
-                string json = File.ReadAllText(filesRead[selectedIndex - 1]);
+                string json = IO.ReadEncryptedFile(filesRead[selectedIndex - 1]);
                 MainTableManifest.Rootobject projectInfo =
                     JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
 
@@ -1806,7 +1708,7 @@ namespace Project_Tracker {
                 sw.Close();
             }
 
-            string json = File.ReadAllText(SETTINGS_FILE);
+            string json = IO.ReadEncryptedFile(SETTINGS_FILE);
             SettingsManifest.Rootobject settings =
                 JsonConvert.DeserializeObject<SettingsManifest.Rootobject>(json);
 
