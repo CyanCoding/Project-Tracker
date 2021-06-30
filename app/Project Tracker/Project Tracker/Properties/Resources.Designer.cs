@@ -59,14 +59,5 @@ namespace Project_Tracker.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to FCABA3D4-E5A6-4F14-A41B-4DEEF5AA60B2.
-        /// </summary>
-        internal static string ENCRYPTION_GUID {
-            get {
-                return ResourceManager.GetString("ENCRYPTION_GUID", resourceCulture);
-            }
-        }
     }
 }
