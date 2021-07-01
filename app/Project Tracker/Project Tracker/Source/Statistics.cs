@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using Project_Tracker.Resources;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,9 +9,6 @@ using System.Threading.Tasks;
 
 namespace Project_Tracker {
     class Statistics {
-        // WARNING: READONLY VARIABLES. IF YOU CHANGE THESE, CHANGE IN ALL OTHER FILES.
-        private static readonly string INITIAL_FILE_DIALOG_DIRECTORY = Environment.SpecialFolder.MyDocuments.ToString();
-
         /// <summary>
         /// Counts the lines for each provided file.
         /// </summary>
@@ -42,7 +40,7 @@ namespace Project_Tracker {
         /// <returns>Returns the array of selected files.</returns>
         public static string[] GetFiles() {
             OpenFileDialog fileDialog = new OpenFileDialog();
-            fileDialog.InitialDirectory = INITIAL_FILE_DIALOG_DIRECTORY;
+            fileDialog.InitialDirectory = Globals.INITIAL_FILE_DIALOG_DIRECTORY;
             fileDialog.Title = "Select Code Files to Count";
             fileDialog.Multiselect = true;
 

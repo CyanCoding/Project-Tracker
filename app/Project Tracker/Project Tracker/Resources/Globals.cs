@@ -47,11 +47,9 @@ namespace Project_Tracker.Resources {
         #endregion
 
         #region Directories/paths
-
-        #endregion
         public static readonly string APPDATA_DIRECTORY =
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
-            + "/Project Tracker";        
+            + "/Project Tracker";
 
         public static readonly string DATA_DIRECTORY =
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
@@ -60,5 +58,9 @@ namespace Project_Tracker.Resources {
         public static readonly string SETTINGS_FILE =
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
             + "/Project Tracker/settings.ptsd";
+
+        public static readonly string INITIAL_FILE_DIALOG_DIRECTORY = Environment.SpecialFolder.MyDocuments.ToString();
+        #endregion
+
     }
 }
