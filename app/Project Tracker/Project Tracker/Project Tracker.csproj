@@ -91,6 +91,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Resources\Globals.cs" />
     <Compile Include="Source\BackgroundProcesses.cs" />
     <Compile Include="Source\Cryptography.cs" />
     <Compile Include="Source\IO.cs" />

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Project_Tracker.Resources;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -77,7 +78,7 @@ namespace Project_Tracker.Source {
                 js.WriteEndObject();
             }
 
-            string encryptedData = Cryptography.Encrypt(sw.ToString(), Properties.Resources.ENCRYPTION_GUID);
+            string encryptedData = Cryptography.Encrypt(sw.ToString(), Globals.ENCRYPTION_GUID);
 
             // Attempts to save the file using a unique file name
             try {
@@ -120,7 +121,7 @@ namespace Project_Tracker.Source {
 
         public static string ReadEncryptedFile(string path) {
             string json = File.ReadAllText(path);
-            return Cryptography.Decrypt(json, Properties.Resources.ENCRYPTION_GUID);
+            return Cryptography.Decrypt(json, Globals.ENCRYPTION_GUID);
         }
     }
 }
