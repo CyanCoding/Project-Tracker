@@ -4,11 +4,11 @@ using System.Windows.Media;
 namespace Project_Tracker.Resources {
 
     /// <summary>
-    /// All readonly global variables used throughout the Project Tracker
-    /// Don't even think about changing these during runtime punk
-    /// 
-    /// Project tracker data files end in *.pt while other files like settings/version
-    /// end in *.ptsd (project tracker settings data)
+    /// All readonly global variables used throughout the Project Tracker Don't even think about
+    /// changing these during runtime punk
+    ///
+    /// Project tracker data files end in *.pt while other files like settings/version end in *.ptsd
+    /// (project tracker settings data)
     /// </summary>
     class Globals {
         // The passcode used for encrypting and decrypting files
