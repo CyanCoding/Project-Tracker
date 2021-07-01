@@ -707,7 +707,7 @@ namespace Project_Tracker {
 
                                 fileHasAllValues = true;
                                 // Reread all the data back again
-                                json = File.ReadAllText(path);
+                                json = IO.ReadEncryptedFile(path);
                                 mainTable =
                                     JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(json);
 
@@ -1496,6 +1496,7 @@ namespace Project_Tracker {
         /// Notifies the user of an update if one is available.
         /// </summary>
         private void Update(object sender, AsyncCompletedEventArgs e) {
+            // This File.ReadAllText() is FINE because version info isn't encrypted
             string json = File.ReadAllText(Globals.VERSION_INFO);
 
             if (json == "" && isSettingsWindowDisplaying) { // Didn't download the entire file properly
