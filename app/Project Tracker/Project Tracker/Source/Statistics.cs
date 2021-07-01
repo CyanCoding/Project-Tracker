@@ -1,14 +1,13 @@
 ﻿using Microsoft.Win32;
 using Project_Tracker.Resources;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project_Tracker {
-    class Statistics {
+
+    internal class Statistics {
+
         /// <summary>
         /// Counts the lines for each provided file.
         /// </summary>

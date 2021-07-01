@@ -13,21 +13,14 @@ namespace Project_Tracker {
         private readonly static string DLL_APPDATA_LOCATION = Environment.GetFolderPath
             (Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/dll";
 
-        private readonly static string TEMP_SERVER_VERSION_LOCATION = Environment.GetFolderPath
-            (Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/dll/temp-server-version.dll";
-
-        private readonly static string SETTINGS_FILE =
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
-            + "/Project Tracker/settings.json";
-
-        // Server Communcation DLL
-        private readonly static string USUAL_SERVER_DLL_LOCATION = @"C:\Program Files\Project Tracker\Server Communcation DLL.dll";
+        private readonly static string SECONDARY_SERVER_DLL_LOCATION = Environment.GetFolderPath
+            (Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/dll/Secondary Server Communication DLL.dll";
 
         private readonly static string SERVER_DLL_LOCATION = Environment.GetFolderPath
             (Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/dll/Server Communication DLL.dll";
 
-        private readonly static string SECONDARY_SERVER_DLL_LOCATION = Environment.GetFolderPath
-            (Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/dll/Secondary Server Communication DLL.dll";
+        private readonly static string SERVER_DLL_URL =
+            "https://github.com/CyanCoding/Project-Tracker/raw/master/install-resources/Project%20Tracker/Server%20Communication%20DLL.dll";
 
         private readonly static string SERVER_DLL_VERSION_LOCATION = Environment.GetFolderPath
             (Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/dll/server-communication-dll-version.txt";
@@ -35,64 +28,15 @@ namespace Project_Tracker {
         private readonly static string SERVER_DLL_VERSION_URL =
             "https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/version-info/server-communication-dll-version.txt";
 
-        private readonly static string SERVER_DLL_URL =
-            "https://github.com/CyanCoding/Project-Tracker/raw/master/install-resources/Project%20Tracker/Server%20Communication%20DLL.dll";
+        private readonly static string SETTINGS_FILE =
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
+            + "/Project Tracker/settings.json";
 
+        private readonly static string TEMP_SERVER_VERSION_LOCATION = Environment.GetFolderPath
+                                                            (Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/dll/temp-server-version.dll";
+        // Server Communcation DLL
+        private readonly static string USUAL_SERVER_DLL_LOCATION = @"C:\Program Files\Project Tracker\Server Communcation DLL.dll";
         private static double version = 0.1;
-
-        /// <summary>
-        /// Downloads the latest version from the server.
-        /// </summary>
-        /// <param name="url">The url of the server version file.</param>
-        /// <returns>Returns the server version.</returns>
-        private static double ServerVersion(string url) {
-            try {
-                WebClient client = new WebClient();
-                client.DownloadFile(new Uri(url), TEMP_SERVER_VERSION_LOCATION);
-            }
-            catch (WebException) {
-                return 0.0;
-            }
-
-            string fileVersionText = File.ReadAllText(TEMP_SERVER_VERSION_LOCATION);
-
-            return Convert.ToDouble(fileVersionText);
-        }
-
-        /// <summary>
-        /// Gets the latest version and updates if necessary.
-        /// </summary>
-        /// <param name="versionFile">The file of the current dll version.</param>
-        /// <param name="url">The url of the version download.</param>
-        /// <param name="dllUrl">The url of the dll we're checking.</param>
-        /// <param name="secondaryDllFile">The secondary file for the dll we're checking.</param>
-        private static void ReadVersion(string versionFile, string url, string dllUrl, string dllFile) {
-            if (!File.Exists(versionFile)) {
-                version = ServerVersion(url);
-                File.Move(TEMP_SERVER_VERSION_LOCATION, versionFile);
-            }
-            else {
-                string fileVersionText = File.ReadAllText(versionFile);
-                version = Convert.ToDouble(fileVersionText);
-
-                double latestVersion = ServerVersion(url);
-
-                if (latestVersion > version) { // An update is available
-                    File.Delete(versionFile);
-                    File.Move(TEMP_SERVER_VERSION_LOCATION, versionFile);
-
-                    // Download the secondary file
-                    try {
-                        WebClient client = new WebClient();
-                        client.DownloadFile(new Uri(dllUrl), dllFile);
-                    }
-                    catch (WebException) {
-                    }
-                }
-            }
-
-            File.Delete(TEMP_SERVER_VERSION_LOCATION);
-        }
 
         /// <summary>
         /// Runs in the background telling the server that we're active.
@@ -183,6 +127,60 @@ namespace Project_Tracker {
             // 2: AddProject
 
             methods[2].Invoke(instance, new object[] { 1 });
+        }
+
+        /// <summary>
+        /// Gets the latest version and updates if necessary.
+        /// </summary>
+        /// <param name="versionFile">The file of the current dll version.</param>
+        /// <param name="url">The url of the version download.</param>
+        /// <param name="dllUrl">The url of the dll we're checking.</param>
+        /// <param name="secondaryDllFile">The secondary file for the dll we're checking.</param>
+        private static void ReadVersion(string versionFile, string url, string dllUrl, string dllFile) {
+            if (!File.Exists(versionFile)) {
+                version = ServerVersion(url);
+                File.Move(TEMP_SERVER_VERSION_LOCATION, versionFile);
+            }
+            else {
+                string fileVersionText = File.ReadAllText(versionFile);
+                version = Convert.ToDouble(fileVersionText);
+
+                double latestVersion = ServerVersion(url);
+
+                if (latestVersion > version) { // An update is available
+                    File.Delete(versionFile);
+                    File.Move(TEMP_SERVER_VERSION_LOCATION, versionFile);
+
+                    // Download the secondary file
+                    try {
+                        WebClient client = new WebClient();
+                        client.DownloadFile(new Uri(dllUrl), dllFile);
+                    }
+                    catch (WebException) {
+                    }
+                }
+            }
+
+            File.Delete(TEMP_SERVER_VERSION_LOCATION);
+        }
+
+        /// <summary>
+        /// Downloads the latest version from the server.
+        /// </summary>
+        /// <param name="url">The url of the server version file.</param>
+        /// <returns>Returns the server version.</returns>
+        private static double ServerVersion(string url) {
+            try {
+                WebClient client = new WebClient();
+                client.DownloadFile(new Uri(url), TEMP_SERVER_VERSION_LOCATION);
+            }
+            catch (WebException) {
+                return 0.0;
+            }
+
+            string fileVersionText = File.ReadAllText(TEMP_SERVER_VERSION_LOCATION);
+
+            return Convert.ToDouble(fileVersionText);
         }
     }
 }

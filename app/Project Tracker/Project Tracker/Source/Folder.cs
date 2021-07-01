@@ -1,14 +1,10 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
 using Project_Tracker.Resources;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Project_Tracker {
-    class Folder {
+
+    internal class Folder {
+
         public static string SelectFolder() {
             CommonOpenFileDialog folderDialog = new CommonOpenFileDialog();
             folderDialog.InitialDirectory = Globals.INITIAL_FILE_DIALOG_DIRECTORY;
