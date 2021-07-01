@@ -361,7 +361,8 @@ namespace Project_Tracker.Source {
                 js.WriteEndObject();
             }
 
-            File.WriteAllText(filePath, sw.ToString());
+            string fileData = Cryptography.Encrypt(sw.ToString(), Globals.ENCRYPTION_GUID);
+            File.WriteAllText(filePath, fileData);
             sb.Clear();
             sw.Close();
         }
