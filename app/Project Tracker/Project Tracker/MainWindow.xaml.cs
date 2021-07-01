@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Project_Tracker.Resources;
 using Project_Tracker.Source;
 using System;
 using System.Collections.Generic;
@@ -38,11 +39,10 @@ namespace Project_Tracker {
         private bool isSwitchingAnimationRunning = false; // Keeps the user from double clicking the animation
         private bool isTypeSelecting = false;
 
-        private List<string> taskData = new List<string>();
-        private List<string> taskIdentifier = new List<string>(); // The type of item we're adding (0 = error, 1 = feature, 2 = comment)
-
         // All these variables relate to the projects and are used for saving/loading
         private List<string> tasks = new List<string>();
+        private List<string> taskData = new List<string>();
+        private List<string> taskIdentifier = new List<string>(); // The type of item we're adding (0 = error, 1 = feature, 2 = comment)
         private List<string> linesOfCodeFiles = new List<string>();
         private string folderLocation;
         private string dateCreated;
@@ -74,7 +74,7 @@ namespace Project_Tracker {
                 projectTitle = addProjectTextBox.Text;
             }
 
-            IO.CreateNewProject(projectTitle, DATA_DIRECTORY);
+            IO.CreateNewProject(projectTitle, Globals.DATA_DIRECTORY);
 
             addProjectTextBox.Text = "Create a new project";
             Keyboard.ClearFocus();
@@ -348,7 +348,7 @@ namespace Project_Tracker {
                 percent10.Content = percent + "%";
             }
 
-            Save(filesRead[selectedIndex - 1]);
+            IO.Save(filesRead[selectedIndex - 1], title, tasks, taskData, taskIdentifier, linesOfCodeFiles, folderLocation, dateCreated, tasksMade, tasksCompleted, percent, duration, icon);
             SetSelectedProject();
         }
 
@@ -599,7 +599,7 @@ namespace Project_Tracker {
                     displayingTitle.Content = title;
                 }
 
-                Save(filesRead[selectedIndex - 1]);
+                IO.Save(filesRead[selectedIndex - 1], title, tasks, taskData, taskIdentifier, linesOfCodeFiles, folderLocation, dateCreated, tasksMade, tasksCompleted, percent, duration, icon);
                 LoadFiles();
             }
         }
@@ -662,8 +662,8 @@ namespace Project_Tracker {
 
             filesRead.Clear();
             try {
-                string[] files = Directory.GetFiles(DATA_DIRECTORY,
-                    pathExtension, SearchOption.AllDirectories);
+                string[] files = Directory.GetFiles(Globals.DATA_DIRECTORY,
+                    Globals.projectDataExtension, SearchOption.AllDirectories);
 
                 int index = 0;
                 foreach (string path in files) {
@@ -703,177 +703,7 @@ namespace Project_Tracker {
                                 System.Windows.Forms.MessageBoxIcon.Question);
 
                             if (migrateData == System.Windows.Forms.DialogResult.Yes) {
-                                StringBuilder sb = new StringBuilder();
-                                StringWriter sw = new StringWriter(sb);
-
-                                using (JsonWriter js = new JsonTextWriter(sw)) {
-                                    js.Formatting = Formatting.Indented;
-
-                                    js.WriteStartObject();
-
-                                    // Title
-                                    js.WritePropertyName("Title");
-                                    if (mainTable.Title != null) {
-                                        js.WriteValue(mainTable.Title);
-                                    }
-                                    else {
-                                        js.WriteValue("Untitled project");
-                                    }
-
-                                    // The name of each task
-                                    js.WritePropertyName("Tasks");
-                                    js.WriteStartArray();
-                                    if (mainTable.Errors != null) {
-                                        foreach (string error in mainTable.Errors) {
-                                            js.WriteValue(error);
-                                        }
-                                    }
-                                    if (mainTable.Features != null) {
-                                        foreach (string feature in mainTable.Features) {
-                                            js.WriteValue(feature);
-                                        }
-                                    }
-                                    if (mainTable.Comments != null) {
-                                        foreach (string comment in mainTable.Comments) {
-                                            js.WriteValue(comment);
-                                        }
-                                    }
-                                    if (mainTable.Tasks != null) {
-                                        foreach (string task in mainTable.Tasks) {
-                                            js.WriteValue(task);
-                                        }
-                                    }
-                                    js.WriteEnd();
-
-                                    // The data for each task (0 = incomplete, 1 = complete)
-                                    js.WritePropertyName("TaskData");
-                                    js.WriteStartArray();
-                                    if (mainTable.ErrorsData != null) {
-                                        foreach (string data in mainTable.ErrorsData) {
-                                            js.WriteValue(data);
-                                        }
-                                    }
-                                    if (mainTable.FeaturesData != null) {
-                                        foreach (string data in mainTable.FeaturesData) {
-                                            js.WriteValue(data);
-                                        }
-                                    }
-                                    if (mainTable.CommentsData != null) {
-                                        foreach (string data in mainTable.CommentsData) {
-                                            js.WriteValue(data);
-                                        }
-                                    }
-                                    if (mainTable.TaskData != null) {
-                                        foreach (string data in mainTable.TaskData) {
-                                            js.WriteValue(data);
-                                        }
-                                    }
-                                    js.WriteEnd();
-
-                                    // The identifer for each task (0 = error, 1 = feature, 2 = comment)
-                                    js.WritePropertyName("TaskIdentifier");
-                                    js.WriteStartArray();
-                                    if (mainTable.Errors != null) {
-                                        for (int i = 0; i < mainTable.Errors.Length; i++) {
-                                            js.WriteValue("0");
-                                        }
-                                    }
-                                    if (mainTable.Features != null) {
-                                        for (int i = 0; i < mainTable.Features.Length; i++) {
-                                            js.WriteValue("1");
-                                        }
-                                    }
-                                    if (mainTable.Comments != null) {
-                                        for (int i = 0; i < mainTable.Comments.Length; i++) {
-                                            js.WriteValue("2");
-                                        }
-                                    }
-                                    if (mainTable.TaskIdentifier != null) {
-                                        foreach (string identifier in mainTable.TaskIdentifier) {
-                                            js.WriteValue(identifier);
-                                        }
-                                    }
-                                    js.WriteEnd();
-
-                                    // Lines of code files
-                                    js.WritePropertyName("LinesOfCodeFiles");
-                                    js.WriteStartArray();
-                                    if (mainTable.LinesOfCodeFiles != null) {
-                                        foreach (string file in mainTable.LinesOfCodeFiles) {
-                                            js.WriteValue(file);
-                                        }
-                                    }
-                                    js.WriteEnd();
-
-                                    // Folder location
-                                    js.WritePropertyName("FolderLocation");
-                                    if (mainTable.FolderLocation != null) {
-                                        js.WriteValue(mainTable.FolderLocation);
-                                    }
-                                    else {
-                                        js.WriteValue("");
-                                    }
-
-                                    // Duration
-                                    js.WritePropertyName("Duration");
-                                    if (mainTable.Duration != null) {
-                                        js.WriteValue(mainTable.Duration);
-                                    }
-                                    else {
-                                        js.WriteValue("00:00:00");
-                                    }
-
-                                    // Date created
-                                    js.WritePropertyName("DateCreated");
-                                    if (mainTable.DateCreated != null) {
-                                        js.WriteValue(mainTable.DateCreated);
-                                    }
-                                    else {
-                                        js.WriteValue(Statistics.CreationDate());
-                                    }
-
-                                    // Tasks made
-                                    js.WritePropertyName("TasksMade");
-                                    if (mainTable.TasksMade != null && mainTable.TasksMade != 0) {
-                                        js.WriteValue(mainTable.TasksMade);
-                                    }
-                                    else {
-                                        js.WriteValue(0);
-                                    }
-
-                                    // Tasks completed
-                                    js.WritePropertyName("TasksCompleted");
-                                    if (mainTable.TasksCompleted != null && mainTable.TasksMade != 0) {
-                                        js.WriteValue(mainTable.TasksCompleted);
-                                    }
-                                    else {
-                                        js.WriteValue(0);
-                                    }
-
-                                    // Icon
-                                    js.WritePropertyName("Icon");
-                                    if (mainTable.Icon != null) {
-                                        js.WriteValue(mainTable.Icon);
-                                    }
-                                    else {
-                                        js.WriteValue("noIcon");
-                                    }
-
-                                    // Percent
-                                    js.WritePropertyName("Percent");
-                                    if (mainTable.Percent != null) {
-                                        js.WriteValue(mainTable.Percent);
-                                    }
-                                    else {
-                                        js.WriteValue("00");
-                                    }
-
-                                    js.WriteEndObject();
-                                }
-
-                                File.WriteAllText(path, sw.ToString());
-                                sb.Clear();
-                                sw.Close();
+                                IO.AttemptFixProject(mainTable, path);
 
                                 fileHasAllValues = true;
                                 // Reread all the data back again
@@ -956,7 +786,7 @@ namespace Project_Tracker {
             Border border = new Border();
             border.Height = 60;
             border.CornerRadius = new CornerRadius(10);
-            border.Background = new SolidColorBrush(itemColor);
+            border.Background = new SolidColorBrush(Globals.itemColor);
             border.BorderThickness = new Thickness(2);
             border.HorizontalAlignment = HorizontalAlignment.Stretch;
             border.VerticalAlignment = VerticalAlignment.Top;
@@ -1025,7 +855,7 @@ namespace Project_Tracker {
             // The label displaying the content of the item
             Label label = new Label();
             label.Content = text;
-            label.Foreground = new SolidColorBrush(labelTextColor);
+            label.Foreground = new SolidColorBrush(Globals.labelTextColor);
             label.Margin = new Thickness(70, 6, 70, 0);
             label.FontSize = 24;
 
@@ -1130,78 +960,6 @@ namespace Project_Tracker {
         }
 
         /// <summary>
-        /// Saves the project at the provided path.
-        /// </summary>
-        /// <param name="filePath">The path to save to.</param>
-        private void Save(string filePath) {
-            StringBuilder sb = new StringBuilder();
-            StringWriter sw = new StringWriter(sb);
-
-            using (JsonWriter js = new JsonTextWriter(sw)) {
-                js.Formatting = Formatting.Indented;
-
-                js.WriteStartObject();
-
-                js.WritePropertyName("Title");
-                js.WriteValue(title);
-
-                js.WritePropertyName("Tasks");
-                js.WriteStartArray();
-                foreach (string task in tasks) {
-                    js.WriteValue(task);
-                }
-                js.WriteEnd();
-
-                js.WritePropertyName("TaskData");
-                js.WriteStartArray();
-                foreach (string data in taskData) {
-                    js.WriteValue(data);
-                }
-                js.WriteEnd();
-
-                js.WritePropertyName("TaskIdentifier");
-                js.WriteStartArray();
-                foreach (string identifier in taskIdentifier) {
-                    js.WriteValue(identifier);
-                }
-                js.WriteEnd();
-
-                js.WritePropertyName("LinesOfCodeFiles");
-                js.WriteStartArray();
-                foreach (string file in linesOfCodeFiles) {
-                    js.WriteValue(file);
-                }
-                js.WriteEnd();
-
-                js.WritePropertyName("FolderLocation");
-                js.WriteValue(folderLocation);
-
-                js.WritePropertyName("Duration");
-                js.WriteValue(duration);
-
-                js.WritePropertyName("DateCreated");
-                js.WriteValue(dateCreated);
-
-                js.WritePropertyName("TasksMade");
-                js.WriteValue(tasksMade);
-
-                js.WritePropertyName("TasksCompleted");
-                js.WriteValue(tasksCompleted);
-
-                js.WritePropertyName("Icon");
-                js.WriteValue(icon);
-                js.WritePropertyName("Percent");
-                js.WriteValue(percent);
-
-                js.WriteEndObject();
-            }
-
-            File.WriteAllText(filePath, sw.ToString());
-            sb.Clear();
-            sw.Close();
-        }
-
-        /// <summary>
         /// Saves the settings for the project.
         /// </summary>
         private void SaveSettings() {
@@ -1232,7 +990,7 @@ namespace Project_Tracker {
                 js.WriteEndObject();
             }
 
-            File.WriteAllText(SETTINGS_FILE, sw.ToString());
+            File.WriteAllText(Globals.SETTINGS_FILE, sw.ToString());
             sb.Clear();
             sw.Close();
         }
@@ -1250,7 +1008,7 @@ namespace Project_Tracker {
             }
             icon = selectedIcon;
 
-            Save(filesRead[selectedIndex - 1]);
+            IO.Save(filesRead[selectedIndex - 1], title, tasks, taskData, taskIdentifier, linesOfCodeFiles, folderLocation, dateCreated, tasksMade, tasksCompleted, percent, duration, icon);
 
             // Set the icon in the project borders
             if (selectedIndex == 1) {
@@ -1573,7 +1331,7 @@ namespace Project_Tracker {
             // Set values
             displayingImage.Source = (ImageSource)TryFindResource("settingsDrawingImage");
             displayingTitle.Content = "Settings";
-            currentVersionLabel.Content = "Installed version: " + CURRENT_VERSION;
+            currentVersionLabel.Content = "Installed version: " + Globals.CURRENT_VERSION;
 
             isSettingsWindowDisplaying = true;
             selectedIndex = 0;
@@ -1621,17 +1379,17 @@ namespace Project_Tracker {
         /// Startup function that runs when code execution starts.
         /// </summary>
         private void Startup() {
-            if (!Directory.Exists(APPDATA_DIRECTORY)) { // Create AppData directory
-                Directory.CreateDirectory(APPDATA_DIRECTORY);
+            if (!Directory.Exists(Globals.APPDATA_DIRECTORY)) { // Create AppData directory
+                Directory.CreateDirectory(Globals.APPDATA_DIRECTORY);
             }
-            if (!Directory.Exists(DATA_DIRECTORY)) { // Create AppData/Data directory
-                Directory.CreateDirectory(DATA_DIRECTORY);
+            if (!Directory.Exists(Globals.DATA_DIRECTORY)) { // Create AppData/Data directory
+                Directory.CreateDirectory(Globals.DATA_DIRECTORY);
             }
 
             backgroundThread = new Thread(BackgroundProcesses.DataReporting);
             backgroundThread.Start();
 
-            if (!File.Exists(SETTINGS_FILE)) { // Settings file doesn't exist. Create it
+            if (!File.Exists(Globals.SETTINGS_FILE)) { // Settings file doesn't exist. Create it
                 StringBuilder sb = new StringBuilder();
                 StringWriter sw = new StringWriter(sb);
 
@@ -1655,12 +1413,12 @@ namespace Project_Tracker {
                     js.WriteEndObject();
                 }
 
-                File.WriteAllText(SETTINGS_FILE, sw.ToString());
+                File.WriteAllText(Globals.SETTINGS_FILE, sw.ToString());
                 sb.Clear();
                 sw.Close();
             }
 
-            string json = IO.ReadEncryptedFile(SETTINGS_FILE);
+            string json = IO.ReadEncryptedFile(Globals.SETTINGS_FILE);
             SettingsManifest.Rootobject settings =
                 JsonConvert.DeserializeObject<SettingsManifest.Rootobject>(json);
 
@@ -1679,21 +1437,21 @@ namespace Project_Tracker {
                 }
             }
 
-            if (IS_BETA) {
-                versionLabel.Content = "Version " + CURRENT_VERSION + " (beta)";
+            if (Globals.IS_BETA) {
+                versionLabel.Content = "Version " + Globals.CURRENT_VERSION + " (beta)";
             }
             else {
-                versionLabel.Content = "Version " + CURRENT_VERSION;
+                versionLabel.Content = "Version " + Globals.CURRENT_VERSION;
             }
 
             LoadFiles();
             SetSelectedProject();
 
-            if (File.Exists(VERSION_INFO)) {
-                File.Delete(VERSION_INFO);
+            if (File.Exists(Globals.VERSION_INFO)) {
+                File.Delete(Globals.VERSION_INFO);
             }
-            if (File.Exists(NEXT_VERSION_INFO)) {
-                File.Delete(NEXT_VERSION_INFO);
+            if (File.Exists(Globals.NEXT_VERSION_INFO)) {
+                File.Delete(Globals.NEXT_VERSION_INFO);
             }
 
             Thread thread1 = new Thread(() => {
@@ -1702,7 +1460,7 @@ namespace Project_Tracker {
                     try {
                         WebClient client = new WebClient();
                         client.DownloadFileCompleted += new AsyncCompletedEventHandler(Update);
-                        client.DownloadFileAsync(new Uri(VERSION_MANIFEST_URL), VERSION_INFO);
+                        client.DownloadFileAsync(new Uri(Globals.VERSION_MANIFEST_URL), Globals.VERSION_INFO);
                     }
                     catch (WebException) {
                         // Couldn't download update file. Possible their wifi isn't working
@@ -1799,7 +1557,7 @@ namespace Project_Tracker {
         /// Notifies the user of an update if one is available.
         /// </summary>
         private void Update(object sender, AsyncCompletedEventArgs e) {
-            string json = File.ReadAllText(VERSION_INFO);
+            string json = File.ReadAllText(Globals.VERSION_INFO);
 
             if (json == "" && isSettingsWindowDisplaying) { // Didn't download the entire file properly
                 System.Windows.Forms.MessageBox.Show("Please connect to the Internet to check for an update.",
@@ -1822,7 +1580,7 @@ namespace Project_Tracker {
             latestVersionLabel.Visibility = Visibility.Visible;
             latestVersionLabel.Content = "Latest version: " + update.Version;
 
-            if (float.Parse(CURRENT_VERSION) < float.Parse(update.Version)) { // Update is available
+            if (float.Parse(Globals.CURRENT_VERSION) < float.Parse(update.Version)) { // Update is available
                 Thread thread = new Thread(() => {
                     Dispatcher.Invoke(new Action(() => {
                         updateGrid.Visibility = Visibility.Visible;
@@ -1850,11 +1608,11 @@ namespace Project_Tracker {
         private void UpdateButtonMouseDown(object sender, MouseButtonEventArgs e) {
             updateButton1.IsEnabled = false;
 
-            if (File.Exists(VERSION_INFO)) {
-                File.Delete(VERSION_INFO);
+            if (File.Exists(Globals.VERSION_INFO)) {
+                File.Delete(Globals.VERSION_INFO);
             }
-            if (File.Exists(NEXT_VERSION_INFO)) {
-                File.Delete(NEXT_VERSION_INFO);
+            if (File.Exists(Globals.NEXT_VERSION_INFO)) {
+                File.Delete(Globals.NEXT_VERSION_INFO);
             }
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -1868,7 +1626,7 @@ namespace Project_Tracker {
 
                 WebClient updateClient = new WebClient();
                 updateClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Update);
-                updateClient.DownloadFileAsync(new Uri(VERSION_MANIFEST_URL), VERSION_INFO);
+                updateClient.DownloadFileAsync(new Uri(Globals.VERSION_MANIFEST_URL), Globals.VERSION_INFO);
             }
             catch (WebException) {
                 // Couldn't download update file. Possible their wifi isn't working
@@ -2192,7 +1950,7 @@ namespace Project_Tracker {
             if (folderLocation == "" || !Directory.Exists(folderLocation)) {
                 folderLocation = Folder.SelectFolder();
 
-                Save(filesRead[selectedIndex - 1]);
+                IO.Save(filesRead[selectedIndex - 1], title, tasks, taskData, taskIdentifier, linesOfCodeFiles, folderLocation, dateCreated, tasksMade, tasksCompleted, percent, duration, icon);
             }
             else {
                 Process.Start(folderLocation);
@@ -2206,14 +1964,14 @@ namespace Project_Tracker {
                 linesOfCodeFiles.Add(file);
             }
 
-            Save(filesRead[selectedIndex - 1]);
+            IO.Save(filesRead[selectedIndex - 1], title, tasks, taskData, taskIdentifier, linesOfCodeFiles, folderLocation, dateCreated, tasksMade, tasksCompleted, percent, duration, icon);
 
             linesOfCodeLabel.Content = "Lines of code: " + String.Format("{0:#,###0}", Statistics.CountLines(linesOfCodeFiles.ToArray()));
         }
 
         private void folderLocationResetButton_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
             folderLocation = Folder.SelectFolder();
-            Save(filesRead[selectedIndex - 1]);
+            IO.Save(filesRead[selectedIndex - 1], title, tasks, taskData, taskIdentifier, linesOfCodeFiles, folderLocation, dateCreated, tasksMade, tasksCompleted, percent, duration, icon);
 
             folderLocationLabel.Content = "Folder location: " + folderLocation;
 
