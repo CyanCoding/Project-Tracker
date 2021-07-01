@@ -16,6 +16,7 @@ namespace Project_Tracker.Resources {
 
         // The file extension for project tracker files
         public static readonly string projectDataExtension = "*.pt";
+        public static readonly string dataExtension = ".pt";
 
         // Generic public color values
         public static readonly Color itemColor = Color.FromRgb(60, 60, 60);

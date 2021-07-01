@@ -82,15 +82,15 @@ namespace Project_Tracker.Source {
 
             // Attempts to save the file using a unique file name
             try {
-                if (!File.Exists(DATA_DIRECTORY + "/" + projectTitle + ".json")) {
-                    File.WriteAllText(DATA_DIRECTORY + "/" + projectTitle + ".json",
+                if (!File.Exists(DATA_DIRECTORY + "/" + projectTitle + Globals.dataExtension)) {
+                    File.WriteAllText(DATA_DIRECTORY + "/" + projectTitle + Globals.dataExtension,
                         encryptedData);
                 }
                 else {
                     int index = 0;
                     while (true) {
-                        if (!File.Exists(DATA_DIRECTORY + "/" + projectTitle + " (" + index + ").json")) {
-                            File.WriteAllText(DATA_DIRECTORY + "/" + projectTitle + " (" + index + ").json",
+                        if (!File.Exists(DATA_DIRECTORY + "/" + projectTitle + " (" + index + ")" + Globals.dataExtension)) {
+                            File.WriteAllText(DATA_DIRECTORY + "/" + projectTitle + " (" + index + ")" + Globals.dataExtension,
                                 encryptedData);
                             break;
                         }
@@ -104,8 +104,8 @@ namespace Project_Tracker.Source {
             catch (ArgumentException) { // Path is an invalid name
                 int index = 0;
                 while (true) {
-                    if (!File.Exists("project " + index + ".json")) {
-                        File.WriteAllText("project " + index + ".json", encryptedData);
+                    if (!File.Exists("project " + index + Globals.dataExtension)) {
+                        File.WriteAllText("project " + index + Globals.dataExtension, encryptedData);
                         break;
                     }
                     else {
