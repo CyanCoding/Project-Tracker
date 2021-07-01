@@ -7,7 +7,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -41,6 +40,7 @@ namespace Project_Tracker {
 
         // All these variables relate to the projects and are used for saving/loading
         private List<string> tasks = new List<string>();
+
         private List<string> taskData = new List<string>();
         private List<string> taskIdentifier = new List<string>(); // The type of item we're adding (0 = error, 1 = feature, 2 = comment)
         private List<string> linesOfCodeFiles = new List<string>();
@@ -58,28 +58,6 @@ namespace Project_Tracker {
         public MainWindow() {
             InitializeComponent();
             Startup();
-        }
-
-        /// <summary>
-        /// Creates a new project
-        /// </summary>
-        private void CreateNewProject(string title = "") {
-            Thread thread = new Thread(() => {
-                BackgroundProcesses.ReportProject();
-            });
-            thread.Start();
-
-            string projectTitle = title;
-            if (projectTitle == "") {
-                projectTitle = addProjectTextBox.Text;
-            }
-
-            IO.CreateNewProject(projectTitle, Globals.DATA_DIRECTORY);
-
-            addProjectTextBox.Text = "Create a new project";
-            Keyboard.ClearFocus();
-            LoadFiles();
-            SetSelectedProject();
         }
 
         /// <summary>
@@ -415,6 +393,27 @@ namespace Project_Tracker {
         }
 
         /// <summary>
+        /// Creates a new project
+        /// </summary>
+        private void CreateNewProject(string title = "") {
+            Thread thread = new Thread(() => {
+                BackgroundProcesses.ReportProject();
+            });
+            thread.Start();
+
+            string projectTitle = title;
+            if (projectTitle == "") {
+                projectTitle = addProjectTextBox.Text;
+            }
+
+            IO.CreateNewProject(projectTitle, Globals.DATA_DIRECTORY);
+
+            addProjectTextBox.Text = "Create a new project";
+            Keyboard.ClearFocus();
+            LoadFiles();
+            SetSelectedProject();
+        }
+        /// <summary>
         /// When the user clicks to delete the project.
         /// </summary>
         private void DeleteProjectButtonPressed(object sender, MouseButtonEventArgs e) {
@@ -496,6 +495,28 @@ namespace Project_Tracker {
                     }));
                 });
                 thread.Start();
+            }
+        }
+
+        private void folderImage_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
+            if (folderLocation == "" || !Directory.Exists(folderLocation)) {
+                folderLocation = Folder.SelectFolder();
+
+                IO.Save(filesRead[selectedIndex - 1], title, tasks, taskData, taskIdentifier, linesOfCodeFiles, folderLocation, dateCreated, tasksMade, tasksCompleted, percent, duration, icon);
+            }
+            else {
+                Process.Start(folderLocation);
+            }
+        }
+
+        private void folderLocationResetButton_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
+            folderLocation = Folder.SelectFolder();
+            IO.Save(filesRead[selectedIndex - 1], title, tasks, taskData, taskIdentifier, linesOfCodeFiles, folderLocation, dateCreated, tasksMade, tasksCompleted, percent, duration, icon);
+
+            folderLocationLabel.Content = "Folder location: " + folderLocation;
+
+            if (folderLocation != "" && Directory.Exists(folderLocation)) {
+                folderLocationResetButton.Content = "Reset folder location";
             }
         }
 
@@ -868,6 +889,10 @@ namespace Project_Tracker {
             itemsAdded++;
         }
 
+        private void NewProjectMenuItem_Click(object sender, RoutedEventArgs e) {
+            CreateNewProject("New project");
+        }
+
         private void overallSettingsBorder_LostFocus(object sender, RoutedEventArgs e) {
             if (isOverallSettingsOpen) { // Hide the icon selector window if they click out
                 Dispatcher.Invoke(new Action(() => {
@@ -957,6 +982,18 @@ namespace Project_Tracker {
 
             changeTitleBorder.Visibility = Visibility.Visible;
             displayingTitle.Visibility = Visibility.Hidden;
+        }
+
+        private void setCodeCountingButton_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
+            linesOfCodeFiles.Clear();
+
+            foreach (string file in Statistics.GetFiles()) {
+                linesOfCodeFiles.Add(file);
+            }
+
+            IO.Save(filesRead[selectedIndex - 1], title, tasks, taskData, taskIdentifier, linesOfCodeFiles, folderLocation, dateCreated, tasksMade, tasksCompleted, percent, duration, icon);
+
+            linesOfCodeLabel.Content = "Lines of code: " + String.Format("{0:#,###0}", Statistics.CountLines(linesOfCodeFiles.ToArray()));
         }
 
         /// <summary>
@@ -1885,43 +1922,5 @@ namespace Project_Tracker {
         }
 
         #endregion Item selection presses
-
-        private void folderImage_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
-            if (folderLocation == "" || !Directory.Exists(folderLocation)) {
-                folderLocation = Folder.SelectFolder();
-
-                IO.Save(filesRead[selectedIndex - 1], title, tasks, taskData, taskIdentifier, linesOfCodeFiles, folderLocation, dateCreated, tasksMade, tasksCompleted, percent, duration, icon);
-            }
-            else {
-                Process.Start(folderLocation);
-            }
-        }
-
-        private void setCodeCountingButton_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
-            linesOfCodeFiles.Clear();
-
-            foreach (string file in Statistics.GetFiles()) {
-                linesOfCodeFiles.Add(file);
-            }
-
-            IO.Save(filesRead[selectedIndex - 1], title, tasks, taskData, taskIdentifier, linesOfCodeFiles, folderLocation, dateCreated, tasksMade, tasksCompleted, percent, duration, icon);
-
-            linesOfCodeLabel.Content = "Lines of code: " + String.Format("{0:#,###0}", Statistics.CountLines(linesOfCodeFiles.ToArray()));
-        }
-
-        private void folderLocationResetButton_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
-            folderLocation = Folder.SelectFolder();
-            IO.Save(filesRead[selectedIndex - 1], title, tasks, taskData, taskIdentifier, linesOfCodeFiles, folderLocation, dateCreated, tasksMade, tasksCompleted, percent, duration, icon);
-
-            folderLocationLabel.Content = "Folder location: " + folderLocation;
-
-            if (folderLocation != "" && Directory.Exists(folderLocation)) {
-                folderLocationResetButton.Content = "Reset folder location";
-            }
-        }
-
-        private void NewProjectMenuItem_Click(object sender, RoutedEventArgs e) {
-            CreateNewProject("New project");
-        }
     }
 }
