@@ -367,6 +367,40 @@ namespace Project_Tracker.Source {
             sw.Close();
         }
 
+        public static void SaveSettings(int selectedIndex, bool isCompletedTasksShown) {
+            StringBuilder sb = new StringBuilder();
+            StringWriter sw = new StringWriter(sb);
+            using (JsonWriter js = new JsonTextWriter(sw)) {
+                js.Formatting = Formatting.Indented;
+
+                js.WriteStartObject();
+
+                // LastSelectedIndex
+                js.WritePropertyName("LastSelectedIndex");
+                js.WriteValue(selectedIndex);
+
+                // DisplayingCompleted
+                js.WritePropertyName("DisplayingCompleted");
+                if (isCompletedTasksShown) {
+                    js.WriteValue(true);
+                }
+                else {
+                    js.WriteValue(false);
+                }
+
+                // ForceClose
+                js.WritePropertyName("ForceClose");
+                js.WriteValue(false);
+
+                js.WriteEndObject();
+            }
+
+            string fileData = Cryptography.Encrypt(sw.ToString(), Globals.ENCRYPTION_GUID);
+            File.WriteAllText(Globals.SETTINGS_FILE, fileData);
+            sb.Clear();
+            sw.Close();
+        }
+
         /// <summary>
         /// Reads the data from a path and returns the unencrypted text
         /// </summary>

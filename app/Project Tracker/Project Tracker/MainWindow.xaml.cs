@@ -445,7 +445,7 @@ namespace Project_Tracker {
                 File.Delete(filesRead[selectedIndex - 1]);
 
                 selectedIndex = 0;
-                SaveSettings();
+                IO.SaveSettings(selectedIndex, isCompletedTasksShown);
                 LoadFiles();
 
                 SetSelectedProject();
@@ -960,42 +960,6 @@ namespace Project_Tracker {
         }
 
         /// <summary>
-        /// Saves the settings for the project.
-        /// </summary>
-        private void SaveSettings() {
-            StringBuilder sb = new StringBuilder();
-            StringWriter sw = new StringWriter(sb);
-            using (JsonWriter js = new JsonTextWriter(sw)) {
-                js.Formatting = Formatting.Indented;
-
-                js.WriteStartObject();
-
-                // LastSelectedIndex
-                js.WritePropertyName("LastSelectedIndex");
-                js.WriteValue(selectedIndex);
-
-                // DisplayingCompleted
-                js.WritePropertyName("DisplayingCompleted");
-                if (isCompletedTasksShown) {
-                    js.WriteValue(true);
-                }
-                else {
-                    js.WriteValue(false);
-                }
-
-                // ForceClose
-                js.WritePropertyName("ForceClose");
-                js.WriteValue(false);
-
-                js.WriteEndObject();
-            }
-
-            File.WriteAllText(Globals.SETTINGS_FILE, sw.ToString());
-            sb.Clear();
-            sw.Close();
-        }
-
-        /// <summary>
         /// Change the icon for the project.
         /// </summary>
         /// <param name="selectedIcon">The icon to change to.</param>
@@ -1163,7 +1127,7 @@ namespace Project_Tracker {
                 selectedIndex = 0;
             }
 
-            SaveSettings();
+            IO.SaveSettings(selectedIndex, isCompletedTasksShown);
 
             // Read the values from this project
             if (selectedIndex != 0) {
@@ -1390,32 +1354,7 @@ namespace Project_Tracker {
             backgroundThread.Start();
 
             if (!File.Exists(Globals.SETTINGS_FILE)) { // Settings file doesn't exist. Create it
-                StringBuilder sb = new StringBuilder();
-                StringWriter sw = new StringWriter(sb);
-
-                using (JsonWriter js = new JsonTextWriter(sw)) {
-                    js.Formatting = Formatting.Indented;
-
-                    js.WriteStartObject();
-
-                    // LastSelectedIndex
-                    js.WritePropertyName("LastSelectedIndex");
-                    js.WriteValue(1);
-
-                    // DisplayingCompleted
-                    js.WritePropertyName("DisplayingCompleted");
-                    js.WriteValue(false);
-
-                    // ForceClose
-                    js.WritePropertyName("ForceClose");
-                    js.WriteValue(false);
-
-                    js.WriteEndObject();
-                }
-
-                File.WriteAllText(Globals.SETTINGS_FILE, sw.ToString());
-                sb.Clear();
-                sw.Close();
+                IO.SaveSettings(1, false);
             }
 
             string json = IO.ReadEncryptedFile(Globals.SETTINGS_FILE);
@@ -1514,7 +1453,7 @@ namespace Project_Tracker {
             }
 
             SetSelectedProject(); // We use this to reset the scrollviewer grid
-            SaveSettings();
+            IO.SaveSettings(selectedIndex, isCompletedTasksShown);
         }
 
         /// <summary>
