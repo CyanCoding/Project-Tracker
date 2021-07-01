@@ -18,85 +18,37 @@ using System.Windows.Media.Animation;
 namespace Project_Tracker {
 
     public partial class MainWindow : Window {
+        public List<string> filesRead = new List<string>();
 
-        // WARNING: READONLY VALUES. IF YOU CHANGE THESE, CHANGE IN OTHER FILES AS WELL
-        private readonly string APPDATA_DIRECTORY =
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
-            + "/Project Tracker";
-
-        // IF YOU CHANGE THIS, ALSO CHANGE IT IN UpdateWindow.xaml.cs
-        private readonly string CURRENT_VERSION = "2.4";
-
-        private readonly string DATA_DIRECTORY =
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
-            + "/Project Tracker/data";
-
-        private readonly bool IS_BETA = false;
-        private readonly Color itemColor = Color.FromRgb(60, 60, 60);
-        private readonly Color labelTextColor = Color.FromRgb(255, 255, 255);
-
-        private readonly string NEXT_VERSION_INFO = Environment.GetFolderPath
-            (Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/next-version.json";
-
-        private readonly string NEXT_VERSION_MANIFEST_URL =
-            "https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/version-info/next-version.json";
-
-        private readonly string pathExtension = "*.json";
-
-        // IF YOU CHANGE THE VERSION, CHANGE WHETHER IT'S BETA OR NOT
-        private readonly string SETTINGS_FILE =
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
-            + "/Project Tracker/settings.json";
-
-        private readonly string VERSION_INFO = Environment.GetFolderPath
-            (Environment.SpecialFolder.LocalApplicationData) + "/Project Tracker/version.json";
-
-        private readonly string VERSION_MANIFEST_URL =
-            "https://raw.githubusercontent.com/CyanCoding/Project-Tracker/master/install-resources/version-info/version.json";
+        private Thread backgroundThread;
 
         private int addingType = 0;
+        private int selectedIndex = 0;
+        private int itemIndex = 0; // We need this to figure out the index of the item
+        private int itemsAdded = 0; // The amount of items added to the scrollviewer
+        private int renameProjectClicks = 0; // When we click on the rename project button it activates the "you click the window so stop renaming" so we use an index to make sure that doesn't happen
+
         private bool isChangingTitle = false;
         private bool isCompletedTasksShown = false;
         private bool isIconSelecting = false;
         private bool isOverallSettingsOpen = false;
         private bool isSettingsOpen = false;
         private bool isSettingsWindowDisplaying = false;
-
-        // Keeps the user from double clicking the animation
-        private bool isSwitchingAnimationRunning = false;
-
+        private bool updateResponse = false;
+        private bool isSwitchingAnimationRunning = false; // Keeps the user from double clicking the animation
         private bool isTypeSelecting = false;
 
-        // We need this to figure out the index of the item
-        private int itemIndex = 0;
-
-        // The amount of items added to the scrollviewer
-        private int itemsAdded = 0;
-
-        public List<string> filesRead = new List<string>();
-        private int selectedIndex = 0;
-
-        // When we click on the rename project button it activates the "you click the window so stop renaming" so we use an index to make sure that doesn't happen
-        private int renameProjectClicks = 0;
-
-        private bool updateResponse = false;
-
-        private Thread backgroundThread;
-
-        // Each project's data - Used for saving
-        private string percent;
-
         private List<string> taskData = new List<string>();
+        private List<string> taskIdentifier = new List<string>(); // The type of item we're adding (0 = error, 1 = feature, 2 = comment)
 
-        // The type of item we're adding (0 = error, 1 = feature, 2 = comment)
-        private List<string> taskIdentifier = new List<string>();
-
+        // All these variables relate to the projects and are used for saving/loading
         private List<string> tasks = new List<string>();
         private List<string> linesOfCodeFiles = new List<string>();
         private string folderLocation;
         private string dateCreated;
         private long tasksMade;
         private long tasksCompleted;
+        private string percent; // Each project's data - Used for saving
         private string title;
         private string duration;
         private string icon;
