@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Project_Tracker.Manifests;
 using Project_Tracker.Resources;
 using System;
@@ -417,6 +417,59 @@ namespace Project_Tracker.Source {
             sw.Close();
         }
 
+        public static int ImportData(string importPath, int suppressWarning = 0) {
+            try {
+                string exportData = IO.ReadEncryptedFile(importPath);
+                ExportManifest.Rootobject rootData =
+                    JsonConvert.DeserializeObject<ExportManifest.Rootobject>(exportData);
+                
+                // Version mismatch
+                if (rootData.Version != Globals.CURRENT_VERSION && suppressWarning != 2) {
+                    return 2;
+                }
+
+                SaveSettings(rootData.Settings.LastSelectedIndex, rootData.Settings.DisplayingCompleted);
+
+                foreach (ExportManifest.Project project in rootData.Projects) {
+                    List<string> tasks = new List<string>();
+                    foreach (string i in project.Tasks) {
+                        tasks.Add(i);
+                    }
+
+                    List<string> taskData = new List<string>();
+                    foreach (string i in project.TaskData) {
+                        taskData.Add(i);
+                    }
+
+                    List<string> taskIdentifier = new List<string>();
+                    foreach (string i in project.TaskIdentifier) {
+                        taskIdentifier.Add(i);
+                    }
+
+                    List<string> linesOfCodeFiles = new List<string>();
+                    foreach (string i in project.LinesOfCodeFiles) {
+                        linesOfCodeFiles.Add(i);
+                    }
+
+                    Save(CreateProjectFileName(project.Title), project.Title, tasks,
+                        taskData, taskIdentifier, linesOfCodeFiles,
+                        project.FolderLocation, project.DateCreated, project.TasksMade,
+                        project.TasksCompleted, project.Percent, project.Duration, project.Icon);
+                }
+
+
+                return 0;
+            }
+            catch (Exception) {
+                return 1;
+            }
+        }
+
+        /// <summary>
+        /// Exports all project data, settings, and current version to one file.
+        /// </summary>
+        /// <param name="exportPath">The path to export to.</param>
+        /// <returns>True if successful, false if unsuccessful</returns>
         public static bool ExportData(string exportPath) {
             try {
                 StringBuilder sb = new StringBuilder();
@@ -531,7 +584,7 @@ namespace Project_Tracker.Source {
 
                 return true;
             }
-            catch (Exception e) {
+            catch (Exception) {
                 return false;
             }
         }

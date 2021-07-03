@@ -406,7 +406,7 @@ namespace Project_Tracker {
                 projectTitle = addProjectTextBox.Text;
             }
 
-            IO.CreateNewProject(projectTitle, Globals.DATA_DIRECTORY);
+            IO.CreateNewProject(projectTitle);
 
             addProjectTextBox.Text = "Create a new project";
             Keyboard.ClearFocus();
@@ -1638,7 +1638,7 @@ namespace Project_Tracker {
         /// </summary>
         private void Window_Closing(object sender, CancelEventArgs e) {
             //backgroundThread.Abort();
-            //IO.DuplicateDecrypted(@"C:\Users\skyec\AppData\Local\Project Tracker\data\Well hello there!.pt");
+            //IO.DuplicateDecrypted(@"C:\Users\skyec\Documents\export.ptex");
         }
 
         /// <summary>
@@ -1925,6 +1925,54 @@ namespace Project_Tracker {
         #endregion Item selection presses
 
         private void ImportProjectsMenuItem_Click(object sender, RoutedEventArgs e) {
+            var dialog = new System.Windows.Forms.OpenFileDialog();
+            dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); // Docs folder
+            dialog.Title = "Import project tracker data";
+            dialog.Filter = "Export files|*.ptex";
+
+            var result = dialog.ShowDialog();
+
+            if (result == System.Windows.Forms.DialogResult.OK) {
+                string notice = "";
+                var icon = System.Windows.Forms.MessageBoxIcon.Information;
+                string filePicked = dialog.FileName;
+
+                int importResult = IO.ImportData(filePicked);
+
+                if (importResult == 2) { // Version mismatch
+                    notice = "The exported data is from a different version." +
+                        " This may cause issues with importing. Would you like" +
+                        " to continue anyway?";
+                    icon = System.Windows.Forms.MessageBoxIcon.Question;
+
+                    var announce = System.Windows.Forms.MessageBox.Show(
+                    notice,
+                    "Import: Version issue",
+                    System.Windows.Forms.MessageBoxButtons.YesNo,
+                    icon);
+
+                    if (announce == System.Windows.Forms.DialogResult.Yes) {
+                        importResult = IO.ImportData(filePicked, 2);
+                    }
+                }
+                if (importResult == 0) { // Executed normally
+                    notice = "Successfully imported!";
+                }
+                if (importResult != 0 && importResult != 2) { // Unknown exception
+                    notice = "An unknown error occurred while importing projects.";
+                    icon = System.Windows.Forms.MessageBoxIcon.Error;
+                }
+
+                LoadFiles();
+                SetSelectedProject();
+
+                var announce2 = System.Windows.Forms.MessageBox.Show(
+                    notice,
+                    "Project import",
+                    System.Windows.Forms.MessageBoxButtons.OK,
+                    icon);
+            }
+            
 
         }
 
