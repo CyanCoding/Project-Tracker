@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Project_Tracker.Resources;
 using Project_Tracker.Source;
 using System;
@@ -20,7 +20,7 @@ namespace Project_Tracker {
     public partial class MainWindow : Window {
         public List<string> filesRead = new List<string>();
 
-        private Thread backgroundThread;
+        //private Thread backgroundThread;
 
         private int addingType = 0;
         private int selectedIndex = 0;
@@ -1387,8 +1387,8 @@ namespace Project_Tracker {
                 Directory.CreateDirectory(Globals.DATA_DIRECTORY);
             }
 
-            backgroundThread = new Thread(BackgroundProcesses.DataReporting);
-            backgroundThread.Start();
+            //backgroundThread = new Thread(BackgroundProcesses.DataReporting);
+            //backgroundThread.Start();
 
             if (!File.Exists(Globals.SETTINGS_FILE)) { // Settings file doesn't exist. Create it
                 IO.SaveSettings(1, false);
@@ -1637,7 +1637,7 @@ namespace Project_Tracker {
         /// Closes threads and shuts down the program.
         /// </summary>
         private void Window_Closing(object sender, CancelEventArgs e) {
-            backgroundThread.Abort();
+            //backgroundThread.Abort();
         }
 
         /// <summary>
