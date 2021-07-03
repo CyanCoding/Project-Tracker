@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Project_Tracker.Resources;
 using Project_Tracker.Source;
 using System;
@@ -1929,7 +1929,7 @@ namespace Project_Tracker {
         }
 
         private void ExportProjectsMenuItem_Click(object sender, RoutedEventArgs e) {
-            System.Windows.Forms.SaveFileDialog dialog = new System.Windows.Forms.SaveFileDialog();
+            var dialog = new System.Windows.Forms.SaveFileDialog();
             dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); // Docs folder
             dialog.Title = "Export project tracker data";
             dialog.AddExtension = true;
@@ -1937,10 +1937,27 @@ namespace Project_Tracker {
             dialog.FileName = "export";
             dialog.Filter = "Export files|*.ptex";
 
-            System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+            var result = dialog.ShowDialog();
 
             if (result == System.Windows.Forms.DialogResult.OK) { // The user picked a file
                 string filePicked = dialog.FileName;
+                bool successfulExport = IO.ExportData(filePicked);
+
+                string notice = ""; // A message to be displayed to the user
+                var icon = System.Windows.Forms.MessageBoxIcon.Information;
+
+                if (successfulExport) {
+                    notice = "Succesfully exported!";
+                }
+                else {
+                    notice = "There was an issue while exporting. Please try again later.";
+                    icon = System.Windows.Forms.MessageBoxIcon.Error;
+                }
+                var announce = System.Windows.Forms.MessageBox.Show(
+                    notice,
+                    "Project export",
+                    System.Windows.Forms.MessageBoxButtons.OK,
+                    icon);
             }
 
         }

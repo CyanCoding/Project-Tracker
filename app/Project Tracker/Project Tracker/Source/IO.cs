@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Project_Tracker.Resources;
 using System;
 using System.Collections.Generic;
@@ -408,6 +408,125 @@ namespace Project_Tracker.Source {
             File.WriteAllText(Globals.SETTINGS_FILE, fileData);
             sb.Clear();
             sw.Close();
+        }
+
+        public static bool ExportData(string exportPath) {
+            try {
+                StringBuilder sb = new StringBuilder();
+                StringWriter sw = new StringWriter(sb);
+
+                using (JsonWriter js = new JsonTextWriter(sw)) {
+                    js.Formatting = Formatting.Indented;
+
+                    js.WriteStartObject(); // Overall
+
+                    js.WritePropertyName("Version");
+                    js.WriteValue(Globals.CURRENT_VERSION);
+
+                    js.WritePropertyName("Settings");
+
+                    string data = IO.ReadEncryptedFile(Globals.SETTINGS_FILE);
+                    SettingsManifest.Rootobject settingsData =
+                        JsonConvert.DeserializeObject<SettingsManifest.Rootobject>(data);
+
+                    js.WriteStartObject(); // Settings
+
+                    js.WritePropertyName("LastSelectedIndex");
+                    js.WriteValue(settingsData.LastSelectedIndex);
+
+                    js.WritePropertyName("DisplayingCompleted");
+                    js.WriteValue(settingsData.DisplayingCompleted);
+
+                    js.WritePropertyName("ForceClose");
+                    js.WriteValue(settingsData.ForceClose);
+
+                    js.WriteEndObject(); // Settings
+
+                    js.WritePropertyName("Projects");
+                    js.WriteStartArray();
+
+                    string[] files = Directory.GetFiles(Globals.DATA_DIRECTORY,
+                        Globals.projectDataExtension, SearchOption.AllDirectories);
+
+                    foreach (string path in files) { // Foreach data project
+                        data = IO.ReadEncryptedFile(path);
+                        MainTableManifest.Rootobject saveData =
+                            JsonConvert.DeserializeObject<MainTableManifest.Rootobject>(data);
+
+                        js.WriteStartObject();
+
+                        js.WritePropertyName("Title");
+                        js.WriteValue(saveData.Title);
+
+                        js.WritePropertyName("Tasks");
+                        js.WriteStartArray();
+                        foreach (string task in saveData.Tasks) {
+                            js.WriteValue(task);
+                        }
+                        js.WriteEnd();
+
+                        js.WritePropertyName("TaskData");
+                        js.WriteStartArray();
+                        foreach (string taskData in saveData.TaskData) {
+                            js.WriteValue(taskData);
+                        }
+                        js.WriteEnd();
+
+                        js.WritePropertyName("TaskIdentifier");
+                        js.WriteStartArray();
+                        foreach (string identifier in saveData.TaskIdentifier) {
+                            js.WriteValue(identifier);
+                        }
+                        js.WriteEnd();
+
+                        js.WritePropertyName("LinesOfCodeFiles");
+                        js.WriteStartArray();
+                        foreach (string file in saveData.LinesOfCodeFiles) {
+                            js.WriteValue(file);
+                        }
+                        js.WriteEnd();
+
+                        js.WritePropertyName("FolderLocation");
+                        js.WriteValue(saveData.FolderLocation);
+
+                        js.WritePropertyName("Duration");
+                        js.WriteValue(saveData.Duration);
+
+                        js.WritePropertyName("DateCreated");
+                        js.WriteValue(saveData.DateCreated);
+
+                        js.WritePropertyName("TasksMade");
+                        js.WriteValue(saveData.TasksMade);
+
+                        js.WritePropertyName("TasksCompleted");
+                        js.WriteValue(saveData.TasksCompleted);
+
+                        js.WritePropertyName("Icon");
+                        js.WriteValue(saveData.Icon);
+                        js.WritePropertyName("Percent");
+                        js.WriteValue(saveData.Percent);
+
+                        js.WriteEndObject();
+
+
+                    }
+
+
+                    js.WriteEndArray();
+
+                    js.WriteEndObject(); // Overall
+                }
+
+                string fileData = Cryptography.Encrypt(sw.ToString(), Globals.ENCRYPTION_GUID);
+                File.WriteAllText(exportPath, fileData);
+                sb.Clear();
+                sw.Close();
+
+                return true;
+            }
+            catch (Exception e) {
+                return false;
+            }
         }
 
         /// <summary>
