@@ -68,8 +68,8 @@
         <Menu Width="Auto" Height="20" VerticalAlignment="Top" Panel.ZIndex="1000">
             <MenuItem Header="_File">
                 <MenuItem Header="_New project" Click="NewProjectMenuItem_Click"/>
-                <MenuItem Header="_Import projects" />
-                <MenuItem Header="_Export projects" />
+                <MenuItem Header="_Import projects" Click="ImportProjectsMenuItem_Click"/>
+                <MenuItem Header="_Export projects" Click="ExportProjectsMenuItem_Click"/>
                 <Separator />
                 <MenuItem Header="_Exit" />
             </MenuItem>

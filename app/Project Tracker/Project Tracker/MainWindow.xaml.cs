@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Project_Tracker.Resources;
 using Project_Tracker.Source;
 using System;
@@ -1922,5 +1922,26 @@ namespace Project_Tracker {
         }
 
         #endregion Item selection presses
+
+        private void ImportProjectsMenuItem_Click(object sender, RoutedEventArgs e) {
+
+        }
+
+        private void ExportProjectsMenuItem_Click(object sender, RoutedEventArgs e) {
+            System.Windows.Forms.SaveFileDialog dialog = new System.Windows.Forms.SaveFileDialog();
+            dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); // Docs folder
+            dialog.Title = "Export project tracker data";
+            dialog.AddExtension = true;
+            dialog.DefaultExt = ".ptex";
+            dialog.FileName = "export";
+            dialog.Filter = "Export files|*.ptex";
+
+            System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+
+            if (result == System.Windows.Forms.DialogResult.OK) { // The user picked a file
+                string filePicked = dialog.FileName;
+            }
+
+        }
     }
 }
