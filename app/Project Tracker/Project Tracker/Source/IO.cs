@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
+using Project_Tracker.Manifests;
 using Project_Tracker.Resources;
 using System;
 using System.Collections.Generic;
@@ -183,13 +184,52 @@ namespace Project_Tracker.Source {
             sb.Clear();
             sw.Close();
         }
+        
+
+        /// <summary>
+        /// Creates a unique file name for the project.
+        /// </summary>
+        /// <param name="projectTitle">The title of the project.</param>
+        /// <returns>The path to the project.</returns>
+        private static string CreateProjectFileName(string projectTitle) {
+            // Attempts to save the file using a unique file name
+            try {
+                if (!File.Exists(Globals.DATA_DIRECTORY + "/" + projectTitle + Globals.dataExtension)) {
+                    return Globals.DATA_DIRECTORY + "/" + projectTitle + Globals.dataExtension;
+                }
+                else {
+                    int index = 0;
+                    while (true) {
+                        if (!File.Exists(Globals.DATA_DIRECTORY + "/" + projectTitle + " (" + index + ")" + Globals.dataExtension)) {
+                            return Globals.DATA_DIRECTORY + "/" + projectTitle + " (" + index + ")" + Globals.dataExtension;
+                        }
+                        else {
+                            index++;
+                            continue;
+                        }
+                    }
+                }
+            }
+            catch (ArgumentException) { // Path is an invalid name
+                int index = 0;
+                while (true) {
+                    if (!File.Exists("project " + index + Globals.dataExtension)) {
+                        return "project " + index + Globals.dataExtension;
+                    }
+                    else {
+                        index++;
+                        continue;
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Creates a new encrypted project file.
         /// </summary>
         /// <param name="projectTitle">The title of the new project.</param>
         /// <param name="DATA_DIRECTORY">The directory for storing data files in.</param>
-        public static void CreateNewProject(string projectTitle, string DATA_DIRECTORY) {
+        public static void CreateNewProject(string projectTitle) {
             StringBuilder sb = new StringBuilder();
             StringWriter sw = new StringWriter(sb);
 
@@ -255,40 +295,7 @@ namespace Project_Tracker.Source {
 
             string encryptedData = Cryptography.Encrypt(sw.ToString(), Globals.ENCRYPTION_GUID);
 
-            // Attempts to save the file using a unique file name
-            try {
-                if (!File.Exists(DATA_DIRECTORY + "/" + projectTitle + Globals.dataExtension)) {
-                    File.WriteAllText(DATA_DIRECTORY + "/" + projectTitle + Globals.dataExtension,
-                        encryptedData);
-                }
-                else {
-                    int index = 0;
-                    while (true) {
-                        if (!File.Exists(DATA_DIRECTORY + "/" + projectTitle + " (" + index + ")" + Globals.dataExtension)) {
-                            File.WriteAllText(DATA_DIRECTORY + "/" + projectTitle + " (" + index + ")" + Globals.dataExtension,
-                                encryptedData);
-                            break;
-                        }
-                        else {
-                            index++;
-                            continue;
-                        }
-                    }
-                }
-            }
-            catch (ArgumentException) { // Path is an invalid name
-                int index = 0;
-                while (true) {
-                    if (!File.Exists("project " + index + Globals.dataExtension)) {
-                        File.WriteAllText("project " + index + Globals.dataExtension, encryptedData);
-                        break;
-                    }
-                    else {
-                        index++;
-                        continue;
-                    }
-                }
-            }
+            File.WriteAllText(CreateProjectFileName(projectTitle), encryptedData);
 
             sb.Clear();
             sw.Close();
