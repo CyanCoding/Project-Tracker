@@ -27,8 +27,8 @@ namespace Project_Tracker.Manifests {
             public string FolderLocation { get; set; }
             public string Duration { get; set; }
             public string DateCreated { get; set; }
-            public int TasksMade { get; set; }
-            public int TasksCompleted { get; set; }
+            public long TasksMade { get; set; }
+            public long TasksCompleted { get; set; }
             public string Icon { get; set; }
             public string Percent { get; set; }
         }
