@@ -770,7 +770,7 @@ namespace Project_Tracker {
                 if (files.Length == 0) {
                     selectedIndex = 0;
                 }
-                else {
+                else if (selectedIndex > index) {
                     selectedIndex = 1;
                 }
             }
@@ -1638,7 +1638,7 @@ namespace Project_Tracker {
         /// </summary>
         private void Window_Closing(object sender, CancelEventArgs e) {
             //backgroundThread.Abort();
-            //IO.DuplicateDecrypted(@"C:\Users\skyec\Documents\export.ptex");
+            //IO.DuplicateDecrypted(@"C:\Users\skyec\AppData\Local\Project Tracker\settings.ptsd");
         }
 
         /// <summary>
