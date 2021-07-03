@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Project_Tracker.Resources;
 using Project_Tracker.Source;
 using System;
@@ -1638,6 +1638,7 @@ namespace Project_Tracker {
         /// </summary>
         private void Window_Closing(object sender, CancelEventArgs e) {
             //backgroundThread.Abort();
+            //IO.DuplicateDecrypted(@"C:\Users\skyec\AppData\Local\Project Tracker\data\Well hello there!.pt");
         }
 
         /// <summary>

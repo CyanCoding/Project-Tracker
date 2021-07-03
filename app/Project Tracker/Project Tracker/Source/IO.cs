@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Project_Tracker.Resources;
 using System;
 using System.Collections.Generic;
@@ -408,6 +408,19 @@ namespace Project_Tracker.Source {
             File.WriteAllText(Globals.SETTINGS_FILE, fileData);
             sb.Clear();
             sw.Close();
+        }
+
+        /// <summary>
+        /// NOT FOR PRODUCTION USE
+        /// 
+        /// Creates a file in your documents folder with the decrypted contents of a folder.
+        /// </summary>
+        /// <param name="path">The path of the file to decrypt</param>
+        public static void DuplicateDecrypted(string path) {
+            string json = File.ReadAllText(path);
+            string unencrypted = Cryptography.Decrypt(json, Globals.ENCRYPTION_GUID);
+
+            File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/project.json", unencrypted);
         }
     }
 }
